@@ -137,45 +137,47 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 		
 	}
 	
-	public void addRoomPop()
-	{
-		Fr_addRoom = new JFrame("강의실 추가");
+	public void addRoomPop(){
+		/**처음으로 생성하는 강의실 추가 프레임만 새로 생성**/
+		if(Fr_addRoom == null){
+			Fr_addRoom = new JFrame("강의실 추가");
+			
+			JPanel panel = new JPanel();
+			panel.setBorder(new TitledBorder("강의실 추가"));
+			panel.setLayout(new FlowLayout());
+			
+			/******************************************/
+			JLabel buildL = new JLabel("건물");
+			tf_building = new JTextField(5);
+			
+			panel.add(buildL);
+			panel.add(tf_building);
+			
+			/******************************************/
+			JLabel roomL = new JLabel("호수");
+			tf_room = new JTextField(5);
+			
+			panel.add(roomL);
+			panel.add(tf_room);
 		
-		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder("강의실 추가"));
-		panel.setLayout(new FlowLayout());
-		
-		/******************************************/
-		JLabel buildL = new JLabel("건물");
-		tf_building = new JTextField(5);
-		
-		panel.add(buildL);
-		panel.add(tf_building);
-		
-		/******************************************/
-		JLabel roomL = new JLabel("호수");
-		tf_room = new JTextField(5);
-		
-		panel.add(roomL);
-		panel.add(tf_room);
-	
-		/*****************************************/
-		JLabel seatL = new JLabel("수용인원");
-		tf_maxSeat = new JTextField(5);
-		
-		panel.add(seatL);
-		panel.add(tf_maxSeat);
-		
-		/*****************************************/
-		
-		panel.add(bt_popAdd);
-		bt_popAdd.addActionListener(new adminListener());
-		
-		/****************************************/
-		
-		Fr_addRoom.add(panel);
-		Fr_addRoom.setSize(400, 100);
-		Fr_addRoom.setLocationRelativeTo(pn_listButton);
+			/*****************************************/
+			JLabel seatL = new JLabel("수용인원");
+			tf_maxSeat = new JTextField(5);
+			
+			panel.add(seatL);
+			panel.add(tf_maxSeat);
+			
+			/*****************************************/
+			
+			panel.add(bt_popAdd);
+			bt_popAdd.addActionListener(new adminListener());
+			
+			/****************************************/
+			
+			Fr_addRoom.add(panel);
+			Fr_addRoom.setSize(400, 100);
+			Fr_addRoom.setLocationRelativeTo(pn_listButton);
+		}
 		Fr_addRoom.setVisible(true);
 	}
 	
@@ -475,9 +477,9 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 					admin.CreateClassRoom(tf_room.getText(), tf_building.getText(), tf_maxSeat.getText());
 					listRoom();
 					Fr_addRoom.setVisible(false);
-				}
-				
+				}				
 			}
+			
 			if(e.getSource() == enterB) {
 				int scheNo;
 				System.out.println("enterB Clicked");
