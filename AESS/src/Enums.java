@@ -1,3 +1,5 @@
+/**각종 요일, 시간 등을 변경해주는 클래스**/
+
 public class Enums {
 	String[] IndexToBlock = {"1a", "1b", "2a", "2b", "3a", "3b", "4a", "4b", "5a", "5b", "6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b"};
 	

@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 public class GUI_Main extends JFrame implements ActionListener {
-	//DB연결 변수 설정
+	/**DB연결 변수 설정**/
 	static DBconnect dbcon = new DBconnect();
 	static Connection conn = dbcon.connect();
 	static Statement query;
@@ -19,8 +19,8 @@ public class GUI_Main extends JFrame implements ActionListener {
 	String id;
 	
 	/**********위치 중앙으로*******/
-	Toolkit tk = Toolkit.getDefaultToolkit(); //구현된 Toolkit객체를 얻는다.
-	Dimension screenSize=tk.getScreenSize();//화면의 크기를 구한다.
+	Toolkit tk = Toolkit.getDefaultToolkit(); 		//구현된 Toolkit객체를 얻는다.
+	Dimension screenSize=tk.getScreenSize();		//화면의 크기를 구한다.
 	int x_l, y_l;
 	
 	JPanel up, left;

@@ -16,13 +16,14 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class GUI_ClassRoomList extends JPanel implements MouseListener// 학생 메인화면이 될 GUI
+/**강의실 목록 GUI**/
+public class GUI_ClassRoomList extends JPanel implements MouseListener
 {
 	String id;
 	Object nowListValue, nowRowB, nowRowC, nowRowM;
 	int nowListRow, nowListCol;
 	int dragStartRow, dragStartCol, dragEndRow;
-	protected Connection conn;
+	protected Connection conn;	//DB접속을 위한 컨넥션 변수
 	User_Admin admin;
 	JFrame Fr_addRoom, Fr_addSchedule;
 	JTable table, table_Room;
