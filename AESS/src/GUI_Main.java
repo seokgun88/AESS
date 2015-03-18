@@ -9,12 +9,14 @@ import java.sql.Statement;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
+/**메인 GUI 띄우기**/
 public class GUI_Main extends JFrame implements ActionListener {
 	/**DB연결 변수 설정**/
 	static DBconnect dbcon = new DBconnect();
 	static Connection conn = dbcon.connect();
 	static Statement query;
 	static ResultSet result;
+	
 	static String name, type;
 	String id;
 	
@@ -23,6 +25,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 	Dimension screenSize=tk.getScreenSize();		//화면의 크기를 구한다.
 	int x_l, y_l;
 	
+	/**GUI 구성요소 설정**/
 	JPanel up, left;
 	ImageIcon logo = new ImageIcon("logo.png");
 	ImageIcon icon = new ImageIcon("icon.png");
@@ -38,12 +41,13 @@ public class GUI_Main extends JFrame implements ActionListener {
 	
 	BorderLayout GUI_MainLayout = new BorderLayout(10,10);
 	
-	GUI_ClassRoomList adm_main;
+	GUI_ClassRoomList classRoom_list;
 	GUI_StudentMain std_main;
 	GUI_ProfessorTable prof_table;
 	GUI_Professor prof_main;
 	GUI_SetPeriod set_period;
 	
+	/**디폴트 생성자**/
 	public GUI_Main(String id) {
 		super("AESS");
 		super.setIconImage(icon.getImage());
@@ -52,23 +56,26 @@ public class GUI_Main extends JFrame implements ActionListener {
 		info i = new info(id);
 		this.setLayout(GUI_MainLayout);
 		this.setSize(1100,750);
+		
+		/**프로그램 창 화면 중앙으로 셋팅**/
 		x_l = screenSize.width/2 - this.getWidth()/2 ; //x좌표구하기
 		y_l = screenSize.height/2 - this.getHeight()/2; //y좌표구하기
 		this.setLocation(x_l, y_l); //화면 중앙에 띄우기
 		
 		
-		/*************메인 컨텐츠 오픈******************/
-		adm_main = new GUI_ClassRoomList(conn, id);
-		std_main = new GUI_StudentMain(conn, id);
-		set_period = new GUI_SetPeriod(conn, id);
-		prof_table = new GUI_ProfessorTable(conn, id);
-		
-		if(info.is_P) add(prof_table, "Center");
-		if(info.is_S) add(std_main, "Center");
-		if(info.is_A) add(adm_main, "Center");
-		
-		
+		/*************메인 컨텐츠 오픈******************/	
+		classRoom_list = new GUI_ClassRoomList(conn, id);	//강의실 GUI		
+		add(classRoom_list, "Center");
+		if(info.is_P){
+			prof_table = new GUI_ProfessorTable(conn, id);	//교수 수업별 시간표 GUI
+			add(prof_table, "Center");
+		}
+		if(info.is_S){
+			std_main = new GUI_StudentMain(conn, id);	//학생 GUI
+			add(std_main, "Center");
+		}
 		/***************************************/
+		
 		up = new JPanel(null);
 		
 		up.setPreferredSize(new java.awt.Dimension(1, 100)); // 좌여백
@@ -97,16 +104,18 @@ public class GUI_Main extends JFrame implements ActionListener {
 		}
 		
 		
-		/***************************************/
+		/************좌측 메뉴 구성*************/
 		GridLayout Layout_leftMenu = new GridLayout(20,1,20,8);
 		left = new JPanel(Layout_leftMenu);
 		
 		bt_logout.addActionListener(this);
 		menu_Professor.setBounds(0,0,10,10);
+
+		left.add(menu_RoomList);
 		if(info.is_S) left.add(menu_stTimeTable);
 		if(info.is_P) left.add(menu_Professor);
-		left.add(menu_RoomList);
 		if(info.is_A) left.add(menu_SetPeriod);
+		
 		menu_stTimeTable.addActionListener(this);
 		menu_RoomList.addActionListener(this);
 		menu_Professor.addActionListener(this);
@@ -122,31 +131,30 @@ public class GUI_Main extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e){		
 		if(e.getSource() == menu_RoomList) {
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
-			add(BorderLayout.CENTER, adm_main);
+			add(classRoom_list, BorderLayout.CENTER);
 			revalidate();
 			repaint();
 		} else if(e.getSource() == menu_Professor) {
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
 			GUI_ProfessorTable prof_table = new GUI_ProfessorTable(conn, id);
-			add(BorderLayout.CENTER, prof_table);
+			add(prof_table, BorderLayout.CENTER);
 			revalidate();
 			repaint();
 		} else if(e.getSource() == menu_stTimeTable) {
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
-			add(BorderLayout.CENTER, std_main);
+			add(std_main, BorderLayout.CENTER);
 			revalidate();
 			repaint();
 		} else if(e.getSource() == menu_SetPeriod) {
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
-			add(BorderLayout.CENTER, set_period);
+			set_period = new GUI_SetPeriod(conn, id);	//시험 기간 설정 GUI
+			add(set_period, BorderLayout.CENTER);
 			revalidate();
 			repaint();
 		} else if(e.getSource() == bt_logout){
 			dispose();
 			GUI_Login gl = new GUI_Login();
 		}
-	}
-		
-	
+	}	
 }
 

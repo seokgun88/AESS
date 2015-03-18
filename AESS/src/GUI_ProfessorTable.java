@@ -7,7 +7,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-public class GUI_ProfessorTable extends JPanel implements MouseListener // 학생 메인화면이 될 GUI
+/**교수 수업 시간표 테이블**/
+public class GUI_ProfessorTable extends JPanel implements MouseListener
 {
 	JTable profTable;
 	BorderLayout layout;

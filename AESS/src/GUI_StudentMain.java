@@ -12,9 +12,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class GUI_StudentMain extends JPanel // 학생 메인화면이 될 GUI
- implements MouseListener, MouseMotionListener
-{
+/**학생 GUI**/
+public class GUI_StudentMain extends JPanel
+ implements MouseListener, MouseMotionListener{
 	JTable studTable;
 	BorderLayout layout;
 	private JButton exitJButton;
@@ -130,7 +130,7 @@ public class GUI_StudentMain extends JPanel // 학생 메인화면이 될 GUI
 		dateP.add(dateC);
 		
 		JLabel timeL = new JLabel("시간");
-		String[] Time = {"9:00","9:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"};
+		String[] Time = {"09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"};
 		timeC1  = new JComboBox(Time);
 		timeC1.setSelectedIndex(sTimeIndex);
 		JLabel timewaveL = new JLabel("~");
@@ -264,14 +264,14 @@ public class GUI_StudentMain extends JPanel // 학생 메인화면이 될 GUI
 	class studentListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
+			/**학생 일정 입력 버튼 클릭**/
 			if(e.getSource() == enterB) {
 				student.Save();
 				
 				int start_time = enums.TimeToIndex(timeC1.getSelectedItem().toString());
 				int end_time = enums.TimeToIndex(timeC2.getSelectedItem().toString());
-				int i;
 				
-				for(i=start_time; i<end_time; i++) {
+				for(int i=start_time; i<end_time; i++) {
 					student.CreateTimeBlock(dateC.getSelectedItem().toString(), enums.IndexToBlock[i], notAvailType);
 				}
 				
