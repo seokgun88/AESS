@@ -17,17 +17,18 @@ public class GUI_StudentMain extends JPanel
  implements MouseListener, MouseMotionListener{
 	JTable studTable;
 	BorderLayout layout;
-	private JButton exitJButton;
-	String time1;
-	JButton enterB, cancelB;
+	JButton btn_enter, btn_cancel;
 	JFrame Fr_studTableClick;
-	JComboBox timeC1, timeC2, dateC;
-	JRadioButton testB, lectB, unabB;
+	JComboBox cmbBx_startTime, cmbBx_endTime, cmbBx_date;
+	JRadioButton rBtn_test, rBtn_lecture, rBtn_unable;
 	int notAvailType=-1;
 	
-	int dragStartRow, dragStartCol, dragEndRow;
+	int dragStartRow, dragStartCol, dragEndRow, dragEndCol;
 	Enums enums = new Enums();
+	
+	protected Connection conn;
 	String id;
+	User_Student student;
 
 	String [] dtm_col = {"시간","월","화","수","목","금","토","일"};	
 	String [][] dtm_data = {{"1A(09:00~09:30)","","","","","","",""},
@@ -49,8 +50,6 @@ public class GUI_StudentMain extends JPanel
 			{"9A(05:00~05:30)","","","","","","",""},
 			{"9B(05:30~06:00)","","","","","","",""}};
 
-	User_Student student;
-	protected Connection conn;
 	String[][] schedule_no = new String[20][20];
 	
 	public GUI_StudentMain(Connection conn, String id)
@@ -122,25 +121,25 @@ public class GUI_StudentMain extends JPanel
 		JPanel dateP = new JPanel();
 		JLabel dateL = new JLabel("요일");
 		String[] dates = {"월","화","수","목","금","토","일"};
-		dateC = new JComboBox(dates);
-		dateC.setSelectedIndex(dayIndex-1);
-		dateC.setMaximumRowCount(3);
+		cmbBx_date = new JComboBox(dates);
+		cmbBx_date.setSelectedIndex(dayIndex-1);
+		cmbBx_date.setMaximumRowCount(3);
 		
 		dateP.add(dateL);
-		dateP.add(dateC);
+		dateP.add(cmbBx_date);
 		
 		JLabel timeL = new JLabel("시간");
 		String[] Time = {"09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"};
-		timeC1  = new JComboBox(Time);
-		timeC1.setSelectedIndex(sTimeIndex);
+		cmbBx_startTime  = new JComboBox(Time);
+		cmbBx_startTime.setSelectedIndex(sTimeIndex);
 		JLabel timewaveL = new JLabel("~");
-		timeC2 = new JComboBox(Time);
-		timeC2.setSelectedIndex(eTimeIndex+1);
+		cmbBx_endTime = new JComboBox(Time);
+		cmbBx_endTime.setSelectedIndex(eTimeIndex+1);
 		
 		dateP.add(timeL);
-		dateP.add(timeC1);
+		dateP.add(cmbBx_startTime);
 		dateP.add(timewaveL);
-		dateP.add(timeC2);
+		dateP.add(cmbBx_endTime);
 		
 		/*****************************************/
 		
@@ -152,31 +151,31 @@ public class GUI_StudentMain extends JPanel
 		
 		/*****************************************/
 		JPanel scheP = new JPanel();	
-		testB = new JRadioButton("시험", true);
-		lectB = new JRadioButton("수업", false);
-		unabB = new JRadioButton("감독 불가능 시간", false);
+		rBtn_test = new JRadioButton("시험", true);
+		rBtn_lecture = new JRadioButton("수업", false);
+		rBtn_unable = new JRadioButton("감독 불가능 시간", false);
 
 		ButtonGroup radioGroup = new ButtonGroup();
-		testB.addActionListener(new studentListener());
-		lectB.addActionListener(new studentListener());
-		unabB.addActionListener(new studentListener());
-		radioGroup.add(testB);
-		radioGroup.add(lectB);
-		radioGroup.add(unabB);
+		rBtn_test.addActionListener(new studentListener());
+		rBtn_lecture.addActionListener(new studentListener());
+		rBtn_unable.addActionListener(new studentListener());
+		radioGroup.add(rBtn_test);
+		radioGroup.add(rBtn_lecture);
+		radioGroup.add(rBtn_unable);
 
-		scheP.add(testB);
-		scheP.add(lectB);
-		if(info.is_J) scheP.add(unabB);
+		scheP.add(rBtn_test);
+		scheP.add(rBtn_lecture);
+		if(info.is_J) scheP.add(rBtn_unable);
 		
 		/******************************************/
 		JPanel buttonP = new JPanel();
-		enterB = new JButton("입력");
-		cancelB = new JButton("취소");
-		enterB.addActionListener(new studentListener());
-		cancelB.addActionListener(new studentListener());
+		btn_enter = new JButton("입력");
+		btn_cancel = new JButton("취소");
+		btn_enter.addActionListener(new studentListener());
+		btn_cancel.addActionListener(new studentListener());
 		
-		buttonP.add(enterB);
-		buttonP.add(cancelB);
+		buttonP.add(btn_enter);
+		buttonP.add(btn_cancel);
 		
 		/******************************************/
 		panel.add(introP);
@@ -265,27 +264,27 @@ public class GUI_StudentMain extends JPanel
 	{
 		public void actionPerformed(ActionEvent e) {
 			/**학생 일정 입력 버튼 클릭**/
-			if(e.getSource() == enterB) {
+			if(e.getSource() == btn_enter) {
 				student.Save();
 				
-				int start_time = enums.TimeToIndex(timeC1.getSelectedItem().toString());
-				int end_time = enums.TimeToIndex(timeC2.getSelectedItem().toString());
+				int start_time = enums.TimeToIndex(cmbBx_startTime.getSelectedItem().toString());
+				int end_time = enums.TimeToIndex(cmbBx_endTime.getSelectedItem().toString());
 				
 				for(int i=start_time; i<end_time; i++) {
-					student.CreateTimeBlock(dateC.getSelectedItem().toString(), enums.IndexToBlock[i], notAvailType);
+					student.CreateTimeBlock(cmbBx_date.getSelectedItem().toString(), enums.IndexToBlock[i], notAvailType);
 				}
 				
 				Fr_studTableClick.setVisible(false);
 				InitializeTable();
 			}
 			
-			else if(e.getSource() == cancelB) {
+			else if(e.getSource() == btn_cancel) {
 				Fr_studTableClick.setVisible(false);
 			}
 			
-			else if(e.getSource() == testB) notAvailType = -1;
-			else if(e.getSource() == lectB) notAvailType = -2;
-			else if(e.getSource() == unabB) notAvailType = -3;
+			else if(e.getSource() == rBtn_test) notAvailType = -1;
+			else if(e.getSource() == rBtn_lecture) notAvailType = -2;
+			else if(e.getSource() == rBtn_unable) notAvailType = -3;
 		}
 	}
 
@@ -319,7 +318,10 @@ public class GUI_StudentMain extends JPanel
 		// TODO Auto-generated method stub
 		if(re.getSource()==studTable) {
 			this.dragEndRow = studTable.getSelectedRow();
-			if(dragEndRow!=dragStartRow) studTableClick(dragStartCol, dragStartRow, dragEndRow);
+			this.dragEndCol = studTable.getSelectedColumn();
+			
+			/**드래그한 행이 다르고 열이 같을 때**/
+			if(dragEndRow!=dragStartRow && dragEndCol == dragStartCol) studTableClick(dragStartCol, dragStartRow, dragEndRow);
 			System.out.println(dragEndRow+"행,"+dragStartCol+"열");
 		}
 	}
