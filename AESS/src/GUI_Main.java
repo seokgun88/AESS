@@ -33,11 +33,11 @@ public class GUI_Main extends JFrame implements ActionListener {
 	JLabel lbWelcom = new JLabel();
 	JLabel lbPeriod = new JLabel();
 	JLabel lbInfo = new JLabel();
-	JButton bt_logout;
-	JButton menu_RoomList = new JButton("강의실 열람");
-	JButton menu_stTimeTable = new JButton("시간표/스케쥴 입력");
-	JButton menu_Professor = new JButton("수업 선택");
-	JButton menu_SetPeriod = new JButton("시험기간 설정");
+	JButton btn_logout;
+	JButton btn_roomList = new JButton("강의실 열람");
+	JButton btn_timeTable = new JButton("시간표/스케쥴 입력");
+	JButton btn_selectLecture = new JButton("수업 선택");
+	JButton btn_setPeriod = new JButton("시험기간 설정");
 	
 	BorderLayout GUI_MainLayout = new BorderLayout(10,10);
 	
@@ -66,15 +66,18 @@ public class GUI_Main extends JFrame implements ActionListener {
 		/*************메인 컨텐츠 오픈******************/	
 		classRoom_list = new GUI_ClassRoomList(conn, id);	//강의실 GUI		
 		add(classRoom_list, "Center");
-		if(info.is_P){
+		if(info.is_A){	//관리자 일때
+			set_period = new GUI_SetPeriod(conn, id);	//시험 기간 설정 GUI
+		}
+		if(info.is_P){	//교수 일때
 			prof_table = new GUI_ProfessorTable(conn, id);	//교수 수업별 시간표 GUI
 			add(prof_table, "Center");
 		}
-		if(info.is_S){
+		if(info.is_S){	//학생 일때
 			std_main = new GUI_StudentMain(conn, id);	//학생 GUI
 			add(std_main, "Center");
 		}
-		/***************************************/
+		/*************상단 부분 설정**************/
 		
 		up = new JPanel(null);
 		
@@ -91,67 +94,67 @@ public class GUI_Main extends JFrame implements ActionListener {
 		lbWelcom.setBounds(800,25,180,50);
 		
 		ImageIcon logout = new ImageIcon("logout.png");
-		bt_logout = new JButton(logout);
-		bt_logout.setBounds(930,42,50,16);
-		bt_logout.setFocusPainted(false);
-		up.add(bt_logout);
+		btn_logout = new JButton(logout);
+		btn_logout.setBounds(930,42,50,16);
+		btn_logout.setFocusPainted(false);
+		up.add(btn_logout);
 		
 		if(info.month!=0) {
 			lbPeriod.setText("시험 기간 : "+info.month+"월 "+info.week+"째 주 "+info.sDate+"일 ~ " +info.eDate+"일");
 			up.add(lbPeriod);
 			lbPeriod.setFont(new Font("Sherif",Font.BOLD,12));
 			lbPeriod.setBounds(800,50,200,50);
-		}
-		
+		}		
+		add(up,"North");		
 		
 		/************좌측 메뉴 구성*************/
 		GridLayout Layout_leftMenu = new GridLayout(20,1,20,8);
 		left = new JPanel(Layout_leftMenu);
+		left.setPreferredSize(new java.awt.Dimension(200, 1)); // 좌여백		
 		
-		bt_logout.addActionListener(this);
-		menu_Professor.setBounds(0,0,10,10);
+		btn_logout.addActionListener(this);
+		btn_selectLecture.setBounds(0,0,10,10);
 
-		left.add(menu_RoomList);
-		if(info.is_S) left.add(menu_stTimeTable);
-		if(info.is_P) left.add(menu_Professor);
-		if(info.is_A) left.add(menu_SetPeriod);
-		
-		menu_stTimeTable.addActionListener(this);
-		menu_RoomList.addActionListener(this);
-		menu_Professor.addActionListener(this);
-		menu_SetPeriod.addActionListener(this);
-		
-		left.setPreferredSize(new java.awt.Dimension(200, 1)); // 좌여백
-		
-		/**************************************/
-		add(up,"North");
+		left.add(btn_roomList);	//모든 사용자에게 강의실 시간표 보기 버튼 추가
+		btn_roomList.addActionListener(this);
+		if(info.is_S){
+			left.add(btn_timeTable);	//학생 일때 스케쥴 테이블 보기 버튼 추가
+			btn_timeTable.addActionListener(this);
+		}
+		if(info.is_P){
+			left.add(btn_selectLecture);	//교수 일때 강의 목록 보기 버튼 추가
+			btn_selectLecture.addActionListener(this);
+		}
+		if(info.is_A){
+			left.add(btn_setPeriod);	//관리자 일때 시험기간 설정 보기 버튼 추가
+			btn_setPeriod.addActionListener(this);
+		}		
 		add(left,"West");
 	}
 	
+	/**각 버튼별 발생 이벤트**/
 	public void actionPerformed(ActionEvent e){		
-		if(e.getSource() == menu_RoomList) {
+		if(e.getSource() == btn_roomList) {	//강의실 목록 버튼 이벤트
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
 			add(classRoom_list, BorderLayout.CENTER);
 			revalidate();
 			repaint();
-		} else if(e.getSource() == menu_Professor) {
+		} else if(e.getSource() == btn_selectLecture) {	//강의 목록 버튼 이벤트
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
-			GUI_ProfessorTable prof_table = new GUI_ProfessorTable(conn, id);
 			add(prof_table, BorderLayout.CENTER);
 			revalidate();
 			repaint();
-		} else if(e.getSource() == menu_stTimeTable) {
+		} else if(e.getSource() == btn_timeTable) {	//스케쥴 보기 버튼 이벤트
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
 			add(std_main, BorderLayout.CENTER);
 			revalidate();
 			repaint();
-		} else if(e.getSource() == menu_SetPeriod) {
+		} else if(e.getSource() == btn_setPeriod) {	//시험기간 설정 버튼 이벤트
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
-			set_period = new GUI_SetPeriod(conn, id);	//시험 기간 설정 GUI
 			add(set_period, BorderLayout.CENTER);
 			revalidate();
 			repaint();
-		} else if(e.getSource() == bt_logout){
+		} else if(e.getSource() == btn_logout){	//로그아웃 버튼 이벤트
 			dispose();
 			GUI_Login gl = new GUI_Login();
 		}
