@@ -6,94 +6,119 @@ import java.util.Calendar;
 import java.util.Vector;
 import javax.swing.JTable;
 
-
-public class User_Professor extends User{
+public class User_Professor{
+	Connection conn;
 	Enums enums = new Enums();
+	
 	public User_Professor(String id, Connection conn){
-		super(id, conn);
+		this.conn = conn;
 	}
+	
 	public void GetLectureSchedule(){
-		String lectureNo;
-		String qry2;
-		Statement query2=null;
-		ResultSet result2;
-		qry = "select no from courseRelation where user_id='" +id+ "';";
 		try {
-			query2 = conn.createStatement();
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select no from courseRelation where user_id='" +Info.getId()+ "';";
+			ResultSet result = query.executeQuery(sql);			
+			
+			String lectureNo;
+			Statement query2 = conn.createStatement();
 			while(result.next()){
 				lectureNo = result.getString("no");
-				qry2 = "select * from timeblock where user_id='" +id+ "' and lectureNo=" +lectureNo;
-				result2 = query2.executeQuery(qry2);
+				String sql2 = "select * from timeblock where user_id='" +Info.getId()+ "' and lectureNo=" +lectureNo;
+				ResultSet result2 = query2.executeQuery(sql2);
 				while(result2.next())
 					System.out.println(result2.getString("day") + result2.getString("time"));
+				result2.close();
 			}
+			result.close();
+			query2.close();
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
 	public void SetIsLecture(String lectureNo, String isExam){
 		try {
-			qry = "select no from schedule where lecture_id = '" +lectureNo+ "';";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select no from schedule where lecture_id = '" +lectureNo+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			if(!result.next()){
 				System.out.println("해당 과목 넘버가 없습니다.");
 			}
 			String no = result.getString("no");
-			qry = "update timeblock set isAvailable='" +isExam+ "' where location != '-1' and scheduleNo='" +no+ "';";
-			query.execute(qry);
+			result.close();
+			
+			sql = "update timeblock set isAvailable='" +isExam+ "' where location != '-1' and scheduleNo='" +no+ "';";
+			query.execute(sql);
+			
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
 	public String GetIsLecture(String lectureNo){
 		try {
-			qry = "select no from schedule where stype='C' and lecture_id = '" +lectureNo+ "';";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select no from schedule where stype='C' and lecture_id = '" +lectureNo+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			if(!result.next()){
 				System.out.println("해당 과목 넘버가 없습니다.");
 			}
 			String no = result.getString("no");
-			qry = "select isAvailable from timeblock where location != '-1' and scheduleNo='" +no+ "';";
-			result = query.executeQuery(qry);
+			result.close();
+			
+			sql = "select isAvailable from timeblock where location != '-1' and scheduleNo='" +no+ "';";
+			result = query.executeQuery(sql);
 			if(!result.next()){
 				System.out.println("해당 과목 스케쥴이 없습니다.");
 			}
-			return result.getString("isAvailable");
+			String isAvailable = result.getString("isAvailable");
+			result.close();
+			query.close();
+			
+			return isAvailable;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "에러";
 	}
+	
 	public void SetRequiredInfo(String lectureNo, int max, int rooms, int timelen){
 		try {
-			qry = "select * from examRequired where lecNo='" +lectureNo+ "'";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select * from examRequired where lecNo='" +lectureNo+ "'";
+			ResultSet result = query.executeQuery(sql);	
 			if(!result.next()){
-				qry = "insert into examRequired values ('" +lectureNo+ "', " +max+ ", " +rooms+ ", " +timelen+ ")";
-				query.execute(qry);
+				sql = "insert into examRequired values ('" +lectureNo+ "', " +max+ ", " +rooms+ ", " +timelen+ ")";
+				query.execute(sql);
 			}
 			else{
-				qry = "update examRequired set max=" +max+ ", rooms=" +rooms+ ", examLen=" +timelen+ 
+				sql = "update examRequired set max=" +max+ ", rooms=" +rooms+ ", examLen=" +timelen+ 
 						" where lecNo='" +lectureNo+ "'";
-				query.execute(qry);
+				query.execute(sql);
 			}
+			result.close();
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
 	public String[] GetRequiredInfo(String lectureNo){
 		String [] require = new String[3];
 		for(int i=0; i<3; i++){
 			require[i] = "";
 		}
-		qry = "select * from examRequired where lecNo='" +lectureNo+ "';";
 		try {
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select * from examRequired where lecNo='" +lectureNo+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			if(!result.next()){
 				System.out.println("시험정보가 없습니다.");
 				return require;
@@ -101,59 +126,71 @@ public class User_Professor extends User{
 			require[0] = result.getString("max");
 			require[1] = result.getString("rooms");
 			require[2] = result.getString("examLen");
+			
+			result.close();
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 		return require;
 	}
+	
 	public void SetPreferredTime(int rank, String day, String rtime, String lectureNo){
 		try {			
 			String time = enums.TimeToBlock(rtime);
-			qry = "select no from schedule where stype='P' and rank=" +rank+ " and lecture_id = '" +lectureNo+ "';";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select no from schedule where stype='P' and rank=" +rank+ " and lecture_id = '" +lectureNo+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			if(!result.next()){
-				qry = "select name from schedule where lecture_id = '" +lectureNo+ "';";
-				result = query.executeQuery(qry);
+				result.close();
+				sql = "select name from schedule where lecture_id = '" +lectureNo+ "';";
+				result = query.executeQuery(sql);
 				if(!result.next()){
 					System.out.println("해당 과목이 없습니다.");
 				}
 				String name = result.getString("name");
+				result.close();
 				
-				qry = "insert into schedule(name, stype, user_id, lecture_id, rank) " +
-						"values('" +name+ "', 'P', '" +id+ "', '" +lectureNo+ "', " +rank+ ")";		
-				query.execute(qry);
+				sql = "insert into schedule(name, stype, user_id, lecture_id, rank) " +
+						"values('" +name+ "', 'P', '" +Info.getId()+ "', '" +lectureNo+ "', " +rank+ ")";		
+				query.execute(sql);
 
-				qry = "select no from schedule where stype='P' and rank=" +rank+ " and lecture_id = '" +lectureNo+ "';";
-				result = query.executeQuery(qry);
+				sql = "select no from schedule where stype='P' and rank=" +rank+ " and lecture_id = '" +lectureNo+ "';";
+				result = query.executeQuery(sql);
 				result.next();
 			}
 			String no = result.getString("no");
+			result.close();
 			
-			qry = "insert into timeblock(location, classroom, day, time, isAvailable, scheduleNo, user_id) " +
-					"values (-2, -2, '" +day+ "', '" +time+ "', 'F', '" +no+ "', '" +id+ "')";
-		
-			query.execute(qry);
+			sql = "insert into timeblock(location, classroom, day, time, isAvailable, scheduleNo, user_id) " +
+					"values (-2, -2, '" +day+ "', '" +time+ "', 'F', '" +no+ "', '" +Info.getId()+ "')";		
+			query.execute(sql);
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 	}
+	
 	public Vector GetPreferredTime(String lectureNo){
 		Vector vPrefer = new Vector();
 		Vector vPreferCol;
 		String stime="", etime="", day="";
 		for(int i=1; i<6; i++){
 			try {
-				qry = "select no from schedule where stype='P' and rank=" +i+ " and lecture_id = '" +lectureNo+ "';";
-				result = query.executeQuery(qry);
+				Statement query = conn.createStatement();
+				String sql = "select no from schedule where stype='P' and rank=" +i+ " and lecture_id = '" +lectureNo+ "';";
+				ResultSet result = query.executeQuery(sql);	
 				if(!result.next()){
 					System.out.println(i+ ": 해당 과목 넘버가 없습니다.");
 					continue;
 				}
 				String no = result.getString("no");
-				qry = "select * from timeblock where location = '-2' and scheduleNo = '" +no+ "' order by time;";
-				result = query.executeQuery(qry);
+				result.close();
+				
+				sql = "select * from timeblock where location = '-2' and scheduleNo = '" +no+ "' order by time;";
+				result = query.executeQuery(sql);
 				if(result.next()){
 					day = result.getString("day");
 					stime = result.getString("time");
@@ -181,6 +218,8 @@ public class User_Professor extends User{
 					vPreferCol.addElement(enums.BlockToTime(etime));
 					vPrefer.addElement(vPreferCol);
 				}
+				result.close();
+				query.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -188,64 +227,78 @@ public class User_Professor extends User{
 		}
 		return vPrefer;
 	}
+	
 	public void DelPreferredTime(int rank, String lectureNo){
 		try {
-			qry = "select no from schedule where stype='P' and rank=" +rank+ " and lecture_id = '" +lectureNo+ "';";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select no from schedule where stype='P' and rank=" +rank+ " and lecture_id = '" +lectureNo+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			if(!result.next()){
 				System.out.println("해당 과목 넘버가 없습니다.");
 				return;
 			}
 			String no = result.getString("no");
-			qry = "delete from timeblock where scheduleNo=" +no;
-			query.execute(qry);
-			qry = "delete from schedule where no='" +no+ "'";
-			query.execute(qry);
+			result.close();
+			
+			sql = "delete from timeblock where scheduleNo=" +no;
+			query.execute(sql);
+			sql = "delete from schedule where no='" +no+ "'";
+			query.execute(sql);
+			
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 	}
+	
 	public void SetImpossibleTime(int rank, String day, String rtime, String lectureNo){
 		try {			
 			String time = enums.TimeToBlock(rtime);
-			qry = "select no from schedule where rank=" +rank+ " and stype='X' and lecture_id = '" +lectureNo+ "';";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select no from schedule where rank=" +rank+ " and stype='X' and lecture_id = '" +lectureNo+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			if(!result.next()){
-				qry = "select name from schedule where lecture_id = '" +lectureNo+ "';";
-				result = query.executeQuery(qry);
+				result.close();
+				sql = "select name from schedule where lecture_id = '" +lectureNo+ "';";
+				result = query.executeQuery(sql);
 				if(!result.next()){
 					System.out.println("해당 과목이 없습니다.");
 				}
 				String name = result.getString("name");
+				result.close();
 				
-				qry = "insert into schedule(name, stype, user_id, lecture_id, rank) " +
-						"values('" +name+ "', 'X', '" +id+ "', '" +lectureNo+ "', " +rank+ ")";		
-				query.execute(qry);
+				sql = "insert into schedule(name, stype, user_id, lecture_id, rank) " +
+						"values('" +name+ "', 'X', '" +Info.getId()+ "', '" +lectureNo+ "', " +rank+ ")";		
+				query.execute(sql);
 				
-				qry = "select no from schedule where rank=" +rank+ " and stype='X' and lecture_id = '" +lectureNo+ "';";
-				result = query.executeQuery(qry);
+				sql = "select no from schedule where rank=" +rank+ " and stype='X' and lecture_id = '" +lectureNo+ "';";
+				result = query.executeQuery(sql);
 				result.next();
 			}
 			String no = result.getString("no");
+			result.close();
 			
-			qry = "insert into timeblock(location, classroom, day, time, isAvailable, scheduleNo, user_id) " +
-					"values (-1, -1, '" +day+ "', '" +time+ "', 'F', '" +no+ "', '" +id+ "')";
-		
-			query.execute(qry);
+			sql = "insert into timeblock(location, classroom, day, time, isAvailable, scheduleNo, user_id) " +
+					"values (-1, -1, '" +day+ "', '" +time+ "', 'F', '" +no+ "', '" +Info.getId()+ "')";		
+			query.execute(sql);
+			
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 	}
+	
 	public Vector GetImpossibleTime(String lectureNo){
 		Vector vImpossible = new Vector();
 		Vector vImpossibleCol;
 		Vector vRank = new Vector();
 		String stime="", etime="", day="";
 		try {
-			qry = "select rank from schedule where stype='X' and lecture_id = '" +lectureNo+ "';";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select rank from schedule where stype='X' and lecture_id = '" +lectureNo+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			if(!result.next()){
 				System.out.println("해당 과목 넘버가 없습니다.");
 				return vImpossible;
@@ -255,19 +308,22 @@ public class User_Professor extends User{
 				if(!result.next())
 					break;
 			}
+			result.close();
 			
 			for(int i=0; i<vRank.size(); i++){
 				int rank = Integer.parseInt((String)vRank.get(i));
 				System.out.println(rank);
-				qry = "select no from schedule where rank=" +rank+ " and stype='X' and lecture_id = '" +lectureNo+ "';";
-				result = query.executeQuery(qry);
+				sql = "select no from schedule where rank=" +rank+ " and stype='X' and lecture_id = '" +lectureNo+ "';";
+				result = query.executeQuery(sql);
 				if(!result.next()){
 					System.out.println("해당 과목 넘버가 없습니다.");
 					continue;
 				}
 				String no = result.getString("no");
-				qry = "select * from timeblock where location = '-1' and scheduleNo = '" +no+ "' order by time;";
-				result = query.executeQuery(qry);
+				result.close();
+				
+				sql = "select * from timeblock where location = '-1' and scheduleNo = '" +no+ "' order by time;";
+				result = query.executeQuery(sql);
 				if(result.next()){
 					day = result.getString("day");
 					stime = result.getString("time");
@@ -292,6 +348,8 @@ public class User_Professor extends User{
 					vImpossibleCol.addElement(enums.BlockToTime(etime));
 					vImpossible.addElement(vImpossibleCol);
 				}
+				result.close();
+				query.close();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -299,66 +357,77 @@ public class User_Professor extends User{
 		}
 		return vImpossible;
 	}
+	
 	public void DelImpossibleTime(String day, String starttime, String endtime, String lectureNo){
 		int rank= enums.TimeToRank(day, starttime);
 		String time=enums.TimeToBlock(starttime);
 		String etime=enums.TimeToBlock(endtime);
 		try {
-			qry = "select no from schedule where rank=" +rank+ " and stype='X' and lecture_id = '" +lectureNo+ "';";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select no from schedule where rank=" +rank+ " and stype='X' and lecture_id = '" +lectureNo+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			if(!result.next()){
 				System.out.println("해당 과목 넘버가 없습니다.");
 				return;
 			}
 			String no = result.getString("no");
-			qry = "delete from timeblock where scheduleNo=" +no;
-			query.execute(qry);
-			qry = "delete from schedule where rank=" +rank;
-			query.execute(qry);
+			result.close();
+			
+			sql = "delete from timeblock where scheduleNo=" +no;
+			query.execute(sql);
+			sql = "delete from schedule where rank=" +rank;
+			query.execute(sql);
+			
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 	}
+	
 	public void SetAssistant(String id, String lectureNo){
 		try {
-			qry = "select * from courseRelation where user_id='" +id+ "' and no='" +lectureNo+ "';";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select * from courseRelation where user_id='" +id+ "' and no='" +lectureNo+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			if(result.next()){
 				System.out.println("수업듣는 학생은 조교 불가능입니다..");
 				return;
-			}			
-			qry = "select * from member where id='" +id+ "';";
-			result = query.executeQuery(qry);
+			}
+			result.close();
+			
+			sql = "select * from member where id='" +id+ "';";
+			result = query.executeQuery(sql);
 			if(!result.next()){
 				System.out.println("해당 학생이 존재하지 않습니다.");
 				return;
-			}			
-			qry = "update member set type='J' where id='" +id+ "';";
-			query.execute(qry);
+			}
+			result.close();
 			
-			qry = "insert into courseRelation values ('" +lectureNo+ "', '" +id+ "', 'J', 0)";
-			query.execute(qry);
+			sql = "update member set type='J' where id='" +id+ "';";
+			query.execute(sql);
+			
+			sql = "insert into courseRelation values ('" +lectureNo+ "', '" +id+ "', 'J', 0)";
+			query.execute(sql);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
 	public Vector GetAssistant(String lectureNo){
 		Vector vAssi = new Vector();
 		Vector vAssiCol;
 		String assi_id;
-		String qry2;
-		Statement query2=null;
-		ResultSet result2;
-		qry = "select * from courseRelation where user_type='J' and no='" +lectureNo+ "';";
 		try {
-			result = query.executeQuery(qry);
-			query2 = conn.createStatement();
+			Statement query = conn.createStatement();
+			String sql = "select * from courseRelation where user_type='J' and no='" +lectureNo+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			
+			Statement query2 = conn.createStatement();			
 			while(result.next()){
-				qry2 = "select name from member where id='" +result.getString("user_id")+ "';";
-				result2 = query2.executeQuery(qry2);
+				String sql2 = "select name from member where id='" +result.getString("user_id")+ "';";
+				ResultSet result2 = query2.executeQuery(sql2);
 				if(!result2.next()){
 					System.out.println("조교가 명단에 없슨니다.");
 					break;
@@ -367,30 +436,41 @@ public class User_Professor extends User{
 				vAssiCol.addElement(result.getString("user_id"));		
 				vAssiCol.addElement(result2.getString("name"));
 				vAssi.addElement(vAssiCol);
+				
+				result2.close();
 			}
+			query2.close();
+			result.close();
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return vAssi;
 	}
+	
 	public void DeleteAssistant(String id){
 		try {
-			qry = "select * from member where id='" +id+ "';";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select * from member where id='" +id+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			if(!result.next()){
 				System.out.println("해당 학생이 존재하지 않습니다.");
 				return;
-			}			
-			qry = "update member set type='S' where id='" +id+ "';";
+			}
+			result.close();
+			
+			sql = "update member set type='S' where id='" +id+ "';";
 			try {
-				query.execute(qry);
+				query.execute(sql);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			qry = "delete from courseRelation where user_id = '" +id+ "';";
-			query.execute(qry);
+			sql = "delete from courseRelation where user_id = '" +id+ "';";
+			query.execute(sql);
+			
+			query.close();;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -407,9 +487,10 @@ public class User_Professor extends User{
 		
 		try {
 			scheduleState=conn.createStatement();
-			scheduleResult = scheduleState.executeQuery("select * from schedule where user_id='" +id+ "' and stype='C'");
+			scheduleResult = scheduleState.executeQuery("select * from schedule where user_id='" +Info.getId()+ "' and stype='C'");
+			
+			blockState=conn.createStatement();
 			while(scheduleResult.next()){
-				blockState=conn.createStatement();
 				blockResult = blockState.executeQuery("select * from timeblock where scheduleNo='" +scheduleResult.getString("no")+ "'");
 				while(blockResult.next()) {
 					row = enums.BlockToIndex(blockResult.getString("time"));
@@ -417,8 +498,11 @@ public class User_Professor extends User{
 					table.setValueAt(scheduleResult.getString("name"), row, col);
 					schedule_no[row][col] = scheduleResult.getString("lecture_id");
 				}
-				
+				blockResult.close();				
 			}
+			blockState.close();
+			scheduleResult.close();
+			scheduleState.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -429,17 +513,15 @@ public class User_Professor extends User{
 		Vector vStdchk = new Vector();
 		Vector vStdchkCol;
 		String std_id;
-		String qry2;
-		Statement query2=null;
-		ResultSet result2;
-		qry = "select * from courseRelation where user_type='S' and no='" +lectureNo+ "';";
 		try {
-			result = query.executeQuery(qry);
-			query2 = conn.createStatement();
+			Statement query = conn.createStatement();
+			String sql = "select * from courseRelation where user_type='S' and no='" +lectureNo+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			
+			Statement query2 = conn.createStatement();			
 			while(result.next()){
-				qry2 = "select name from member where id='" +result.getString("user_id")+ "';";
-				result2 = query2.executeQuery(qry2);
+				String sql2 = "select name from member where id='" +result.getString("user_id")+ "';";
+				ResultSet result2 = query2.executeQuery(sql2);
 				if(!result2.next()){
 					System.out.println("학생이 명단에 없슨니다.");
 				}
@@ -448,33 +530,38 @@ public class User_Professor extends User{
 				vStdchkCol.addElement(result2.getString("name"));
 				vStdchkCol.addElement(result.getString("schedule_save").equals("0")?"X":"O");
 				vStdchk.addElement(vStdchkCol);
+				result2.close();
 			}
+			query2.close();
+			result.close();
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return vStdchk;
 	}
+	
 	public void SelectExamTime(String lectureNo, int rank, int examLen){
 		int roomcnt = 0;
 		int availRooms [] = new int[100];
 		int roomNo, time;
 		String start, cur;
-		Statement query2=null;
-		Statement query3=null;
-		ResultSet result2, result3;
 		boolean avail;
 		try {
-			query2 = conn.createStatement();
-			query3 = conn.createStatement();			
-			String qry = "select no from classroom, required where lecNo=" +lectureNo+ " and max<maxSeat";
-			String qry2 = "select * from schedule where lecture_id='" +lectureNo+ "' and rank=" +rank;
+			Statement query = conn.createStatement();
+			Statement query2 = conn.createStatement();
+			Statement query3 = conn.createStatement();	
 			
-			result = query.executeQuery(qry);
-			result2 = query2.executeQuery(qry2);
-			result2.next();
+			String sql = "select no from classroom, required where lecNo=" +lectureNo+ " and max<maxSeat";
+			ResultSet result = query.executeQuery(sql);			
+			
+			String sql2 = "select * from schedule where lecture_id='" +lectureNo+ "' and rank=" +rank;
+			ResultSet result2 = query2.executeQuery(sql2);
+			result2.next();			
 			String day = result2.getString("day");
 			start = result2.getString("start_time");
+			result2.close();
 			
 			while(result.next()){
 				avail = true;
@@ -482,15 +569,17 @@ public class User_Professor extends User{
 				cur = start;
 				
 				for(int i=0; i<examLen; i++){
-					String qry3 = "select isAvailable from timeblock where classroom=" +roomNo+ " and " +
+					String sql3 = "select isAvailable from timeblock where classroom=" +roomNo+ " and " +
 							"time='" +cur+ "' and day='" +day+ "';";
-					result3 = query3.executeQuery(qry3);
+					ResultSet result3 = query3.executeQuery(sql3);
 					if(!result3.next())
 						break;
 					else if(result3.getString("isAvailable").equals("F")){
 						avail = false;
 						break;
 					}
+					result3.close();
+					
 					time = Integer.parseInt(cur.substring(0,1));
 					if(start.substring(1).equals("a")){
 						cur = time+"b";
@@ -502,6 +591,10 @@ public class User_Professor extends User{
 					availRooms[roomcnt++] = roomNo;
 				}
 			}
+			result.close();
+			query3.close();
+			query2.close();
+			query.close();
 		}				
 		 catch (SQLException e1) {
 			e1.printStackTrace();
@@ -512,11 +605,13 @@ public class User_Professor extends User{
 			System.out.println(availRooms[i]);
 		}
 	}
+	
 	public int GetPeriodStartday(){
 		Calendar calendar = Calendar.getInstance();
 		try {
-			qry = "select * from period";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select * from period";
+			ResultSet result = query.executeQuery(sql);	
 			if(result.next()){
 				calendar.set(Calendar.YEAR, Integer.parseInt(result.getString("year")));
 				calendar.set(Calendar.MONTH, Integer.parseInt(result.getString("month"))-1);
@@ -526,12 +621,15 @@ public class User_Professor extends User{
 			else{
 				System.out.println("시험 기간 불러오기 실패");
 			}
+			result.close();
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return calendar.get(Calendar.DATE);
 	}
+	
 	public int[] SetPossibleTime(String lectureNo){
 		int [] possibleRank = new int[5];
 		for(int i=0; i<5; i++){
@@ -541,19 +639,22 @@ public class User_Professor extends User{
 			String day="", time="";
 			Statement npQuery=conn.createStatement();
 			ResultSet npResult=null;
-			
-			qry = "select no from schedule where stype='T' and lecture_id = '" +lectureNo+ "';";
-			result = query.executeQuery(qry);
+
+			Statement query = conn.createStatement();
+			String sql = "select no from schedule where stype='T' and lecture_id = '" +lectureNo+ "';";
+			ResultSet result = query.executeQuery(sql);	
 			if(!result.next()){
-				qry = "insert into schedule(name, stype, user_id, lecture_id) " +
-							"values('시험시간후보', 'T', '" +id+ "', '" +lectureNo+ "')";
-				query.execute(qry);
+				result.close();
+				sql = "insert into schedule(name, stype, user_id, lecture_id) " +
+							"values('시험시간후보', 'T', '" +Info.getId()+ "', '" +lectureNo+ "')";
+				query.execute(sql);
 				
-				qry = "select no from schedule where stype='T' and lecture_id = '" +lectureNo+ "';";
-				result = query.executeQuery(qry);
+				sql = "select no from schedule where stype='T' and lecture_id = '" +lectureNo+ "';";
+				result = query.executeQuery(sql);
 				result.next();
 			}
 			String no = result.getString("no");
+			result.close();
 			
 			//시험 바탕 시간표 초기화
 			for(int i=0; i<7; i++){
@@ -586,18 +687,18 @@ public class User_Professor extends User{
 							time = (j+1)+"a";
 						else
 							time = (j+1)+"b";
-						qry = "insert into timeblock(location, classroom, day, time, isAvailable, scheduleNo, user_id)" +
-								" values (-3, -3, '" +day+ "', '" +time+ "', 'T', '" +no+ "', '" +id+ "')";
+						sql = "insert into timeblock(location, classroom, day, time, isAvailable, scheduleNo, user_id)" +
+								" values (-3, -3, '" +day+ "', '" +time+ "', 'T', '" +no+ "', '" +Info.getId()+ "')";
 						
-						query.execute(qry);
+						query.execute(sql);
 					}
 				}
 			}
 			
 			//교수 안되는 시간 표시
 			Vector vRank = new Vector();
-			qry = "select rank from schedule where stype='X' and lecture_id = '" +lectureNo+ "';";
-			result = query.executeQuery(qry);
+			sql = "select rank from schedule where stype='X' and lecture_id = '" +lectureNo+ "';";
+			result = query.executeQuery(sql);
 			if(!result.next()){
 				System.out.println("해당 과목 넘버가 없습니다.");
 			}
@@ -608,41 +709,48 @@ public class User_Professor extends User{
 						break;
 				}
 			}
+			result.close();
 			
 			for(int i=0; i<vRank.size(); i++){
 				int rank = Integer.parseInt((String)vRank.get(i));
-				qry = "select no from schedule where stype='X' and rank=" +rank+ " and lecture_id = '" +lectureNo+ "';";
-				result = query.executeQuery(qry);
+				sql = "select no from schedule where stype='X' and rank=" +rank+ " and lecture_id = '" +lectureNo+ "';";
+				result = query.executeQuery(sql);
 				if(!result.next()){
 					return possibleRank;
 				}
 				String pNo = result.getString("no");
-				qry = "select * from timeblock where scheduleNo=" +pNo;
-				result = query.executeQuery(qry);
+				result.close();
+				
+				sql = "select * from timeblock where scheduleNo=" +pNo;
+				result = query.executeQuery(sql);
 				while(result.next()){
 					String npQry = "update timeblock set isAvailable='F' where time='" 
 				+result.getString("time")+ "' and day='" +result.getString("day")+ "' and scheduleNo='" +no+ "'";
 					npQuery.execute(npQry);
 				}
+				result.close();
 			}
 			
 			//학생 안되는시간 표시
 			Vector vStd = new Vector();
-			qry = "select user_id from courseRelation where user_type='S' and no='" +lectureNo+ "'";
-			result = query.executeQuery(qry);
+			sql = "select user_id from courseRelation where user_type='S' and no='" +lectureNo+ "'";
+			result = query.executeQuery(sql);
 			while(result.next()){
 				vStd.add(result.getString("user_id"));
 			}
+			result.close();
+			
 			for(int i=0; i<vStd.size(); i++){
 				String std = (String)vStd.get(i);
-				qry = "select * from timeblock where user_id='" +std+ "'";
-				result = query.executeQuery(qry);
+				sql = "select * from timeblock where user_id='" +std+ "'";
+				result = query.executeQuery(sql);
 				while(result.next()){
 					String npQry = "update timeblock set isAvailable='" +result.getString("isAvailable")+ 
 							"' where time='" +result.getString("time")+ "' and day='" +result.getString("day")+ 
 							"' and scheduleNo='" +no+ "'";
 					npQuery.execute(npQry);
 				}
+				result.close();
 			}		
 			
 			//우선순위 시간중 가능한거 찾기
@@ -650,16 +758,17 @@ public class User_Professor extends User{
 			for(int i=0; i<5; i++){
 				possible[i] = true;
 			}
-			qry = "select no from schedule where stype='T' and user_id='" +id+ "'";
-			result = query.executeQuery(qry);
+			sql = "select no from schedule where stype='T' and user_id='" +Info.getId()+ "'";
+			result = query.executeQuery(sql);
 			if(!result.next()){
 				return possibleRank;
 			}
 			String tNo = result.getString("no");
+			result.close();
 			
 			for(int i=1; i<6; i++){
-				qry = "select no from schedule where stype='P' and rank=" +i+ " and user_id='" +id+ "'";
-				result = query.executeQuery(qry);
+				sql = "select no from schedule where stype='P' and rank=" +i+ " and user_id='" +Info.getId()+ "'";
+				result = query.executeQuery(sql);
 				if(!result.next()){
 					possible[i-1] = false;
 					possibleRank[i-1] = -1;
@@ -667,9 +776,10 @@ public class User_Professor extends User{
 					continue;
 				}
 				String rNo = result.getString("no");
+				result.close();
 				
-				qry = "select * from timeblock where scheduleNo='" +rNo+ "'";
-				result = query.executeQuery(qry);
+				sql = "select * from timeblock where scheduleNo='" +rNo+ "'";
+				result = query.executeQuery(sql);
 				while(result.next()){
 					String npQry = "select * from timeblock" +
 							" where isAvailable='F' and time='" +result.getString("time")+ 
@@ -681,6 +791,7 @@ public class User_Professor extends User{
 						break;
 					}
 				}
+				result.close();
 			}
 			for(int i=0; i<5; i++){
 				if(possible[i]){
@@ -690,88 +801,113 @@ public class User_Professor extends User{
 			}
 			
 			//안되는시간 블럭들 테이블에서 삭제			
-			qry = "delete from timeblock where scheduleNo=" +no;
-			query.execute(qry);
+			sql = "delete from timeblock where scheduleNo=" +no;
+			query.execute(sql);
+			
+			query.close();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}		
 		return possibleRank;	
 	}
+	
 	public Vector FindClassroom(String lectureNo, int rank){	
 		Vector room = new Vector();	
 		try {
+			Statement query = conn.createStatement();
 			Statement query2=conn.createStatement();
 			Statement query3=conn.createStatement();
+			
 			ResultSet tbResult=null;
-			ResultSet result3=null;
 			boolean isPossible;
 			String [] infos = GetRequiredInfo(lectureNo);
 			Vector location = new Vector();
 			Vector roomno = new Vector();
-			qry = "select no from schedule where stype='P' and rank=" +rank+ " and user_id='" +id+ "'";
-			result = query.executeQuery(qry);
+
+			String sql = "select no from schedule where stype='P' and rank=" +rank+ " and user_id='" +Info.getId()+ "'";
+			ResultSet result = query.executeQuery(sql);	
 			if(!result.next()){
 				return room;
 			}
 			String rNo = result.getString("no");
-			qry = "select * from classroom where maxSeat>=" +Integer.parseInt(infos[0]);
-			result = query.executeQuery(qry);
-			qry = "select * from timeblock where scheduleNo='" +rNo+ "'";
+			result.close();
+			
+			sql = "select * from classroom where maxSeat>=" +Integer.parseInt(infos[0]);
+			result = query.executeQuery(sql);
+			
 			while(result.next()){
 				isPossible = true;
-				tbResult = query2.executeQuery(qry);
+				String sql2 = "select * from timeblock where scheduleNo='" +rNo+ "'";
+				tbResult = query2.executeQuery(sql2);
 				while(tbResult.next()){
-					String qry2 = "select * from timeblock where location='" +result.getString("location")+ 
+					String sql3 = "select * from timeblock where location='" +result.getString("location")+ 
 				"' and classroom='" +result.getString("no")+ "' and isAvailable='F' and day='" + tbResult.getString("day")+ 
 				"' and time='" +tbResult.getString("time")+ "'";
-					result3 = query3.executeQuery(qry2);
+					
+					ResultSet result3 = query3.executeQuery(sql3);
 					if(result3.next()){
 						isPossible = false;
 						break;
 					}
+					result3.close();
 				}
+				tbResult.close();
 				if(isPossible){
 					location.add(result.getString("location"));
 					roomno.add(result.getString("no"));
 				}
 			}
+			result.close();
 			
 			for(int i=0; i<Integer.parseInt(infos[1]); i++){
 				room.addElement(location.get(i) +" "+ roomno.get(i));
 			}
+			
+			query3.close();
+			query2.close();
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return room;
 	}
+	
 	public String SetFinal(String lectureNo, int rank){
 		String rt="";
 		try {
-			qry = "update schedule set stype='F' where stype='P' and lecture_id='" +lectureNo+ "' and rank=" +rank;
-			query.execute(qry);
-			qry = "select * from schedule where stype='F' and lecture_id='" +lectureNo+ "' and rank=" +rank;
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "update schedule set stype='F' where stype='P' and lecture_id='" +lectureNo+ "' and rank=" +rank;
+			query.execute(sql);
+			
+			sql = "select * from schedule where stype='F' and lecture_id='" +lectureNo+ "' and rank=" +rank;
+			ResultSet result = query.executeQuery(sql);
 			result.next();
 			rt = result.getString("no");
+			
+			result.close();
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rt;
 	}
+	
 	public void SetFinalClassSchedule(String lectureNo, String day, String start, String end, String location, String roomno){
 		try {
 			String time=start;
-			qry = "select * from schedule where lecture_id='" +lectureNo+ "' and stype='F'";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select * from schedule where lecture_id='" +lectureNo+ "' and stype='F'";
+			ResultSet result = query.executeQuery(sql);
 			result.next();
 			String no = result.getString("no");
+			result.close();
 			while(true){
-				qry = "insert into timeblock(location, classroom, day, time, isAvailable, scheduleNo)" +
+				sql = "insert into timeblock(location, classroom, day, time, isAvailable, scheduleNo)" +
 						" values('" +location+ "', '" +roomno+ "', '" +day+ "', '" +time+ "', 'F', '" +no+ "')";
-				query.execute(qry);
+				query.execute(sql);
 
 				if(time.substring(1).equals("a")){
 					time = time.substring(0, 1)+"b";
@@ -781,20 +917,25 @@ public class User_Professor extends User{
 				if(time.equals(end))
 					break;
 			}
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 	}
+	
 	public void DelPossibleToFinal(String lectureNo){
 		try {
-			qry = "select * from schedule where lecture_id='" +lectureNo+ "' and stype='F'";
-			result = query.executeQuery(qry);
+			Statement query = conn.createStatement();
+			String sql = "select * from schedule where lecture_id='" +lectureNo+ "' and stype='F'";
+			ResultSet result = query.executeQuery(sql);
 			result.next();
 			String no = result.getString("no");
+			result.close();
 			
-			qry = "delete from timeblock where scheduleNo='" +no+ "'";
-			query.execute(qry);
+			sql = "delete from timeblock where scheduleNo='" +no+ "'";
+			query.execute(sql);
+			query.close();;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

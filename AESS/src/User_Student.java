@@ -1,33 +1,39 @@
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 
-
-public class User_Student extends User{
+public class User_Student{
+	private Connection conn;
+	
 	public User_Student(String id, Connection conn){
-		super(id, conn);
+		this.conn = conn;
 	}
 	public void CreateTimeBlock(String day, String time, int type){
-		qry = "insert into timeblock(location, classroom, day, time, isAvailable, user_id, scheduleNo) values ('-1', '-1', '"+day+"', '"+time+"', 'F', '"+id+"', '"+type+"')";
 		try {
-			query.execute(qry);
+			Statement query = conn.createStatement();
+			String sql = "insert into timeblock(location, classroom, day, time, isAvailable, user_id, scheduleNo) values ('-1', '-1', '"+day+"', '"+time+"', 'F', '"+Info.getId()+"', '"+type+"')";
+			query.execute(sql);
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	public void DeleteTimeBlock(int no){
-		qry = "delete from timeblock where no = '"+no+"'";
 		try {
-			query.execute(qry);
+			Statement query = conn.createStatement();
+			String sql = "delete from timeblock where no = '"+no+"'";
+			query.execute(sql);
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	public void Save(){
-		qry = "update courserelation set schedule_save='T' where user_id='" +id+ "';";
 		try {
-			query.execute(qry);
+			Statement query = conn.createStatement();
+			String sql = "update courserelation set schedule_save='T' where user_id='" +Info.getId()+ "';";
+			query.execute(sql);
+			query.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,34 +1,37 @@
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 
-
-public class User_Assistant extends User {
+public class User_Assistant{
+	private Connection conn;
+	
 	public User_Assistant(String id, String pass, Connection conn){
-		super(id, conn);
+		this.conn = conn;
 	}
 	
 	public void CreateImpossibleExamTime(){
-		String qry = "insert into schedule (name, type, classroom) values ('조교', 'J', 1113)";
 		try {
-			query.execute(qry);
+			Statement query = conn.createStatement();
+			String sql = "insert into schedule (name, type, classroom) values ('조교', 'J', 1113)";
+			query.execute(sql);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	public void SetImpossibleExamTime(String name){
-		qry = "update schedule set classroom=1555 where name='" +name+ "';";
 		try {
-			query.execute(qry);
+			Statement query = conn.createStatement();
+			String sql = "update schedule set classroom=1555 where name='" +name+ "';";
+			query.execute(sql);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	public void DeleteImpossibleExamTime(String name){
-		qry = "delete from schedule where name='" +name+ "';";
 		try {
-			query.execute(qry);
+			Statement query = conn.createStatement();
+			String sql = "delete from schedule where name='" +name+ "';";
+			query.execute(sql);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

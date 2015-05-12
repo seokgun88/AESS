@@ -163,7 +163,8 @@ public class GUI_StudentMain extends JPanel
 
 		panel_schedule.add(rBtn_test);
 		panel_schedule.add(rBtn_lecture);
-		if(info.is_J) panel_schedule.add(rBtn_unable);	//조교면 감독 불가능한 시간 버튼 추가
+		if(Info.getType().equals("J"))
+			panel_schedule.add(rBtn_unable);	//조교면 감독 불가능한 시간 버튼 추가
 		
 		/******************************************/
 		JPanel buttonP = new JPanel();

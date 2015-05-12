@@ -28,9 +28,9 @@ public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListen
 	public GUI_SetPeriod(Connection conn, String id) {
 		this.id = id;
 		this.conn = conn;
-		info i = new info(id);
 		
-		if(info.is_A) admin = new User_Admin(id, conn);
+		if(Info.getType().equals("A"))
+			admin = new User_Admin(conn);
 		
 		setLayout(new BorderLayout(10,10));
 		
@@ -64,11 +64,11 @@ public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListen
 			
 		add(pn_done, "South");
 		
-		if(info.week!=0) {
-			thisYear = info.year;
-			thisMonth = info.month;
-			thisWeek = info.week;
-			weekTable.changeSelection(info.week-1, 0, false, false);
+		if(Info.getWeek()!=0) {
+			thisYear = Info.getYear();
+			thisMonth = Info.getMonth();
+			thisWeek = Info.getWeek();
+			weekTable.changeSelection(thisWeek-1, 0, false, false);
 		}
 		
 		lb_year = new JLabel(Integer.toString(thisYear));
@@ -149,10 +149,10 @@ public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListen
 			int sDate = Integer.parseInt(weekTable.getValueAt(nowRow, 0).toString());
 			int eDate = Integer.parseInt(weekTable.getValueAt(nowRow, 6).toString());
 			
-			if(info.test.equals("중간")) test="M";
+			if(Info.test.equals("중간")) test="M";
 			else test="F";
 			
-			admin.SetExamWeek(info.year, info.season, test, thisMonth, thisWeek, sDate, eDate);
+			admin.SetExamWeek(Info.getYear(), Info.season, test, thisMonth, thisWeek, sDate, eDate);
 			JOptionPane.showMessageDialog(null, "시험 기간이 변경되었습니다. 지금 이후로 로그인한 사용자에게 반영됩니다.");  
 		}
 	}

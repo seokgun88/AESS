@@ -1,6 +1,6 @@
 import java.sql.*;
 
-/**데이터베이스 연결**/
+/**데이터베이스 연결 클래스**/
 public class DBconnect {
 	public Connection connect() {
 		Connection conn = null;

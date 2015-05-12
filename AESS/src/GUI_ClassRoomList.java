@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -16,19 +16,20 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-/**강의실 목록 GUI**/
-public class GUI_ClassRoomList extends JPanel implements MouseListener
-{
-	String id;
+/**강의실 목록 및 스케쥴 GUI**/
+public class GUI_ClassRoomList extends JPanel implements MouseListener{
+	private Connection conn;	//DB접속을 위한 컨넥션 변수
+	private User_Admin admin; //관리자일 경우 강의실 정보 수정 가능
+	
 	Object nowListValue, nowRowB, nowRowC, nowRowM;
 	int nowListRow, nowListCol;
 	int dragStartRow, dragStartCol, dragEndRow;
-	protected Connection conn;	//DB접속을 위한 컨넥션 변수
-	User_Admin admin;
+		
 	JFrame Fr_addRoom, Fr_addSchedule;
 	JTable table, table_Room;
 	DefaultTableModel sche;
 	MyTableModel DTM_Room;
+	
 	JButton bt_addRoom = new JButton("강의실 추가");
 	JButton bt_delRoom = new JButton("강의실 삭제");
 	JButton bt_popAdd = new JButton("추가");
@@ -43,7 +44,8 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 	String [][] data_roomList;
 	
 	String [] col_roomTimetable = {"시간","월","화","수","목","금","토","일"};
-	String [][] data_roomTimetable = {{"1A(09:00~09:30)","","","","","","",""},
+	String [][] data_roomTimetable = {
+			{"1A(09:00~09:30)","","","","","","",""},
 			{"1B(09:30~10:00)","","","","","","",""},
 			{"2A(10:00~10:30)","","","","","","",""},
 			{"2B(10:30~11:00)","","","","","","",""},
@@ -60,27 +62,27 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 			{"8A(04:00~04:30)","","","","","","",""},
 			{"8B(04:30~05:00)","","","","","","",""},
 			{"9A(05:00~05:30)","","","","","","",""},
-			{"9B(05:30~06:00)","","","","","","",""}};
+			{"9B(05:30~06:00)","","","","","","",""}
+			};
 	
 	JRadioButton tableJRadioButton;
 	JRadioButton eventJRadioButton;
 	JLabel lb_name, lb_code, lb_prof;
 	JComboBox cb_prof, cb_prof_id, dateC, timeC1, timeC2;
 	JTextField tf_name, tf_code;
-	int regularOrEtc = 0;
+	int regularOrEtc = 0; //정규시간표인지 특별 이벤트 스케쥴인지 확인하는 변수
 	Enums enums = new Enums();
 	
-	public GUI_ClassRoomList(Connection conn, String id)
-	{
-		this.id = id;
+	public GUI_ClassRoomList(Connection conn){
 		this.conn = conn;
-		info i = new info(id);
+		ClassRoomList.setConn(conn);
 	
-		if(info.is_A) admin = new User_Admin(id, conn);
-	
-		setLayout(new BorderLayout());
+		/*********관리자일 경우 강의실 정보 수정 기능 추가**********/
+		if(Info.getType().equals("A"))
+			admin = new User_Admin(conn);	
 		
 		/*************우측 리스트***************/
+		setLayout(new BorderLayout());
 		pn_roomList.setBorder(new TitledBorder("강의실 List"));
 		pn_roomList.setLayout(new BorderLayout());
 		
@@ -93,7 +95,10 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 		pn_listButton.add(bt_addRoom, "North");
 		pn_listButton.add(bt_delRoom, "North");
 		
-		if(info.is_A) pn_roomList.add(pn_listButton, "North");
+		/********관리자일 경우 강의실 정보 수정 버튼 추가***************/
+		if(Info.getType().equals("A"))
+			pn_roomList.add(pn_listButton, "North");
+		
 		pn_roomList.add(sp, "Center");
 		add(pn_roomList,"East");
 		pn_roomList.setPreferredSize(new java.awt.Dimension(200, 1));
@@ -120,7 +125,10 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 		TableColumn column = table_Room.getColumnModel().getColumn(0);
 		column.setPreferredWidth(30);
 		table_Room.getColumn("시간").setPreferredWidth(95);
-		if(info.is_A) table_Room.addMouseListener(this);
+		
+		/**********관리자일 경우 수정 가능하게 리스너 등록***********/
+		if(Info.getType().equals("A"))
+			table_Room.addMouseListener(this);
 		
 		scheP.add("Center",sp_RoomTimetalbe);
 					
@@ -130,13 +138,12 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 		buttonP.add("South", okJButton);
 		
 		pn_roomInfo.add(scheP);
-		pn_roomInfo.add(buttonP);
+		pn_roomInfo.add(buttonP);		
 		
-		
-		add(pn_roomInfo,"Center");
-		
+		add(pn_roomInfo,"Center");		
 	}
 	
+	/***********새로운 강의실 정보 추가********************/
 	public void addRoomPop(){
 		/**처음으로 생성하는 강의실 추가 프레임만 새로 생성**/
 		if(Fr_addRoom == null){
@@ -181,6 +188,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 		Fr_addRoom.setVisible(true);
 	}
 	
+	/*****************새 스케쥴 입력************************/
 	public void addSchedulePop(int dayIndex, int sTimeIndex, int eTimeIndex)
 	{
 		Fr_addSchedule = new JFrame("스케쥴 추가");
@@ -243,20 +251,14 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 		cb_prof = new JComboBox();
 		cb_prof_id = new JComboBox();
 		
-		Statement profState;
-		ResultSet profResult;
-		try {
-			profState=conn.createStatement();
-			profResult = profState.executeQuery("select name, id from member where type='P'");
-			while(profResult.next()) {
-				cb_prof.addItem(profResult.getString("name"));
-				cb_prof_id.addItem(profResult.getString("id"));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		/*************교수 목록 불러오기***************/
+		ArrayList nameAndIdList = ClassRoomList.getProfessorList();
+		ArrayList<String> nameList = (ArrayList)nameAndIdList.get(0);
+		ArrayList<String> idList = (ArrayList)nameAndIdList.get(1);
+		for(int i=0; i<nameList.size(); i++){
+			cb_prof.addItem(nameList.get(i));
+			cb_prof_id.addItem(idList.get(i));			
 		}
-		
 		
 		scheP.add(lb_prof);
 		scheP.add(cb_prof);
@@ -280,6 +282,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 		Fr_addSchedule.setVisible(true);
 	}
 	
+	/************강의실 목록 출력****************/
 	public void listRoom() {
 		Statement scheduleState;
 		ResultSet scheduleResult;
@@ -291,30 +294,23 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 		vRoomListHead.addElement("인원");	
 		Vector vRoomList = new Vector();
 		Vector vRoomListCol;
-		try {
-			scheduleState = conn.createStatement();
-			scheduleResult = scheduleState.executeQuery("select * from classroom order by location");
-			while(true){
-				if(scheduleResult.next()){
-					vRoomListCol = new Vector();
-					vRoomListCol.addElement(scheduleResult.getString("location"));
-					vRoomListCol.addElement(scheduleResult.getString("no"));		
-					vRoomListCol.addElement(scheduleResult.getString("maxSeat"));
-					vRoomList.addElement(vRoomListCol);
-				}
-				else{
-					DefaultTableModel DTM2 = new DefaultTableModel(vRoomList, vRoomListHead);
-					table.setModel(DTM2);
-					table.getModel().addTableModelListener(new ChangeListener());
-					table.revalidate();
-					table.repaint();
-					break;
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		/*************강의실 목록 불러오기****************/
+		ArrayList classRoomList = ClassRoomList.getClassRoomList();
+		String[] classInfo;
+		for(int i=0; i<classRoomList.size(); i++){			
+			classInfo = (String[]) classRoomList.get(i);
+			vRoomListCol = new Vector();
+			vRoomListCol.addElement(classInfo[0]);
+			vRoomListCol.addElement(classInfo[1]);		
+			vRoomListCol.addElement(classInfo[2]);
+			vRoomList.addElement(vRoomListCol);
+		}		
+		DefaultTableModel DTM2 = new DefaultTableModel(vRoomList, vRoomListHead);
+		table.setModel(DTM2);
+		table.getModel().addTableModelListener(new ChangeListener());
+		table.revalidate();
+		table.repaint();
 	}
 	
 	public void InitializeTable(String location, String roomNo) {
@@ -339,6 +335,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 		schedule_no = new String[20][20];
 		
 		try {
+			//**GUI가 할 일이 아님
 			blockState=conn.createStatement();
 			blockResult = blockState.executeQuery("select * from timeblock where location='" +location+ "' and classroom='"+roomNo+"' and isAvailable='F'");
 			System.out.println(location + roomNo);
@@ -435,19 +432,18 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 		public void tableChanged(TableModelEvent e) { 
 	        System.out.println(table.getValueAt(nowListRow, nowListCol).toString());
 	        if(!nowListValue.equals(table.getValueAt(nowListRow, nowListCol))) {
-	       	 if(JOptionPane.showConfirmDialog(null,"강의실 정보를 변경 하시겠습니까?","강의실 정보 변경",
-							JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)!=JOptionPane.NO_OPTION)
-					{
+	        	if(JOptionPane.showConfirmDialog(null,"강의실 정보를 변경 하시겠습니까?","강의실 정보 변경",
+							JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)!=JOptionPane.NO_OPTION){
 	       		 		String changedRowB = table.getValueAt(nowListRow, 0).toString();
 	       		 		String changedRowC = table.getValueAt(nowListRow, 1).toString();
 	       		 		String changedRowM = table.getValueAt(nowListRow, 2).toString();
 	       		 		System.out.printf("%s %s %s %s %s %s",nowRowB.toString(), nowRowC.toString(), nowRowM.toString(), changedRowB, changedRowC, changedRowM);
 	       		 		admin.SetClassRoom(nowRowB.toString(), nowRowC.toString(), nowRowM.toString(), changedRowB, changedRowC, changedRowM);
-	       		 		
-					} else {
+	       		 		}
+	        	else{
 						table.setValueAt(nowListValue, nowListRow, nowListCol);
 						System.out.println("변경안됨");
-					}
+						}
 	        }
 	    }
 	}
@@ -499,7 +495,8 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener
 				System.out.println("returned schNo : "+scheNo);
 				for(i=start_time; i<end_time; i++) {
 					System.out.printf("%d %s %d",nowListRow, dateC.getSelectedItem().toString(), scheNo);
-					admin.CreateTimeBlock(cb_prof_id.getItemAt(cb_prof.getSelectedIndex()).toString(), table.getValueAt(nowListRow, 0).toString(), table.getValueAt(nowListRow, 1).toString(), dateC.getSelectedItem().toString(), enums.IndexToBlock[i], scheNo);
+					admin.CreateTimeBlock(cb_prof_id.getItemAt(cb_prof.getSelectedIndex()).toString(), table.getValueAt(nowListRow, 0).toString(), 
+							table.getValueAt(nowListRow, 1).toString(), dateC.getSelectedItem().toString(), enums.IndexToBlock[i], scheNo);
 				}
 				Fr_addSchedule.setVisible(false);
 				InitializeTable(table.getValueAt(nowListRow, 0).toString(), table.getValueAt(nowListRow, 1).toString());
