@@ -35,13 +35,16 @@ public class GUI_SignUp extends JFrame{
 	JLabel lb_Pass = new JLabel("Password :", Label.RIGHT);
 	JLabel valid = new JLabel("아이디와 비밀번호를 입력해 주세요.");
 	
-
+	boolean isSignUp;
+	
 	TextField tf_Id  = new TextField(20);
 	TextField tf_Pwd = new TextField(20);
 	TextField tf_Name = new TextField(20);
 	JButton bt_SignUp = new JButton("회원가입");		//회원가입으로 바꿈
 	JButton bt_Cancel = new JButton("취소");
 	JButton bt1 = new JButton("dd");
+	
+	private String Name;
 	
 	public GUI_SignUp(Connection conn){
 		super("AESS SignUp"); // Frame(String title)을 호출한다.
@@ -111,8 +114,16 @@ public class GUI_SignUp extends JFrame{
 		public void keyPressed(KeyEvent e) {
 			if(e.getKeyCode() == KeyEvent.VK_ENTER){
 				GUI_Login gui_login = new GUI_Login(conn);
-				//System.out.printf("ID : %d\nName : %s\nPW : %d\n",tf_Id.getText(), tf_Name.getText(), tf_Pwd.getText());
-				System.out.println("dd");
+				System.out.printf("ID : %s\nName : %s\nPW : %s\n",tf_Id.getText(), tf_Name.getText(), tf_Pwd.getText());
+				/*이름 조건*/
+				setName(tf_Name.getText());
+				if(getName().contains("0") || getName().contains("1") || getName().contains("2") || getName().contains("3") || getName().contains("4") || getName().contains("5") || getName().contains("6") || getName().contains("7") || getName().contains("8") || getName().contains("9"))
+					isSignUp = false;
+				if(getName().contains(")") || getName().contains("!") || getName().contains("@") || getName().contains("#") || getName().contains("$") || getName().contains("%") || getName().contains("^") || getName().contains("&") || getName().contains("*") || getName().contains("("))
+					isSignUp = false;
+				if(getName().contains("[") || getName().contains("]") || getName().contains("{")  || getName().contains("}") || getName().contains("-") || getName().contains("=") || getName().contains("_") || getName().contains("+") || getName().contains(";") || getName().contains("'") || getName().contains(":") || getName().contains("\"") || getName().contains("|") || getName().contains("\\") || getName().contains(",") || getName().contains(".") || getName().contains("/") || getName().contains("<") || getName().contains(">") || getName().contains("?") || getName().contains("`") || getName().contains("~"))
+					isSignUp = false;
+				isSignUp = true;
 				setVisible(false);
 				dispose();
 				gui_login.setVisible(true);
@@ -125,6 +136,14 @@ public class GUI_SignUp extends JFrame{
 		@Override
 		public void keyTyped(KeyEvent arg0) {}
 	}
+	
+	public void setName(String name){
+		Name = name;
+	}
+	
+	public String getName(){
+		return Name;
+	}
 
 	class EventHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e){		
@@ -132,8 +151,16 @@ public class GUI_SignUp extends JFrame{
 			if(e.getSource() == bt_SignUp){
 				GUI_Login gui_login = new GUI_Login(conn);
 				/*회원가입 시 아이디랑 비밀번호 출력*/
-				//System.out.printf("ID : %d\nName : %s\nPW : %d\n",tf_Id.getText(), tf_Name.getText(), tf_Pwd.getText());
-				System.out.println("dd2");
+				System.out.printf("ID : %s\nName : %s\nPW : %s\n",tf_Id.getText(), tf_Name.getText(), tf_Pwd.getText());
+				/*이름 조건*/
+				String Name = tf_Name.getText();
+				if(Name.contains("0") || Name.contains("1") || Name.contains("2") || Name.contains("3") || Name.contains("4") || Name.contains("5") || Name.contains("6") || Name.contains("7") || Name.contains("8") || Name.contains("9"))
+					isSignUp = false;
+				if(Name.contains(")") || Name.contains("!") || Name.contains("@") || Name.contains("#") || Name.contains("$") || Name.contains("%") || Name.contains("^") || Name.contains("&") || Name.contains("*") || Name.contains("("))
+					isSignUp = false;
+				if(Name.contains("[") || Name.contains("]") || Name.contains("{")  || Name.contains("}") || Name.contains("-") || Name.contains("=") || Name.contains("_") || Name.contains("+") || Name.contains(";") || Name.contains("'") || Name.contains(":") || Name.contains("\"") || Name.contains("|") || Name.contains("\\") || Name.contains(",") || Name.contains(".") || Name.contains("/") || Name.contains("<") || Name.contains(">") || Name.contains("?") || Name.contains("`") || Name.contains("~"))
+					isSignUp = false;
+				isSignUp = true;
 				setVisible(false);
 				dispose();
 				gui_login.setVisible(true);
