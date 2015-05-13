@@ -32,11 +32,11 @@ public class ClassRoomList {
 	
 	public static ArrayList getClassRoomList(){
 		ArrayList classRoomList = new ArrayList();
-		String [] classInfo = new String[3];
 		try {
 			Statement query = conn.createStatement();
 			ResultSet result = query.executeQuery("select * from classroom order by location");
 			while(result.next()){
+				String [] classInfo = new String[3];
 				classInfo[0] = result.getString("location");
 				classInfo[1] = result.getString("no");
 				classInfo[2] = result.getString("maxSeat");

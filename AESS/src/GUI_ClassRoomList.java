@@ -297,9 +297,8 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 
 		/*************강의실 목록 불러오기****************/
 		ArrayList classRoomList = ClassRoomList.getClassRoomList();
-		String[] classInfo;
 		for(int i=0; i<classRoomList.size(); i++){			
-			classInfo = (String[]) classRoomList.get(i);
+			String[] classInfo = (String[]) classRoomList.get(i);
 			vRoomListCol = new Vector();
 			vRoomListCol.addElement(classInfo[0]);
 			vRoomListCol.addElement(classInfo[1]);		
