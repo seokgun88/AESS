@@ -35,7 +35,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 	JButton bt_popAdd = new JButton("추가");
 	JButton enterB = new JButton("입력");
 	JButton cancelB = new JButton("취소");
-	JTextField tf_building, tf_room, tf_maxSeat; //추가 : tf_etc_equiment
+	JTextField tf_building, tf_room, tf_maxSeat;
 	JRadioButton[] rb_equipment; //추가 : rb_equipment = 부수기재 버튼그룹
 	JPanel pn_roomList = new JPanel();
 	JPanel pn_listButton = new JPanel();
@@ -198,9 +198,8 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 
 			/*****************************************/
 
-			
 			Fr_addRoom.add(panel);
-			Fr_addRoom.setSize(420, 120); //추가 : Y축크기 100->120 변경
+			Fr_addRoom.setSize(420, 120);
 			Fr_addRoom.setLocationRelativeTo(pn_listButton);
 		}
 		Fr_addRoom.setVisible(true);
@@ -316,9 +315,8 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 
 		/*************강의실 목록 불러오기****************/
 		ArrayList classRoomList = ClassRoomList.getClassRoomList();
-		String[] classInfo;
 		for(int i=0; i<classRoomList.size(); i++){			
-			classInfo = (String[]) classRoomList.get(i);
+			String[] classInfo = (String[]) classRoomList.get(i);
 			vRoomListCol = new Vector();
 			vRoomListCol.addElement(classInfo[0]);
 			vRoomListCol.addElement(classInfo[1]);		
@@ -494,17 +492,15 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 						JOptionPane.showMessageDialog(null, "강의실을 잘못 입력하셨습니다.");
 				
 				else if(tf_building.getText()!=null&&tf_room.getText()!=null&&tf_maxSeat.getText()!=null) {
-					String equiment_text = ""; //추가 : 부수기재 여기에 저장해서 보냄
+					String equipment_text = ""; //추가 : 부수기재 여기에 저장해서 보냄
 					if(rb_equipment[0].isSelected()) 
-						equiment_text = equiment_text + rb_equipment[0].getText()+" ";
+						equipment_text = equipment_text + rb_equipment[0].getText()+" ";
 					if(rb_equipment[1].isSelected())
-						equiment_text = equiment_text + rb_equipment[1].getText()+" ";
+						equipment_text = equipment_text + rb_equipment[1].getText()+" ";
 					if(rb_equipment[2].isSelected())
-						equiment_text = equiment_text + rb_equipment[2].getText()+" ";
-					//추가 : 새로만든 equiment_text문자열에 입력한 부수기재들 더함
-					System.out.println("부수기재 : " + equiment_text);
-					
-					admin.CreateClassRoom(tf_room.getText(), tf_building.getText(), tf_maxSeat.getText(), equiment_text); 
+						equipment_text = equipment_text + rb_equipment[2].getText()+" ";
+					System.out.println("부수기재 : " + equipment_text);
+					admin.CreateClassRoom(tf_room.getText(), tf_building.getText(), tf_maxSeat.getText(), equipment_text); 
 					listRoom();
 					Fr_addRoom.setVisible(false);
 				}				

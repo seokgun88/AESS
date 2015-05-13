@@ -36,6 +36,7 @@ public class ClassRoomList {
 			Statement query = conn.createStatement();
 			ResultSet result = query.executeQuery("select * from classroom order by location");
 			while(result.next()){
+
 				String [] classInfo = new String[4];
 				classInfo[0] = result.getString("location");
 				classInfo[1] = result.getString("no");
