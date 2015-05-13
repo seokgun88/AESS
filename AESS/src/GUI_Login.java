@@ -28,6 +28,7 @@ class GUI_Login extends JFrame{
 	TextField tf_Pwd = new TextField(20);
 	JButton bt_Login = new JButton("로그인");
 	JButton bt_Cancel = new JButton("취소");	
+	JButton bt_SignUp = new JButton("회원가입");
 
 	/*************디폴트 생성자*****************/
 	public GUI_Login(Connection conn){
@@ -56,6 +57,9 @@ class GUI_Login extends JFrame{
 		bt_Login.addKeyListener(new KeyHandler());
 		bt_Cancel.addActionListener(new EventHandler());
 		
+		/**********************회원가입 버튼**********************/
+		bt_SignUp.addActionListener(new EventHandler());
+		
 		lbSmallLogo.setBounds(40, 0, 321, 68);
 		add(lbSmallLogo, "North");		
 		
@@ -70,10 +74,13 @@ class GUI_Login extends JFrame{
 		add(lb_Pass);
 		add(tf_Pwd);
 
-		bt_Login.setBounds(120, 153, 80, 21);
-		bt_Cancel.setBounds(210, 153, 80, 21);
+		bt_Login.setBounds(70, 153, 80, 21);
+		bt_Cancel.setBounds(160, 153, 80, 21);
+		bt_SignUp.setBounds(250, 153, 80, 21);
 		add(bt_Login);
 		add(bt_Cancel);
+		/**********************회원가입**********************/
+		add(bt_SignUp);
 		
 		lb_Valid.setBounds(105, 190, 220, 21);
 		add(lb_Valid);
@@ -124,6 +131,12 @@ class GUI_Login extends JFrame{
 			else if (e.getSource() == bt_Cancel) {
 				System.exit(0);
 			} 
+
+			//회원가입 창으로 이동
+			else if(e.getSource() == bt_SignUp){
+				GUI_SignUp gui = new GUI_SignUp();
+			    gui.setVisible(true);
+			}
 		}
 	}
 
