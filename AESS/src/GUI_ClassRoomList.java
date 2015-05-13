@@ -35,13 +35,13 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 	JButton bt_popAdd = new JButton("추가");
 	JButton enterB = new JButton("입력");
 	JButton cancelB = new JButton("취소");
-	JTextField tf_building, tf_room, tf_maxSeat,tf_etc_equiment; //추가 : tf_etc_equiment
+	JTextField tf_building, tf_room, tf_maxSeat; //추가 : tf_etc_equiment
 	JRadioButton[] rb_equipment; //추가 : rb_equipment = 부수기재 버튼그룹
 	JPanel pn_roomList = new JPanel();
 	JPanel pn_listButton = new JPanel();
 	JPanel pn_roomInfo = new JPanel();
 	String [][] schedule_no = new String[20][20];
-	String [] col_roomList = {"건물","호수","인원"};
+	String [] col_roomList = {"건물","호수","인원","부수기재"}; //추가 : 부수기재
 	String [][] data_roomList;
 	
 	
@@ -196,21 +196,11 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 				panel.add(c);
 			}
 
-			
-			/*****************************************/
-			//추가 : 기타 부수기재 입력 텍스트필드
-
-			JLabel etc_equipL = new JLabel("기타");
-			tf_etc_equiment = new JTextField(10);
-
-			panel.add(etc_equipL);
-			panel.add(tf_etc_equiment);
-
 			/*****************************************/
 
 			
 			Fr_addRoom.add(panel);
-			Fr_addRoom.setSize(420, 150); //추가 : Y축크기 100->150 변경
+			Fr_addRoom.setSize(420, 120); //추가 : Y축크기 100->120 변경
 			Fr_addRoom.setLocationRelativeTo(pn_listButton);
 		}
 		Fr_addRoom.setVisible(true);
@@ -293,7 +283,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		
 		/******************************************/
 		JPanel buttonP = new JPanel();
-		enterB.addActionListener(new adminListener());
+		enterB.addActionListener(new adminListener()); 
 		cancelB.addActionListener(new adminListener());
 		
 		buttonP.add(enterB);
@@ -319,7 +309,8 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		Vector vRoomListHead = new Vector();
 		vRoomListHead.addElement("건물");
 		vRoomListHead.addElement("호수");	
-		vRoomListHead.addElement("인원");	
+		vRoomListHead.addElement("인원");
+		vRoomListHead.addElement("부수기재"); //추가 : 부수기재	
 		Vector vRoomList = new Vector();
 		Vector vRoomListCol;
 
@@ -332,10 +323,15 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 			vRoomListCol.addElement(classInfo[0]);
 			vRoomListCol.addElement(classInfo[1]);		
 			vRoomListCol.addElement(classInfo[2]);
+			vRoomListCol.addElement(classInfo[3]); //추가 : 부수기재
 			vRoomList.addElement(vRoomListCol);
 		}		
 		DefaultTableModel DTM2 = new DefaultTableModel(vRoomList, vRoomListHead);
 		table.setModel(DTM2);
+		table.getColumnModel().getColumn(0).setPreferredWidth(45);
+		table.getColumnModel().getColumn(1).setPreferredWidth(45);
+		table.getColumnModel().getColumn(2).setPreferredWidth(45);
+		table.getColumnModel().getColumn(3).setPreferredWidth(150); //추가 : 부수기재쪽 넓이 넓힘
 		table.getModel().addTableModelListener(new ChangeListener());
 		table.revalidate();
 		table.repaint();
@@ -505,11 +501,10 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 						equiment_text = equiment_text + rb_equipment[1].getText()+" ";
 					if(rb_equipment[2].isSelected())
 						equiment_text = equiment_text + rb_equipment[2].getText()+" ";
-					equiment_text = equiment_text + tf_etc_equiment.getText();
 					//추가 : 새로만든 equiment_text문자열에 입력한 부수기재들 더함
 					System.out.println("부수기재 : " + equiment_text);
 					
-					admin.CreateClassRoom(tf_room.getText(), tf_building.getText(), tf_maxSeat.getText()); 
+					admin.CreateClassRoom(tf_room.getText(), tf_building.getText(), tf_maxSeat.getText(), equiment_text); 
 					listRoom();
 					Fr_addRoom.setVisible(false);
 				}				

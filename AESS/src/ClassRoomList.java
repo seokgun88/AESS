@@ -32,14 +32,15 @@ public class ClassRoomList {
 	
 	public static ArrayList getClassRoomList(){
 		ArrayList classRoomList = new ArrayList();
-		String [] classInfo = new String[3];
 		try {
 			Statement query = conn.createStatement();
 			ResultSet result = query.executeQuery("select * from classroom order by location");
 			while(result.next()){
+				String [] classInfo = new String[4];
 				classInfo[0] = result.getString("location");
 				classInfo[1] = result.getString("no");
 				classInfo[2] = result.getString("maxSeat");
+				classInfo[3] = result.getString("equipment"); //추가 : 부수기재 정보 얻어옴
 				classRoomList.add(classInfo);
 			}
 			result.close();

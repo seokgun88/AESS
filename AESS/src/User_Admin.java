@@ -23,9 +23,9 @@ public class User_Admin{
 		}
 	}
 	
-	public void CreateClassRoom(String roomNo, String location, String maxSeat){
+	public void CreateClassRoom(String roomNo, String location, String maxSeat, String equipment){
 		try {
-			String sql = "insert into classroom values ('"+roomNo+ "', '" +location+ "', '" +maxSeat+ "');";
+			String sql = "insert into classroom values ('"+roomNo+ "', '" +location+ "', '" +maxSeat+ "', '"+equipment+ "');"; //Ãß°¡ : equipment
 			Statement query = conn.createStatement();
 			query.execute(sql);
 			query.close();
