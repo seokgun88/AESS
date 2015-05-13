@@ -27,10 +27,12 @@ public class GUI_Main extends JFrame implements ActionListener {
 	JLabel lbPeriod = new JLabel();
 	JLabel lbInfo = new JLabel();
 	JButton btn_logout;
-	JButton btn_roomList = new JButton("강의실 열람");
-	JButton btn_timeTable = new JButton("시간표/스케쥴 입력");
-	JButton btn_selectLecture = new JButton("수업 선택");
-	JButton btn_setPeriod = new JButton("시험기간 설정");
+	JButton btn_roomList = new JButton("강의실 열람"); //모든 사용자가 사용
+	JButton btn_timeTable = new JButton("시간표/스케쥴 입력"); //학생, 조교가 사용
+	JButton btn_leaveOfAbsence = new JButton("휴학신청"); //학생, 조교가 사용
+	JButton btn_returnToShool = new JButton("복학신청"); //휴학생이 사용
+	JButton btn_selectLecture = new JButton("수업 선택"); //교수가 사용
+	JButton btn_setPeriod = new JButton("시험기간 설정"); //관리자가 사용
 	
 	BorderLayout GUI_MainLayout = new BorderLayout(10,10);
 	
@@ -138,6 +140,12 @@ public class GUI_Main extends JFrame implements ActionListener {
 			
 			left.add(btn_timeTable);	//학생 일때 스케쥴 테이블 보기 버튼 추가
 			btn_timeTable.addActionListener(this);
+			left.add(btn_leaveOfAbsence);
+			btn_leaveOfAbsence.addActionListener(this);
+		}
+		else if(Info.getType().equals("L")){
+			left.add(btn_returnToShool);
+			btn_returnToShool.addActionListener(this);
 		}
 		add(left,"West");
 	}
@@ -149,24 +157,62 @@ public class GUI_Main extends JFrame implements ActionListener {
 			add(classRoom_list, BorderLayout.CENTER);
 			revalidate();
 			repaint();
-		} else if(e.getSource() == btn_selectLecture) {	//강의 목록 버튼 이벤트
+		}
+		else if(e.getSource() == btn_selectLecture) {	//강의 목록 버튼 이벤트
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
 			add(prof_table, BorderLayout.CENTER);
 			revalidate();
 			repaint();
-		} else if(e.getSource() == btn_timeTable) {	//스케쥴 보기 버튼 이벤트
+		}
+		else if(e.getSource() == btn_timeTable) {	//스케쥴 보기 버튼 이벤트
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
 			add(std_main, BorderLayout.CENTER);
 			revalidate();
 			repaint();
-		} else if(e.getSource() == btn_setPeriod) {	//시험기간 설정 버튼 이벤트
+		}
+		else if(e.getSource() == btn_setPeriod) {	//시험기간 설정 버튼 이벤트
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
 			add(set_period, BorderLayout.CENTER);
 			revalidate();
 			repaint();
-		} else if(e.getSource() == btn_logout){	//로그아웃 버튼 이벤트
+		}
+		else if(e.getSource() == btn_logout){	//로그아웃 버튼 이벤트
 			GUI_Login gl = new GUI_Login(conn);
 			dispose();
+		}
+		else if(e.getSource() == btn_leaveOfAbsence){ //복학 신청 =>이후 다른 클래스로 이동해야 함
+			if(JOptionPane.showConfirmDialog(null,"휴학신청을 하시겠습니까?\n(신청 후 자동로그아웃 됩니다.)", "휴학신청",
+					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION)
+			{
+				try {
+					Statement query = conn.createStatement();
+					query.execute("update member set type='L' where id='" +Info.getId()+ "';");
+					query.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				/**재접속**/
+				GUI_Login gl = new GUI_Login(conn);
+				dispose();			
+			} 
+		}
+		else if(e.getSource() == btn_returnToShool){ //복학신청 =>이후 다른 클래스로 이동해야 함
+			if(JOptionPane.showConfirmDialog(null,"복학신청을 하시겠습니까?\n(신청 후 자동로그아웃 됩니다.)", "복학신청",
+					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION)
+			{				
+				try {
+					Statement query = conn.createStatement();
+					query.execute("update member set type='S' where id='" +Info.getId()+ "';");
+					query.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				/**재접속**/
+				GUI_Login gl = new GUI_Login(conn);
+				dispose();			
+			}
 		}
 	}
 	
