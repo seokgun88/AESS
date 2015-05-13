@@ -31,25 +31,29 @@ public class GUI_SignUp extends JFrame{
 	JPanel pn_box = new JPanel();
 
 	JLabel lb_Id = new JLabel("ID : ", Label.RIGHT); // Label의 text정렬을 오른쪽으로.
+	JLabel lb_Name = new JLabel("Name :", Label.RIGHT);
 	JLabel lb_Pass = new JLabel("Password :", Label.RIGHT);
 	JLabel valid = new JLabel("아이디와 비밀번호를 입력해 주세요.");
 	
 
 	TextField tf_Id  = new TextField(20);
 	TextField tf_Pwd = new TextField(20);
+	TextField tf_Name = new TextField(20);
 	JButton bt_SignUp = new JButton("회원가입");		//회원가입으로 바꿈
 	JButton bt_Cancel = new JButton("취소");
 	JButton bt1 = new JButton("dd");
 	
-	public GUI_SignUp(){
+	public GUI_SignUp(Connection conn){
 		super("AESS SignUp"); // Frame(String title)을 호출한다.
 		super.setIconImage(icon.getImage());
 		setLayout(null);
+		this.conn = conn;
+		Login.setConn(conn);
 		
 		dbcon = new DBconnect();
 		conn = dbcon.connect();
 		
-		this.setSize(400,250);
+		this.setSize(400,300);
 		x_l = screenSize.width/2 - this.getWidth()/2 ; //x좌표구하기
 		y_l = screenSize.height/2 - this.getHeight()/2; //y좌표구하기
 		this.setLocation(x_l, y_l);
@@ -60,6 +64,7 @@ public class GUI_SignUp extends JFrame{
 		
 		// 버튼과 TextField에 이벤트처리를 위한 Listener를 추가해준다.
 		tf_Id.addKeyListener(new KeyHandler());
+		tf_Name.addKeyListener(new KeyHandler());
 		tf_Pwd.addKeyListener(new KeyHandler());
 		
 		bt_SignUp.addActionListener(new EventHandler());
@@ -75,17 +80,23 @@ public class GUI_SignUp extends JFrame{
 		add(lb_Id);
 		add(tf_Id);	
 		
-		lb_Pass.setBounds(70, 110, 80, 22);
-		tf_Pwd.setBounds(150, 110, 180, 22);
+		/*Name 추가*/
+		lb_Name.setBounds(95, 110, 50, 22);
+		tf_Name.setBounds(150, 110, 180, 22);
+		add(lb_Name);
+		add(tf_Name);
+		
+		lb_Pass.setBounds(73, 140, 70, 22);
+		tf_Pwd.setBounds(150, 140, 180, 22);
 		add(lb_Pass);
-		add(tf_Pwd);
+		add(tf_Pwd);	
 
-		bt_SignUp.setBounds(115, 153, 80, 21);
-		bt_Cancel.setBounds(205, 153, 80, 21);
+		bt_SignUp.setBounds(115, 183, 80, 21);
+		bt_Cancel.setBounds(205, 183, 80, 21);
 		add(bt_SignUp);
 		add(bt_Cancel);
 		
-		valid.setBounds(105, 190, 220, 21);
+		valid.setBounds(105, 213, 220, 21);
 		add(valid);
 		add(pn_box);		
 		
@@ -99,10 +110,11 @@ public class GUI_SignUp extends JFrame{
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if(e.getKeyCode() == KeyEvent.VK_ENTER){
-				System.out.printf("ID : %d\n PW : %d\n",tf_Id.getText(), tf_Pwd.getText());
+				GUI_Login gui_login = new GUI_Login(conn);
+				System.out.printf("ID : %d\nName : %s\nPW : %d\n",tf_Id.getText(), tf_Name.getText(), tf_Pwd.getText());
 				setVisible(false);
 				dispose();
-				System.exit(0);
+				gui_login.setVisible(true);
 			}
 		}
 
@@ -117,15 +129,19 @@ public class GUI_SignUp extends JFrame{
 		public void actionPerformed(ActionEvent e){		
 			
 			if(e.getSource() == bt_SignUp){
+				GUI_Login gui_login = new GUI_Login(conn);
 				/*회원가입 시 아이디랑 비밀번호 출력*/
-				System.out.printf("ID : %s\nPW : %s\n",tf_Id.getText(), tf_Pwd.getText());
+				System.out.printf("ID : %d\nName : %s\nPW : %d\n",tf_Id.getText(), tf_Name.getText(), tf_Pwd.getText());
 				setVisible(false);
 				dispose();
+				gui_login.setVisible(true);
 			}
 
 			else if (e.getSource() == bt_Cancel) {
+				GUI_Login gui_login = new GUI_Login(conn);
 				setVisible(false);
 				dispose();
+				gui_login.setVisible(true);
 			} 
 		}
 	} // class EventHandler

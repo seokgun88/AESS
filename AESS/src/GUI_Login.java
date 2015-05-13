@@ -94,8 +94,9 @@ class GUI_Login extends JFrame{
 		String password = tf_Pwd.getText();
 		int loginResult = Login.loginSetting(id, password);
 		if(loginResult == 0){
-			GUI_Main gui = new GUI_Main(id);
-			gui.setVisible(true);
+			//gui 변수 gui_main으로 변경
+			GUI_Main gui_main = new GUI_Main(id);
+			gui_main.setVisible(true);
 			dispose();
 		}
 		else if(loginResult == 1){
@@ -134,8 +135,9 @@ class GUI_Login extends JFrame{
 
 			//회원가입 창으로 이동
 			else if(e.getSource() == bt_SignUp){
-				GUI_SignUp gui = new GUI_SignUp();
-			    gui.setVisible(true);
+				setVisible(false);
+				GUI_SignUp gui_signup = new GUI_SignUp(conn);
+			    gui_signup.setVisible(true);
 			}
 		}
 	}
