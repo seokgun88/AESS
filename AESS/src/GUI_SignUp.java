@@ -111,7 +111,8 @@ public class GUI_SignUp extends JFrame{
 		public void keyPressed(KeyEvent e) {
 			if(e.getKeyCode() == KeyEvent.VK_ENTER){
 				GUI_Login gui_login = new GUI_Login(conn);
-				System.out.printf("ID : %d\nName : %s\nPW : %d\n",tf_Id.getText(), tf_Name.getText(), tf_Pwd.getText());
+				//System.out.printf("ID : %d\nName : %s\nPW : %d\n",tf_Id.getText(), tf_Name.getText(), tf_Pwd.getText());
+				System.out.println("dd");
 				setVisible(false);
 				dispose();
 				gui_login.setVisible(true);
@@ -131,7 +132,8 @@ public class GUI_SignUp extends JFrame{
 			if(e.getSource() == bt_SignUp){
 				GUI_Login gui_login = new GUI_Login(conn);
 				/*회원가입 시 아이디랑 비밀번호 출력*/
-				System.out.printf("ID : %d\nName : %s\nPW : %d\n",tf_Id.getText(), tf_Name.getText(), tf_Pwd.getText());
+				//System.out.printf("ID : %d\nName : %s\nPW : %d\n",tf_Id.getText(), tf_Name.getText(), tf_Pwd.getText());
+				System.out.println("dd2");
 				setVisible(false);
 				dispose();
 				gui_login.setVisible(true);

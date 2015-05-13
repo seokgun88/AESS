@@ -30,7 +30,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 	JButton btn_roomList = new JButton("강의실 열람"); //모든 사용자가 사용
 	JButton btn_timeTable = new JButton("시간표/스케쥴 입력"); //학생, 조교가 사용
 	JButton btn_leaveOfAbsence = new JButton("휴학신청"); //학생, 조교가 사용
-	JButton btn_returnToShool = new JButton("복학신청"); //휴학생이 사용
+	JButton btn_returnToSchool = new JButton("복학신청"); //휴학생이 사용
 	JButton btn_selectLecture = new JButton("수업 선택"); //교수가 사용
 	JButton btn_setPeriod = new JButton("시험기간 설정"); //관리자가 사용
 	
@@ -144,8 +144,8 @@ public class GUI_Main extends JFrame implements ActionListener {
 			btn_leaveOfAbsence.addActionListener(this);
 		}
 		else if(Info.getType().equals("L")){
-			left.add(btn_returnToShool);
-			btn_returnToShool.addActionListener(this);
+			left.add(btn_returnToSchool);
+			btn_returnToSchool.addActionListener(this);
 		}
 		add(left,"West");
 	}
@@ -185,31 +185,19 @@ public class GUI_Main extends JFrame implements ActionListener {
 			if(JOptionPane.showConfirmDialog(null,"휴학신청을 하시겠습니까?\n(신청 후 자동로그아웃 됩니다.)", "휴학신청",
 					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION)
 			{
-				try {
-					Statement query = conn.createStatement();
-					query.execute("update member set type='L' where id='" +Info.getId()+ "';");
-					query.close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				Manage_User.setConn(conn);
+				Manage_User.setLeaveOfAbsence();
 				/**재접속**/
 				GUI_Login gl = new GUI_Login(conn);
 				dispose();			
 			} 
 		}
-		else if(e.getSource() == btn_returnToShool){ //복학신청 =>이후 다른 클래스로 이동해야 함
+		else if(e.getSource() == btn_returnToSchool){ //복학신청 =>이후 다른 클래스로 이동해야 함
 			if(JOptionPane.showConfirmDialog(null,"복학신청을 하시겠습니까?\n(신청 후 자동로그아웃 됩니다.)", "복학신청",
 					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION)
-			{				
-				try {
-					Statement query = conn.createStatement();
-					query.execute("update member set type='S' where id='" +Info.getId()+ "';");
-					query.close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+			{	
+				Manage_User.setConn(conn);
+				Manage_User.setReturnToSchool();
 				/**재접속**/
 				GUI_Login gl = new GUI_Login(conn);
 				dispose();			
