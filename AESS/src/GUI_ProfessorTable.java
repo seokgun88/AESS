@@ -8,8 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 /**교수 수업 시간표 테이블**/
-public class GUI_ProfessorTable extends JPanel implements MouseListener
-{
+public class GUI_ProfessorTable extends JPanel implements MouseListener{
 	JTable profTable;
 	BorderLayout layout;
 	
@@ -35,13 +34,16 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener
 	
 	User_Professor prof;
 	String id;
-	protected Connection conn;
+	private Connection conn;
 	String[][] schedule_no = new String[20][20];
 	
-	public GUI_ProfessorTable(Connection conn, String id)
-	{
+	boolean isProfTable;
+	
+	public GUI_ProfessorTable(Connection conn, String id){
 		this.conn = conn;
 		this.id = id;
+		
+		isProfTable = true;
 		
 		setBorder(new TitledBorder("수업 시간표"));
 		layout = new BorderLayout();
@@ -65,7 +67,28 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener
 		
 		prof=new User_Professor(id, conn);
 		prof.InitializeTable(profTable, schedule_no);
-
+	}
+	
+	/***************다시 강의목록을 볼려고 할 때 리셋 해주는 함수*******************/
+	public void resetProfessorTable(){
+		remove(layout.getLayoutComponent(BorderLayout.CENTER));
+		revalidate();
+		repaint();
+		
+		isProfTable = true;
+		
+		setBorder(new TitledBorder("수업 시간표"));		
+		JPanel scheP = new JPanel();
+		DefaultTableModel sche = new DefaultTableModel(data, col);
+		profTable = new JTable(sche);					
+		profTable.setColumnSelectionAllowed(true);
+		profTable.setRowHeight(40);
+		JScrollPane sp = new JScrollPane(profTable);
+		sp.setPreferredSize(new java.awt.Dimension(800, 500));	
+		scheP.add("Center",sp);
+		add(scheP);
+		profTable.addMouseListener(this);
+		prof.InitializeTable(profTable, schedule_no);
 	}
 
 	public void mouseClicked(MouseEvent me) {
@@ -76,6 +99,9 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener
 			remove(layout.getLayoutComponent(BorderLayout.CENTER));
 			revalidate();
 			repaint();
+			
+			isProfTable = false;
+			
 			GUI_Professor prof_main = new GUI_Professor(conn, id, schedule_no[row][column]);
 			add(BorderLayout.CENTER, prof_main);
 			this.setBorder(new TitledBorder((String) profTable.getValueAt(row, column) ));
@@ -83,8 +109,6 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener
 	}
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}
-
 	public void mousePressed(MouseEvent e) {}
-
 	public void mouseReleased(MouseEvent e) {}
 }

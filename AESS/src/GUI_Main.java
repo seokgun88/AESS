@@ -152,31 +152,32 @@ public class GUI_Main extends JFrame implements ActionListener {
 	
 	/************각 버튼별 발생 이벤트*************/
 	public void actionPerformed(ActionEvent e){		
-		if(e.getSource() == btn_roomList) {	//강의실 목록 버튼 이벤트
+		if(e.getSource() == btn_roomList) { //강의실 목록 버튼 이벤트
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
 			add(classRoom_list, BorderLayout.CENTER);
 			revalidate();
 			repaint();
 		}
-		else if(e.getSource() == btn_selectLecture) {	//강의 목록 버튼 이벤트
+		else if(e.getSource() == btn_selectLecture) { //강의 목록 버튼 이벤트
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
+			prof_table.resetProfessorTable();
 			add(prof_table, BorderLayout.CENTER);
 			revalidate();
 			repaint();
 		}
-		else if(e.getSource() == btn_timeTable) {	//스케쥴 보기 버튼 이벤트
+		else if(e.getSource() == btn_timeTable) { //스케쥴 보기 버튼 이벤트
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
 			add(std_main, BorderLayout.CENTER);
 			revalidate();
 			repaint();
 		}
-		else if(e.getSource() == btn_setPeriod) {	//시험기간 설정 버튼 이벤트
+		else if(e.getSource() == btn_setPeriod) { //시험기간 설정 버튼 이벤트
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
 			add(set_period, BorderLayout.CENTER);
 			revalidate();
 			repaint();
 		}
-		else if(e.getSource() == btn_logout){	//로그아웃 버튼 이벤트
+		else if(e.getSource() == btn_logout){ //로그아웃 버튼 이벤트
 			GUI_Login gl = new GUI_Login(conn);
 			dispose();
 		}
