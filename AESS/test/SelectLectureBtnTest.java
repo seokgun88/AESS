@@ -15,5 +15,4 @@ public class SelectLectureBtnTest {
 		profTable.resetProfessorTable();
 		assertEquals(true,profTable.isProfTable);
 	}
-
 }
