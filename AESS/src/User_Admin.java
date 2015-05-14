@@ -164,6 +164,20 @@ public class User_Admin{
 		return resultno;
 	}
 	
+	public boolean checkClassCode(String classCode){
+		if(classCode.length() != 10)
+			return false;
+		else{
+			for(int i=0; i<10; i++){
+				if(i<4 && !Character.isAlphabetic(classCode.charAt(i)))
+					return false;
+				else if(i>=4 && !Character.isDigit(classCode.charAt(i)))
+					return false;
+			}
+		}
+		return true;
+	}
+	
 	public int CreateOtherSchedule(String name){
 		int resultno=0;
 		try {
