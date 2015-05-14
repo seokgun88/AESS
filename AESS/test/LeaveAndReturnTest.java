@@ -4,8 +4,8 @@ import java.sql.*;
 
 import org.junit.*;
 
-
 public class LeaveAndReturnTest {
+	/************휴학 신청시 데이터베이스에 휴학처리 되는지 확인*************/
 	@Test
 	public void leaveOfAbsenceTest() {
 		DBconnect dbcon = new DBconnect();
@@ -24,7 +24,8 @@ public class LeaveAndReturnTest {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/************복학 신청시 데이터베이스에 복학처리 되는지 확인*************/
 	@Test
 	public void ReturnToSchoolTest() {
 		DBconnect dbcon = new DBconnect();

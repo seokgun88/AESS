@@ -486,24 +486,20 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 			
 			if(e.getSource() == bt_popAdd) {
 				System.out.println("bt_popAdd Clicked");
-				if(!tf_building.getText().startsWith("E")&&!tf_building.getText().startsWith("I"))
-						JOptionPane.showMessageDialog(null, "건물을 잘못 입력하셨습니다.");
-				else if(tf_room.getText().startsWith("E")||tf_room.getText().startsWith("I"))
-						JOptionPane.showMessageDialog(null, "강의실을 잘못 입력하셨습니다.");
 				
-				else if(tf_building.getText()!=null&&tf_room.getText()!=null&&tf_maxSeat.getText()!=null) {
-					String equipment_text = ""; //추가 : 부수기재 여기에 저장해서 보냄
-					if(rb_equipment[0].isSelected()) 
-						equipment_text = equipment_text + rb_equipment[0].getText()+" ";
-					if(rb_equipment[1].isSelected())
-						equipment_text = equipment_text + rb_equipment[1].getText()+" ";
-					if(rb_equipment[2].isSelected())
-						equipment_text = equipment_text + rb_equipment[2].getText()+" ";
-					System.out.println("부수기재 : " + equipment_text);
-					admin.CreateClassRoom(tf_room.getText(), tf_building.getText(), tf_maxSeat.getText(), equipment_text); 
-					listRoom();
-					Fr_addRoom.setVisible(false);
-				}				
+				String equipment_text = ""; //추가 : 부수기재 여기에 저장해서 보냄
+				if(rb_equipment[0].isSelected()) 
+					equipment_text = equipment_text + rb_equipment[0].getText()+" ";
+				if(rb_equipment[1].isSelected())
+					equipment_text = equipment_text + rb_equipment[1].getText()+" ";
+				if(rb_equipment[2].isSelected())
+					equipment_text = equipment_text + rb_equipment[2].getText()+" ";
+				System.out.println("부수기재 : " + equipment_text);
+				
+				admin.CreateClassRoom(tf_room.getText(), tf_building.getText(), tf_maxSeat.getText(), equipment_text); 
+				listRoom();
+				Fr_addRoom.setVisible(false);
+
 			}
 			
 			if(e.getSource() == enterB) {

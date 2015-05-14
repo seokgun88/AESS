@@ -28,6 +28,26 @@ public class Manage_User {
 			e1.printStackTrace();
 		}		
 	}
+	
+	public static boolean signUp(String id, String pass, String name){
+		boolean isSignUp;
+		
+		/*회원가입 시 아이디랑 비밀번호 출력*/
+		System.out.printf("ID : %s\nName : %s\nPW : %s\n",id, pass, name);
+
+		/*이름 조건*/
+		if(name.contains("0") || name.contains("1") || name.contains("2") || name.contains("3") || name.contains("4") || name.contains("5") || name.contains("6") || name.contains("7") || name.contains("8") || name.contains("9"))
+			isSignUp = false;
+		else if(name.contains(")") || name.contains("!") || name.contains("@") || name.contains("#") || name.contains("$") || name.contains("%") || name.contains("^") || name.contains("&") || name.contains("*") || name.contains("("))
+			isSignUp = false;
+		else if(name.contains("[") || name.contains("]") || name.contains("{")  || name.contains("}") || name.contains("-") || name.contains("=") || name.contains("_") || name.contains("+") || name.contains(";") || name.contains("'") || name.contains(":") || name.contains("\"") || name.contains("|") || name.contains("\\") || name.contains(",") || name.contains(".") || name.contains("/") || name.contains("<") || name.contains(">") || name.contains("?") || name.contains("`") || name.contains("~"))
+			isSignUp = false;
+		else if(name == null || name.contains("\t") || name.contains(" ") || name.contains("\n"))
+			isSignUp = false;
+		else
+			isSignUp = true;		
+		return isSignUp;
+	}
 
 	public static void setConn(Connection conn) {
 		Manage_User.conn = conn;

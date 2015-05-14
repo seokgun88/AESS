@@ -35,14 +35,15 @@ public class GUI_SignUp extends JFrame{
 	JLabel lb_Pass = new JLabel("Password :", Label.RIGHT);
 	JLabel valid = new JLabel("아이디와 비밀번호를 입력해 주세요.");
 	
-
+	boolean isSignUp; //##지수 추가
+	
 	TextField tf_Id  = new TextField(20);
 	TextField tf_Pwd = new TextField(20);
 	TextField tf_Name = new TextField(20);
 	JButton bt_SignUp = new JButton("회원가입");		//회원가입으로 바꿈
 	JButton bt_Cancel = new JButton("취소");
 	JButton bt1 = new JButton("dd");
-	
+		
 	public GUI_SignUp(Connection conn){
 		super("AESS SignUp"); // Frame(String title)을 호출한다.
 		super.setIconImage(icon.getImage());
@@ -110,9 +111,8 @@ public class GUI_SignUp extends JFrame{
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if(e.getKeyCode() == KeyEvent.VK_ENTER){
-				GUI_Login gui_login = new GUI_Login(conn);
-				//System.out.printf("ID : %d\nName : %s\nPW : %d\n",tf_Id.getText(), tf_Name.getText(), tf_Pwd.getText());
-				System.out.println("dd");
+				GUI_Login gui_login = new GUI_Login(conn);			
+				Manage_User.signUp(tf_Id.getText(), tf_Pwd.getText(), tf_Name.getText());
 				setVisible(false);
 				dispose();
 				gui_login.setVisible(true);
@@ -127,13 +127,12 @@ public class GUI_SignUp extends JFrame{
 	}
 
 	class EventHandler implements ActionListener {
-		public void actionPerformed(ActionEvent e){		
-			
+		public void actionPerformed(ActionEvent e){					
 			if(e.getSource() == bt_SignUp){
 				GUI_Login gui_login = new GUI_Login(conn);
-				/*회원가입 시 아이디랑 비밀번호 출력*/
-				//System.out.printf("ID : %d\nName : %s\nPW : %d\n",tf_Id.getText(), tf_Name.getText(), tf_Pwd.getText());
-				System.out.println("dd2");
+				
+				Manage_User.signUp(tf_Id.getText(), tf_Pwd.getText(), tf_Name.getText());
+				
 				setVisible(false);
 				dispose();
 				gui_login.setVisible(true);

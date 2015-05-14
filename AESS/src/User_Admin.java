@@ -1,10 +1,12 @@
 import java.sql.*;
 
+import javax.swing.JOptionPane;
+
 public class User_Admin{	
-	private Connection conn;
+	private static Connection conn; //@@승훈 추가 : static으로 선언함. test때문에
 	
 	public User_Admin(Connection conn){
-		this.conn = conn;
+		User_Admin.conn = conn; //@@승훈 추가 : static으로 선언함. test때문에
 	}
 	
 	public void GetExamSchedule(int classroom){
@@ -23,17 +25,61 @@ public class User_Admin{
 		}
 	}
 	
-	public void CreateClassRoom(String roomNo, String location, String maxSeat, String equipment){
+	public static boolean CreateClassRoom(String roomNo, String location, String maxSeat, String equipment){ //@@승훈 추가 : test를 위해서 static선언
+		boolean createroom_success = true; //@@승훈 추가 : 리턴타입 bool변수
+		boolean room_check = true; //@@승훈 추가 : room이름 숫자인지 체크
+		boolean seat_check = true; //@@승훈 추가 : maxseat 숫자인지 체크
 		try {
-
-			String sql = "insert into classroom values ('"+roomNo+ "', '" +location+ "', '" +maxSeat+ "', '" +equipment+ "');";
-			Statement query = conn.createStatement();
-			query.execute(sql);
-			query.close();
+			//@@승훈 추가 : GUI에서 떼옴(기능)
+			if(!location.startsWith("E")&&!location.startsWith("I")) {
+				createroom_success = false;
+				JOptionPane.showMessageDialog(null, "건물을 잘못 입력하셨습니다.");
+			}
+			else if( location!=null&& roomNo!=null && maxSeat!=null) {
+			}
+			
+			//@@승훈 추가 : 호수 검사 (숫자)
+			for(int i = 0; i< roomNo.length(); i++){
+				char room_char = roomNo.charAt(i);
+				if( room_char < 48 || room_char > 58 || room_char == ' ') {
+					//해당 char값이 숫자가 아닐 경우
+					room_check = false;
+				}
+			}
+			if(room_check == false || roomNo.length()==0) {
+				createroom_success = false;
+				JOptionPane.showMessageDialog(null, "호수를 잘못 입력하셨습니다.");
+			}
+			else if( location!=null&& roomNo!=null && maxSeat!=null) {
+			}
+			
+			//@@승훈 추가 : 좌석 검사 (숫자)
+			for(int i = 0; i< maxSeat.length(); i++){
+				char seat_char = maxSeat.charAt(i);
+				if( seat_char < 48 || seat_char > 58 || seat_char==' ') {
+					//해당 char값이 숫자가 아닐 경우
+					seat_check = false;
+				}
+			}
+			if(seat_check == false || maxSeat.length()==0) {
+				createroom_success = false;
+				JOptionPane.showMessageDialog(null, "좌석수를 잘못 입력하셨습니다.");
+			}
+			else if( location!=null&& roomNo!=null && maxSeat!=null) {
+			}
+			
+			if(createroom_success == true) { //@@승훈 추가  : create 조건
+				System.out.println(roomNo+location);
+				String sql = "insert into classroom values ('"+roomNo+ "', '" +location+ "', '" +maxSeat+ "', '" +equipment+ "');";
+				Statement query = conn.createStatement();
+				query.execute(sql);
+				query.close();
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return createroom_success; //@@승훈 추가  : bool타입 반환
 	}
 	
 	public void SetClassRoom(String location, String no, String maxSeat, String cLocation, String cNo, String cMax){
