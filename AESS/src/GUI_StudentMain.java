@@ -56,7 +56,7 @@ public class GUI_StudentMain extends JPanel
 	{
 		this.conn = conn;
 		this.id = id;
-		this.student = new User_Student(id, conn);
+		this.student = new User_Student(conn);
 		
 		/**화면 구성 요소들 설정**/
 		setBorder(new TitledBorder("학생 시간표"));

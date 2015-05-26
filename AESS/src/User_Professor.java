@@ -523,7 +523,7 @@ public class User_Professor{
 				String sql2 = "select name from member where id='" +result.getString("user_id")+ "';";
 				ResultSet result2 = query2.executeQuery(sql2);
 				if(!result2.next()){
-					System.out.println("학생이 명단에 없슨니다.");
+					System.out.println("학생이 명단에 없습니다.");
 				}
 				vStdchkCol = new Vector();
 				vStdchkCol.addElement(result.getString("user_id"));		
@@ -941,4 +941,27 @@ public class User_Professor{
 			e.printStackTrace();
 		}
 	}
+	
+	/*******************이영석 추가 : 공지사항 입력**************************/
+	public void SetNotice(String lectureCode, String message){
+		try {
+			Statement query = conn.createStatement();
+			String sql = "select * from notice where courseNo='" +lectureCode+ "';";	 //공지사항이 있는지 확인
+			ResultSet result = query.executeQuery(sql);
+			if(result.next()){ //이미 있다면 공지사항 수정
+				sql = "update notice set message='" +message+ "' where courseNo='" +lectureCode+ "';";
+				query.execute(sql);
+			}
+			else{ //없다면 새 공지사항 입력
+				sql = "insert into notice(courseNo, message) values ('" +lectureCode+ "', '" +message+ "');";
+				query.execute(sql);
+			}
+			result.close();
+			query.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	/************************************************************************/
 }

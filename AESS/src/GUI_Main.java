@@ -30,6 +30,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 	JButton btn_roomList = new JButton("강의실 열람"); //모든 사용자가 사용
 	JButton btn_timeTable = new JButton("시간표/스케쥴 입력"); //학생, 조교가 사용
 	JButton btn_leaveOfAbsence = new JButton("휴학신청"); //학생, 조교가 사용
+	JButton btn_notice = new JButton("공지사항"); //학생, 조교가 사용
 	JButton btn_returnToSchool = new JButton("복학신청"); //휴학생이 사용
 	JButton btn_selectLecture = new JButton("수업 선택"); //교수가 사용
 	JButton btn_setPeriod = new JButton("시험기간 설정"); //관리자가 사용
@@ -41,6 +42,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 	GUI_ProfessorTable prof_table;
 	GUI_Professor prof_main;
 	GUI_SetPeriod set_period;
+	GUI_Notice notice; //이영석 추가 : 공지사항 클래스
 
 	/**********************메인 시작 함수****************************/
 	public static void main(String argv[]){
@@ -138,10 +140,15 @@ public class GUI_Main extends JFrame implements ActionListener {
 			std_main = new GUI_StudentMain(conn, id);	//학생 GUI
 			add(std_main, "Center");
 			
-			left.add(btn_timeTable);	//학생 일때 스케쥴 테이블 보기 버튼 추가
+			left.add(btn_timeTable);	 //스케쥴 테이블 보기 버튼 추가
 			btn_timeTable.addActionListener(this);
-			left.add(btn_leaveOfAbsence);
+			left.add(btn_leaveOfAbsence); //휴학 버튼 추가
 			btn_leaveOfAbsence.addActionListener(this);
+			/**********이영석 추가***************/
+			notice = new GUI_Notice(conn); //공지사항 인스턴스 생성
+			left.add(btn_notice); //공지사항 보기 버튼 추가
+			btn_notice.addActionListener(this); //공지사항 보기 버튼 리스너 등록
+			/*************************************/
 		}
 		else if(Info.getType().equals("L")){
 			left.add(btn_returnToSchool);
@@ -202,6 +209,12 @@ public class GUI_Main extends JFrame implements ActionListener {
 				GUI_Login gl = new GUI_Login(conn);
 				dispose();			
 			}
+		}
+		else if(e.getSource() == btn_notice){ //이영석 추가 : 공지사항 보기
+			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
+			add(notice, BorderLayout.CENTER); //공지사항 인스턴스 등록
+			revalidate();
+			repaint();			
 		}
 	}
 	

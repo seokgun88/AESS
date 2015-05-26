@@ -16,6 +16,8 @@ import javax.swing.table.TableColumnModel;
 public class GUI_Professor extends JTabbedPane implements MouseListener {
 	User_Professor prof;
 	Enums enums = new Enums();
+	protected Connection conn;
+	String lecture_code;
 	
 	JButton btAdd = new JButton("조교추가");
 	JButton btRemove = new JButton("삭제");
@@ -23,8 +25,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 	JTextField tfAcceptNum = new JTextField(16);
 	JTextField tfClassNum = new JTextField(16);
 	JTextField tfTestPeriod = new JTextField(16);
-	String lecture_code;
-	protected Connection conn;
+	JTextArea ta_notice = new JTextArea(30, 60); //공지사항 입력할 textarea
 	JTable table;
 	JTable prrior_table;
 	JComboBox cbPrrior;
@@ -111,7 +112,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		addTab("휴강/시험정보 입력", null, pn_TestInfo, "휴강/시험정보 입력");			
 		
 		/******************************조교 등록********************************/
-		JPanel pn_SetAssist = new JPanel();//
+		JPanel pn_SetAssist = new JPanel();
 		JPanel pTop = new JPanel();
 		btAdd.addActionListener(new profListener());
 		btRemove.addActionListener(new profListener());
@@ -308,6 +309,17 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		tableCellCenter(table5);
 		table5.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table5.addMouseListener(this);
+		
+		/********************이영석 추가 : 공지사항*************************/
+		JPanel pn_notice = new JPanel(); //공지사항 패널
+		pn_notice.add(ta_notice); //textarea 패널에 등록
+		JScrollPane scrollPane = new JScrollPane(ta_notice); //스크롤 생성
+		pn_notice.add(scrollPane); //스크롤 패널에 추가		
+		JButton bt_sendNotice = new JButton("입력"); //공지사항 입력 버튼
+		bt_sendNotice.addActionListener(new profListener()); //입력 버튼 리스너 등록
+		pn_notice.add(bt_sendNotice); //버튼 패널에 등록
+		addTab("공지사항", null, pn_notice, "공지사항 입력 및 수정"); //패널을 탭으로 만듦
+		/******************************************************************/
 	}
 	
 	public void tableCellCenter(JTable t) // 셀 내용 가운데 정렬
@@ -489,6 +501,9 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 					}
 				}
 			}
+			else if(menu.equals("입력")){ //이영석 추가 : 공지사항 입력 버튼 액션
+				prof.SetNotice(lecture_code, ta_notice.getText());
+			}
 		}
 	}
 
@@ -529,23 +544,19 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 }
 
