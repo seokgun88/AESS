@@ -30,6 +30,7 @@ public class GUI_Notice extends JPanel implements MouseListener{
 				return false;
 			}
 		}); //테이블 생성
+		t_participateClass.getTableHeader().setReorderingAllowed(false); //테이블 헤더 드래그 불가
 		t_participateClass.addMouseListener(this); //셀 마우스 리스너 등록
 		sp_participateClass = new JScrollPane(t_participateClass);
 		sp_participateClass.setPreferredSize(new Dimension(100, 500));
@@ -46,6 +47,7 @@ public class GUI_Notice extends JPanel implements MouseListener{
 	}
 	
 	public void mouseClicked(MouseEvent arg0) {
+		/****************선택된 칸의 과목코드로 해당 공지사항 읽어오기*****************/
 		int row = t_participateClass.getSelectedRow();
 		int col = t_participateClass.getSelectedColumn();
 		String lectureCode = (String)t_participateClass.getValueAt(row, col);

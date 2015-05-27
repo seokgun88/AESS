@@ -50,6 +50,11 @@ public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListen
 		
 		tm1 = new CalendarModel(0, 0);
 		weekTable = new JTable(tm1);
+		
+		/********************이영석 추가 : 테이블 헤더 수정 불가********************/
+		weekTable.getTableHeader().setReorderingAllowed(false);
+		weekTable.getTableHeader().setResizingAllowed(false);
+		
 		weekTable.addMouseListener(this);
 		jsp = new JScrollPane(weekTable);
 		jsp.setPreferredSize(new java.awt.Dimension(800, 500));
@@ -113,6 +118,11 @@ public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListen
 			remove(jsp);
 			tm1 = new CalendarModel(thisYear,thisMonth);
 			weekTable = new JTable(tm1);
+			
+			/********************이영석 추가 : 테이블 헤더 수정 불가********************/
+			weekTable.getTableHeader().setReorderingAllowed(false);
+			weekTable.getTableHeader().setResizingAllowed(false);
+			
 			weekTable.addMouseListener(this);
 			jsp = new JScrollPane(weekTable);
 			jsp.setPreferredSize(new java.awt.Dimension(800, 500));
@@ -134,6 +144,11 @@ public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListen
 			remove(jsp);
 			tm1 = new CalendarModel(thisYear,thisMonth);
 			weekTable = new JTable(tm1);
+			
+			/********************이영석 추가 : 테이블 헤더 수정 불가********************/
+			weekTable.getTableHeader().setReorderingAllowed(false);
+			weekTable.getTableHeader().setResizingAllowed(false);
+			
 			weekTable.addMouseListener(this);
 			jsp = new JScrollPane(weekTable);
 			jsp.setPreferredSize(new java.awt.Dimension(800, 500));

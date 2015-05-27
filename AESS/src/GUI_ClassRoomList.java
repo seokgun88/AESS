@@ -90,7 +90,9 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		
 		sche = new DefaultTableModel(data_roomList, col_roomList);
 		
-		table = new JTable(sche);		
+		table = new JTable(sche);
+		table.getTableHeader().setReorderingAllowed(false); //이영석 추가 : 헤더 드래그 불가
+		table.getTableHeader().setResizingAllowed(false); //이영석 추가 : 헤더 크기 수정 불가
 		JScrollPane sp = new JScrollPane(table);
 		listRoom();
 					
@@ -118,6 +120,11 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		JPanel scheP = new JPanel();
 		DTM_Room = new MyTableModel(data_roomTimetable, col_roomTimetable);
 		table_Room = new JTable(DTM_Room);
+		
+		/*****************이영석 추가 : 테이블 헤더 수정 불가*********************/		
+		table_Room.getTableHeader().setReorderingAllowed(false);
+		table_Room.getTableHeader().setResizingAllowed(false);
+		
 		JScrollPane sp_RoomTimetalbe = new JScrollPane(table_Room);
 		
 		sp_RoomTimetalbe.setPreferredSize(new java.awt.Dimension(650, 500));
@@ -326,6 +333,11 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		}		
 		DefaultTableModel DTM2 = new DefaultTableModel(vRoomList, vRoomListHead);
 		table.setModel(DTM2);
+		
+		/*********************이영석 추가 : 테이블 헤더 수정 불가********************/
+		table.getTableHeader().setReorderingAllowed(false);
+		table.getTableHeader().setResizingAllowed(false);
+		
 		table.getColumnModel().getColumn(0).setPreferredWidth(45);
 		table.getColumnModel().getColumn(1).setPreferredWidth(45);
 		table.getColumnModel().getColumn(2).setPreferredWidth(45);
@@ -345,6 +357,10 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		
 		MyTableModel DTM_Room2 = new MyTableModel(data_roomTimetable, col_roomTimetable);
 		table_Room.setModel(DTM_Room2);
+		/**********************이영석 추가 : 테이블 헤더 수정 불가**********************/
+		table_Room.getTableHeader().setReorderingAllowed(false);
+		table_Room.getTableHeader().setResizingAllowed(false);
+		
 		table_Room.setColumnSelectionAllowed(true);
 		table_Room.setRowHeight(35);
 		TableColumn column = table_Room.getColumnModel().getColumn(0);

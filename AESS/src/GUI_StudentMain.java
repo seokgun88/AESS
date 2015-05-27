@@ -66,6 +66,8 @@ public class GUI_StudentMain extends JPanel
 		JPanel panel_schedule = new JPanel();
 		MyTableModel sche = new MyTableModel(dtm_data, dtm_col);
 		table_student = new JTable(sche);		
+		table_student.getTableHeader().setReorderingAllowed(false); //이영석 추가 : 테이블 헤더 드래그 불가
+		table_student.getTableHeader().setResizingAllowed(false); //이영석 추가 : 테이블 크기 수정 불가
 		JScrollPane sp = new JScrollPane(table_student);
 		panel_schedule.add("Center",sp);
 		

@@ -51,7 +51,12 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener{
 		
 		JPanel scheP = new JPanel();
 		DefaultTableModel sche = new DefaultTableModel(data, col);
-		profTable = new JTable(sche);		
+		profTable = new JTable(sche);
+		
+		/******************이영석 추가 : 테이블 헤더 수정 불가*******************/
+		profTable.getTableHeader().setReorderingAllowed(false);
+		profTable.getTableHeader().setResizingAllowed(false);
+		
 		JScrollPane sp = new JScrollPane(profTable);
 		scheP.add("Center",sp);
 		
@@ -81,6 +86,11 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener{
 		JPanel scheP = new JPanel();
 		DefaultTableModel sche = new DefaultTableModel(data, col);
 		profTable = new JTable(sche);					
+		
+		/******************이영석 추가 : 테이블 헤더 수정 불가*******************/
+		profTable.getTableHeader().setReorderingAllowed(false);
+		profTable.getTableHeader().setResizingAllowed(false);
+		
 		profTable.setColumnSelectionAllowed(true);
 		profTable.setRowHeight(40);
 		JScrollPane sp = new JScrollPane(profTable);
