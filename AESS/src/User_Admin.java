@@ -82,10 +82,12 @@ public class User_Admin{
 		return createroom_success; //@@승훈 추가  : bool타입 반환
 	}
 	
-	public void SetClassRoom(String location, String no, String maxSeat, String cLocation, String cNo, String cMax){
+	/**이영석 추가 : 부수기재 정보 수정 추가**/
+	public void SetClassRoom(String location, String no, String maxSeat, String equipment, String cLocation, String cNo, String cMax, String cEquipment){
 		try {
 			//기존의 건물, 방, 인원으로 검색하여, 변경되었을 수도 있는 값들로 모두 업데이트 해버린다.
-			String sql = "update classroom set no='"+cNo+"', location='" +cLocation+ "', maxSeat='" +cMax+ "' where no='"+no+"' and location='" +location+ "' and maxSeat='"+maxSeat+"'";
+			String sql = "update classroom set no='"+cNo+"', location='" +cLocation+ "', maxSeat='" +cMax+ "', equipment='" +cEquipment+ 
+					"' where no='"+no+"' and location='" +location+ "' and maxSeat='"+maxSeat+"' and equipment='" +equipment+ "';";
 			Statement query = conn.createStatement();
 			query.execute(sql);
 			query.close();

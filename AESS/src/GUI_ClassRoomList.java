@@ -21,7 +21,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 	private Connection conn;	//DB접속을 위한 컨넥션 변수
 	private User_Admin admin; //관리자일 경우 강의실 정보 수정 가능
 	
-	Object nowListValue, nowRowB, nowRowC, nowRowM;
+	Object nowListValue, nowRowB, nowRowC, nowRowM, nowRowE; //이영석 추가 : nowRowE(부수기재 열)
 	int nowListRow, nowListCol;
 	int dragStartRow, dragStartCol, dragEndRow;
 		
@@ -35,8 +35,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 	JButton bt_popAdd = new JButton("추가");
 	JButton enterB = new JButton("입력");
 	JButton cancelB = new JButton("취소");
-	JTextField tf_building, tf_room, tf_maxSeat;
-	JRadioButton[] rb_equipment; //추가 : rb_equipment = 부수기재 버튼그룹
+	JTextField tf_building, tf_room, tf_maxSeat, tf_equip; //이영석 추가 : tf_equip(부수기재)
 	JPanel pn_roomList = new JPanel();
 	JPanel pn_listButton = new JPanel();
 	JPanel pn_roomInfo = new JPanel();
@@ -192,16 +191,9 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 			//추가 : 부수기재 란
 			JLabel equipL = new JLabel("부수기재");	
 			panel.add(equipL);
-						
-			//추가 : 부수기재 라디오버튼
-			rb_equipment = new JRadioButton[3];
-			rb_equipment[0] = new JRadioButton("mic");
-			rb_equipment[1] = new JRadioButton("bim");
-			rb_equipment[2] = new JRadioButton("lager");
-
-			for(JRadioButton c : rb_equipment) {
-				panel.add(c);
-			}
+			
+			tf_equip = new JTextField(20);
+			panel.add(tf_equip);						
 
 			/*****************************************/
 
@@ -421,6 +413,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 			this.nowRowB = table.getValueAt(nowListRow, 0);
 			this.nowRowC = table.getValueAt(nowListRow, 1);
 			this.nowRowM = table.getValueAt(nowListRow, 2);
+			this.nowRowE = table.getValueAt(nowListRow, 3);
 			System.out.println(nowListRow+","+nowListCol+","+nowListValue.toString()+"selected");
 			InitializeTable(table.getValueAt(nowListRow, 0).toString(), table.getValueAt(nowListRow, 1).toString());
 			System.out.println(table.getValueAt(nowListRow, 0).toString()+","+ table.getValueAt(nowListRow, 1).toString());
@@ -475,9 +468,11 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 	       		 		String changedRowB = table.getValueAt(nowListRow, 0).toString();
 	       		 		String changedRowC = table.getValueAt(nowListRow, 1).toString();
 	       		 		String changedRowM = table.getValueAt(nowListRow, 2).toString();
-	       		 		System.out.printf("%s %s %s %s %s %s",nowRowB.toString(), nowRowC.toString(), nowRowM.toString(), changedRowB, changedRowC, changedRowM);
-	       		 		admin.SetClassRoom(nowRowB.toString(), nowRowC.toString(), nowRowM.toString(), changedRowB, changedRowC, changedRowM);
-	       		 		}
+	       		 		/**이영석 추가 : 부수기재 정보 수정 가능**/
+	       		 		String changedRowE = table.getValueAt(nowListRow, 3).toString();
+	       		 		System.out.printf("%s %s %s %s %s %s %s",nowRowB.toString(), nowRowC.toString(), nowRowM.toString(), changedRowB, changedRowC, changedRowM, changedRowE);
+	       		 		admin.SetClassRoom(nowRowB.toString(), nowRowC.toString(), nowRowM.toString(), nowRowE.toString(), changedRowB, changedRowC, changedRowM, changedRowE);
+	       		 }
 	        	else{
 						table.setValueAt(nowListValue, nowListRow, nowListCol);
 						System.out.println("변경안됨");
@@ -503,19 +498,13 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 			if(e.getSource() == bt_popAdd) {
 				System.out.println("bt_popAdd Clicked");
 				
-				String equipment_text = ""; //추가 : 부수기재 여기에 저장해서 보냄
-				if(rb_equipment[0].isSelected()) 
-					equipment_text = equipment_text + rb_equipment[0].getText()+" ";
-				if(rb_equipment[1].isSelected())
-					equipment_text = equipment_text + rb_equipment[1].getText()+" ";
-				if(rb_equipment[2].isSelected())
-					equipment_text = equipment_text + rb_equipment[2].getText()+" ";
-				System.out.println("부수기재 : " + equipment_text);
+				String equipment = ""; //추가 : 부수기재 여기에 저장해서 보냄
+				equipment = tf_equip.getText();
+				System.out.println("부수기재 : " + equipment);
 				
-				admin.CreateClassRoom(tf_room.getText(), tf_building.getText(), tf_maxSeat.getText(), equipment_text); 
+				admin.CreateClassRoom(tf_room.getText(), tf_building.getText(), tf_maxSeat.getText(), equipment); 
 				listRoom();
 				Fr_addRoom.setVisible(false);
-
 			}
 			
 			if(e.getSource() == enterB) {
