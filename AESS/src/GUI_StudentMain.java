@@ -297,15 +297,13 @@ public class GUI_StudentMain extends JPanel
 			if(schedule_no[table_student.getSelectedRow()][table_student.getSelectedColumn()]!=null)
 				PopUpMenu(me, Integer.parseInt(schedule_no[table_student.getSelectedRow()][table_student.getSelectedColumn()]));
 		}
-	}
-		
+	}		
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {}
-
 	@Override
 	public void mouseExited(MouseEvent arg0) {}
-
+	
 	/**마우스 드래그 할때 시작 칸과 끝 칸 좌표 저장**/
 	public void mousePressed(MouseEvent pe) {
 		// TODO Auto-generated method stub
@@ -342,10 +340,8 @@ public class GUI_StudentMain extends JPanel
 		}
 	}
 	/**********************************************/
-
 	@Override
 	public void mouseMoved(MouseEvent arg0) {}
-
 	@Override
 	public void mouseDragged(MouseEvent arg0) {}
 }
