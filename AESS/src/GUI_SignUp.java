@@ -28,12 +28,10 @@ public class GUI_SignUp extends JFrame{
 	JPanel pn_id = new JPanel();
 	JPanel pn_password = new JPanel();
 	JPanel pn_button = new JPanel();
-	JPanel pn_box = new JPanel();
 
 	JLabel lb_Id = new JLabel("ID : ", Label.RIGHT); // Label의 text정렬을 오른쪽으로.
 	JLabel lb_Name = new JLabel("Name :", Label.RIGHT);
 	JLabel lb_Pass = new JLabel("Password :", Label.RIGHT);
-	JLabel valid = new JLabel("아이디와 비밀번호를 입력해 주세요.");
 	
 	boolean isSignUp; //##지수 추가
 	
@@ -43,6 +41,11 @@ public class GUI_SignUp extends JFrame{
 	JButton bt_SignUp = new JButton("회원가입");		//회원가입으로 바꿈
 	JButton bt_Cancel = new JButton("취소");
 	JButton bt1 = new JButton("dd");
+	
+	/*********이영석 추가 : 학생, 교수 중 골라서 회원가입 하게 하는 라디오 버튼************/
+	ButtonGroup bg_stdOrPrf = new ButtonGroup();
+	JRadioButton rbt_student = new JRadioButton("학생");
+	JRadioButton rbt_professor = new JRadioButton("교수");
 		
 	public GUI_SignUp(Connection conn){
 		super("AESS SignUp"); // Frame(String title)을 호출한다.
@@ -64,12 +67,8 @@ public class GUI_SignUp extends JFrame{
 		tf_Pwd.setEchoChar('*'); // 입력한 값 대신 '*'이 보이게 한다.
 		
 		// 버튼과 TextField에 이벤트처리를 위한 Listener를 추가해준다.
-		tf_Id.addKeyListener(new KeyHandler());
-		tf_Name.addKeyListener(new KeyHandler());
-		tf_Pwd.addKeyListener(new KeyHandler());
 		
 		bt_SignUp.addActionListener(new EventHandler());
-		bt_SignUp.addKeyListener(new KeyHandler());
 		bt_Cancel.addActionListener(new EventHandler());
 		
 		lbSmallLogo.setBounds(40, 0, 321, 68);
@@ -92,46 +91,37 @@ public class GUI_SignUp extends JFrame{
 		add(lb_Pass);
 		add(tf_Pwd);	
 
-		bt_SignUp.setBounds(115, 183, 80, 21);
-		bt_Cancel.setBounds(205, 183, 80, 21);
+		bt_SignUp.setBounds(115, 213, 80, 21);
+		bt_Cancel.setBounds(205, 213, 80, 21);
 		add(bt_SignUp);
 		add(bt_Cancel);
 		
-		valid.setBounds(105, 213, 220, 21);
-		add(valid);
-		add(pn_box);		
+		/**********이영석 추가 : 학생, 교수 라디오버튼 등록************/
+		bg_stdOrPrf.add(rbt_student);
+		bg_stdOrPrf.add(rbt_professor);
+		rbt_student.setBounds(115, 173, 80, 21);
+		rbt_professor.setBounds(205, 173, 80, 21);
+		add(rbt_student);
+		add(rbt_professor);
 		
 		this.setResizable(false);
 	}
 	
-	/*Login_set 함수 삭제*/
-	
-	class KeyHandler implements KeyListener
-	{
-		@Override
-		public void keyPressed(KeyEvent e) {
-			if(e.getKeyCode() == KeyEvent.VK_ENTER){
-				GUI_Login gui_login = new GUI_Login(conn);			
-				Manage_User.signUp(tf_Id.getText(), tf_Pwd.getText(), tf_Name.getText());
-				setVisible(false);
-				dispose();
-				gui_login.setVisible(true);
-			}
-		}
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {}
-
-		@Override
-		public void keyTyped(KeyEvent arg0) {}
-	}
-
+	/**Login_set 함수 삭제**/
+	/**이영석 삭제 : 엔터키 리스너 삭제**/
 	class EventHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e){					
 			if(e.getSource() == bt_SignUp){
 				GUI_Login gui_login = new GUI_Login(conn);
+				String type = "notSelect";
 				
-				Manage_User.signUp(tf_Id.getText(), tf_Pwd.getText(), tf_Name.getText());
+				if(rbt_student.isSelected())
+					type = "S";
+				else if(rbt_professor.isSelected())
+					type = "P";
+				
+				ManageUser.setConn(conn);
+				ManageUser.signUp(tf_Id.getText(), tf_Pwd.getText(), tf_Name.getText(), type);
 				
 				setVisible(false);
 				dispose();
@@ -149,16 +139,13 @@ public class GUI_SignUp extends JFrame{
 
 	class EventHandler1 implements WindowListener 
 	{ 
-		public void windowOpened(WindowEvent e) {} 
 		// Frame의 닫기 버튼을 눌렀을 때 호출된다.
 		public void windowClosing(WindowEvent e) {
 			// Frame을 화면에서 보이지 않도록 하고
-			e.getWindow().setVisible(false);
-			e.getWindow().dispose();
 			System.exit(0);		
-			}
-
+		}
 		//아무내용도 없는 메서드 구현
+		public void windowOpened(WindowEvent e) {} 
 		public void windowClosed(WindowEvent e){} 
 		public void windowIconified(WindowEvent e){} 
 		public void windowDeiconified(WindowEvent e){} 

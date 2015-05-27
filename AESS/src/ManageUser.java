@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
-public class Manage_User {
+public class ManageUser {
 	static private Connection conn;
 	
 	public static void setLeaveOfAbsence(){
@@ -29,12 +29,10 @@ public class Manage_User {
 		}		
 	}
 	
-	public static boolean signUp(String id, String pass, String name){
-		boolean isSignUp;
-		
+	public static boolean signUp(String id, String pass, String name, String type){
+		boolean isSignUp;		
 		/*회원가입 시 아이디랑 비밀번호 출력*/
-		System.out.printf("ID : %s\nName : %s\nPW : %s\n",id, pass, name);
-
+		System.out.printf("ID : %s\nName : %s\nPW : %s\nType : %s\n",id, pass, name, type);
 		/*이름 조건*/
 		if(name.contains("0") || name.contains("1") || name.contains("2") || name.contains("3") || name.contains("4") || name.contains("5") || name.contains("6") || name.contains("7") || name.contains("8") || name.contains("9"))
 			isSignUp = false;
@@ -45,11 +43,23 @@ public class Manage_User {
 		else if(name == null || name.contains("\t") || name.contains(" ") || name.contains("\n"))
 			isSignUp = false;
 		else
-			isSignUp = true;		
+			isSignUp = true;	
+		
+		/**이영석 추가 : DB로 회원 가입 정보 전송**/
+		try {
+			Statement query = conn.createStatement();
+			String sql = "insert into member (id, pass, name, type) values ('" +id+ "', '" +pass+ "', '" +name+ "', '" +type+ "');";
+			query.execute(sql);
+			query.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return isSignUp;
 	}
 
 	public static void setConn(Connection conn) {
-		Manage_User.conn = conn;
+		ManageUser.conn = conn;
 	}	
 }

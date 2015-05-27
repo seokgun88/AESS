@@ -22,9 +22,6 @@ public class GUI_Notice extends JPanel implements MouseListener{
 		Vector v_participateClassHead = new Vector(); //강의목록 테이블 헤드
 		v_participateClassHead.addElement("강의목록"); //테이블 헤드 이름
 		Vector v_participateClass = notice.getParticipateClasss(); //강의 목록 받아오기
-		if(v_participateClass.size() == 0){
-			v_participateClass.addElement("참여중인 강의가 없습니다.");
-		}
 		t_participateClass = new JTable(new DefaultTableModel(v_participateClass ,v_participateClassHead){
 			public boolean isCellEditable(int i, int c){ //셀 내용 수정 안되게 설정
 				return false;

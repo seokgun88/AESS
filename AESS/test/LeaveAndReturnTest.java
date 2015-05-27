@@ -12,8 +12,8 @@ public class LeaveAndReturnTest {
 		DBconnect dbcon = new DBconnect();
 		Connection conn = dbcon.connect();
 		Info.setId("s");
-		Manage_User.setConn(conn);
-		Manage_User.setLeaveOfAbsence();
+		ManageUser.setConn(conn);
+		ManageUser.setLeaveOfAbsence();
 		try {
 			Statement query = conn.createStatement();
 			ResultSet result = query.executeQuery("select type from member where id='" +Info.getId()+ "';");
@@ -32,8 +32,8 @@ public class LeaveAndReturnTest {
 		DBconnect dbcon = new DBconnect();
 		Connection conn = dbcon.connect();
 		Info.setId("s");
-		Manage_User.setConn(conn);
-		Manage_User.setReturnToSchool();
+		ManageUser.setConn(conn);
+		ManageUser.setReturnToSchool();
 		try {
 			Statement query = conn.createStatement();
 			ResultSet result = query.executeQuery("select type from member where id='" +Info.getId()+ "';");

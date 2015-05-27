@@ -192,8 +192,8 @@ public class GUI_Main extends JFrame implements ActionListener {
 			if(JOptionPane.showConfirmDialog(null,"휴학신청을 하시겠습니까?\n(신청 후 자동로그아웃 됩니다.)", "휴학신청",
 					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION)
 			{
-				Manage_User.setConn(conn);
-				Manage_User.setLeaveOfAbsence();
+				ManageUser.setConn(conn);
+				ManageUser.setLeaveOfAbsence();
 				/**재접속**/
 				GUI_Login gl = new GUI_Login(conn);
 				dispose();			
@@ -203,8 +203,8 @@ public class GUI_Main extends JFrame implements ActionListener {
 			if(JOptionPane.showConfirmDialog(null,"복학신청을 하시겠습니까?\n(신청 후 자동로그아웃 됩니다.)", "복학신청",
 					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION)
 			{	
-				Manage_User.setConn(conn);
-				Manage_User.setReturnToSchool();
+				ManageUser.setConn(conn);
+				ManageUser.setReturnToSchool();
 				/**재접속**/
 				GUI_Login gl = new GUI_Login(conn);
 				dispose();			

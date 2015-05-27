@@ -7,30 +7,30 @@ import org.junit.*;
 public class SignUpNameTest {
 	@Test
 	public void TestSucceed() {
-		assertEquals(true, Manage_User.signUp("abc", "123", "이영석"));
+		assertEquals(true, ManageUser.signUp("abc", "123", "이영석", "S"));
 	}
 	@Test
 	public void TestContainingNumber() {
-		assertEquals(false, Manage_User.signUp("abc", "123", "1이영석"));
+		assertEquals(false, ManageUser.signUp("abc", "123", "1이영석", "S"));
 	}
 	@Test
 	public void TestContainingSymbol() {
-		assertEquals(false, Manage_User.signUp("abc", "123", "#$이영석"));
+		assertEquals(false, ManageUser.signUp("abc", "123", "#$이영석", "S"));
 	}
 	@Test
 	public void TestContainingSpace() {
-		assertEquals(false, Manage_User.signUp("abc", "123", " 이영석	"));
+		assertEquals(false, ManageUser.signUp("abc", "123", " 이영석	", "S"));
 	}
 	@Test
 	public void TestContainingNumberAndSymbol() {
-		assertEquals(false, Manage_User.signUp("abc", "123", "1!이영석"));
+		assertEquals(false, ManageUser.signUp("abc", "123", "1!이영석", "S"));
 	}
 	@Test
 	public void TestContainingNumberAndSpace() {
-		assertEquals(false, Manage_User.signUp("abc", "123", "1이영석	"));
+		assertEquals(false, ManageUser.signUp("abc", "123", "1이영석	", "S"));
 	}
 	@Test
 	public void TestContainingSymbolAndSpace() {
-		assertEquals(false, Manage_User.signUp("abc", "123", "#$@이영석	"));
+		assertEquals(false, ManageUser.signUp("abc", "123", "#$@이영석	", "S"));
 	}
 }
