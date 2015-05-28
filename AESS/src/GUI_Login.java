@@ -27,6 +27,7 @@ class GUI_Login extends JFrame{
 	private JButton bt_Login = new JButton("로그인");
 	private JButton bt_Cancel = new JButton("취소");	
 	private JButton bt_SignUp = new JButton("회원가입");
+	private int false_check = 0; //승훈추가 : 비밀번호 초기화용
 
 	/*************디폴트 생성자*****************/
 	public GUI_Login(){
@@ -98,7 +99,16 @@ class GUI_Login extends JFrame{
 		}
 		else if(loginResult == 1){
 			lb_Valid.setText("아이디 또는 비밀번호가 잘못되었습니다.");
-			lb_Valid.setForeground(Color.red); // 글자 빨간색으로 출력		
+			lb_Valid.setForeground(Color.red); // 글자 빨간색으로 출력	
+			false_check++; //승훈추가 : 비밀번호 틀린횟수 체크, 5이상일때 초기화창 만들려고
+			System.out.printf("   %d\n",false_check);
+			if(false_check>5) {
+				if(JOptionPane.showConfirmDialog(null,"비밀번호 초기화 요청하시겠습니까?", "비밀번호 초기화",
+					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION) {
+						false_check=0;
+						System.out.println("id : " + id + " 초기화 요청 발사"); //승훈추가 : 비밀번호 초기화 요청
+					}
+			}
 		}
 		else if(loginResult == 2){
 			lb_Valid.setText("강의실예약시스템 사용 기간이 아닙니다.");

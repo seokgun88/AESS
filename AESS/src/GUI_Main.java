@@ -30,6 +30,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 	private JButton btn_returnToSchool = new JButton("복학신청"); //휴학생이 사용
 	private JButton btn_selectLecture = new JButton("수업 선택"); //교수가 사용
 	private JButton btn_setPeriod = new JButton("시험기간 설정"); //관리자가 사용
+	private JButton btn_reset_pwd = new JButton("비밀번호 초기화 요청 확인"); //@@승훈추가 : 관리자가 사용
 	
 	private BorderLayout GUI_MainLayout = new BorderLayout(10,10);
 	
@@ -39,6 +40,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 	private GUI_ProfessorTable prof_table;
 	private GUI_Professor prof_main;
 	private GUI_SetPeriod set_period;
+	private GUI_ResetPwd reset_pwd; //승훈추가 : 비밀번호 초기화 클래스
 	private GUI_Notice notice; //이영석 추가 : 공지사항 클래스
 
 	/**********************메인 시작 함수****************************/
@@ -125,6 +127,9 @@ public class GUI_Main extends JFrame implements ActionListener {
 			
 			left.add(btn_setPeriod);	//관리자 일때 시험기간 설정 보기 버튼 추가
 			btn_setPeriod.addActionListener(this);
+			
+			left.add(btn_reset_pwd);	//관리자 일때 비밀번호 초기화 요청확인 버튼 추가
+			btn_reset_pwd.addActionListener(this);
 		}		
 		else if(Info.getType().equals("P")){ //교수 일때
 			prof_table = new GUI_ProfessorTable(id);	//교수 수업별 시간표 GUI
@@ -179,6 +184,12 @@ public class GUI_Main extends JFrame implements ActionListener {
 		else if(e.getSource() == btn_setPeriod) { //시험기간 설정 버튼 이벤트
 			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
 			add(set_period, BorderLayout.CENTER);
+			revalidate();
+			repaint();
+		}
+		else if(e.getSource() == btn_reset_pwd) { //승훈추가 : 비밀번호 초기화 요청 확인 버튼 이벤트
+			remove(GUI_MainLayout.getLayoutComponent(BorderLayout.CENTER));
+			add(reset_pwd, BorderLayout.CENTER);
 			revalidate();
 			repaint();
 		}
