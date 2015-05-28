@@ -270,7 +270,14 @@ public class User_Admin{
 		//활성상태일때 값은 T, 비활성상태일때는 F. Update구문 사용.
 		try{
 			Statement query = conn.createStatement();
-			String sql = "update member set state='" +state+ "' where id='" +id+ "';";
+			String stateStr;
+			if(isUserUnapproved(id))//가입 승인되지 않은 회원의 상태가 변경되지 않도록.
+				return;
+			if (state)
+				stateStr="T";
+			else
+				stateStr="F";
+			String sql = "update member set state='" +stateStr+ "' where id='" +id+ "';";
 			query.execute(sql);
 			query.close();
 		}catch(SQLException e){
@@ -286,6 +293,22 @@ public class User_Admin{
 			result = query.executeQuery(sql);
 			result.next();
 			if (result.getString("state").equals("T"))
+				res=true;
+			query.close();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return res;
+	}
+	public boolean isUserUnapproved(String id){
+		boolean res=false;
+		try{
+			Statement query = conn.createStatement();
+			String sql = "select * from member where id='" +id+ "';";
+			ResultSet result;
+			result = query.executeQuery(sql);
+			result.next();
+			if (result.getString("state").equals("N"))
 				res=true;
 			query.close();
 		}catch(SQLException e){
