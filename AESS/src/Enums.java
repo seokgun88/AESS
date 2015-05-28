@@ -3,7 +3,7 @@
 public class Enums {
 	String[] IndexToBlock = {"1a", "1b", "2a", "2b", "3a", "3b", "4a", "4b", "5a", "5b", "6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b"};
 	
-	int DayToIndex(String Day) {
+	public static int DayToIndex(String Day) {
 		switch(Day) {
 			case "¿ù" : return 1;
 			case "È­" : return 2;
@@ -16,7 +16,7 @@ public class Enums {
 		return 0;
 	}
 
-	int BlockToIndex(String block) {
+	public static int BlockToIndex(String block) {
 		switch(block) {
 			case "1a" : return 0;
 			case "1b" : return 1;
@@ -40,7 +40,7 @@ public class Enums {
 		return 0;
 	}
 		
-	String BlockToTime(String block) {
+	public static String BlockToTime(String block) {
 		switch(block) {
 			case "1a" : return "09:00";
 			case "1b" : return "09:30";
@@ -64,7 +64,7 @@ public class Enums {
 		return "00:00";
 	}
 	
-	String TimeToBlock(String time){
+	public static String TimeToBlock(String time){
 		switch(time){
 			 case "09:00" : return "1a";
 			 case "09:30" : return "1b";
@@ -88,7 +88,7 @@ public class Enums {
 		return "00";
 	}
 	
-	int TimeToIndex(String time){
+	public static int TimeToIndex(String time){
 		switch(time){
 			 case "09:00" : return 0;
 			 case "09:30" : return 1;
@@ -112,7 +112,7 @@ public class Enums {
 		return -1;
 	}
 	
-	int TimeToRank(String day, String starttime){
+	public static int TimeToRank(String day, String starttime){
 		return 100*DayToIndex(day) + Integer.parseInt(starttime.substring(0, 2));
 	}
 }

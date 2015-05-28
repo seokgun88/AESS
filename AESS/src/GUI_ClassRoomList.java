@@ -337,14 +337,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		table.repaint();
 	}
 	
-	public void InitializeTable(String location, String roomNo) {
-		Statement scheduleState, blockState;
-		ResultSet scheduleResult, blockResult;
-	
-		int row;
-		int col;
-		int i =0;
-		
+	public void InitializeTable(String location, String roomNo) {			
 		MyTableModel DTM_Room2 = new MyTableModel(data_roomTimetable, col_roomTimetable);
 		table_Room.setModel(DTM_Room2);
 		/**********************이영석 추가 : 테이블 헤더 수정 불가**********************/
@@ -360,29 +353,15 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 
 		table_Room.revalidate();
 		//table_Room.repaint();
-		schedule_no = new String[20][20];
 		
-		try {
-			//**GUI가 할 일이 아님
-			Connection conn = Info.getConn();
-			blockState=conn.createStatement();
-			blockResult = blockState.executeQuery("select * from timeblock where location='" +location+ "' and classroom='"+roomNo+"' and isAvailable='F'");
-			System.out.println(location + roomNo);
-			while(blockResult.next()) {
-				scheduleState=conn.createStatement();
-				scheduleResult = scheduleState.executeQuery("select * from schedule where no='" +blockResult.getString("scheduleNo")+ "'");
-				row = enums.BlockToIndex(blockResult.getString("time"));
-				col = enums.DayToIndex(blockResult.getString("day"));
-				schedule_no[row][col] = blockResult.getString("scheduleNo");
-				while(scheduleResult.next()) {
-					System.out.println("schedule");
-					table_Room.setValueAt(scheduleResult.getString("name"), row, col);
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
+		/**이영석 수정 : GUI에 있던 세부 기능을 ClassRoomList로 이동**/
+		Vector v_schedule = ClassRoomList.getRoomTimetable(location, roomNo);
+		schedule_no = (String[][]) v_schedule.get(0);
+		Vector v_scheduleInfos = (Vector) v_schedule.get(1);
+		for(int i=0; i<v_scheduleInfos.size(); i++){
+			Vector v_scheduleInfo = (Vector) v_scheduleInfos.get(i);
+			table_Room.setValueAt((String)v_scheduleInfo.get(0), (int)v_scheduleInfo.get(1), (int)v_scheduleInfo.get(2));			
+		}				
 	}
 	
 	public void tableCellColor(JTable t, int row, int col) // 셀 내용 안비었으면 색칠

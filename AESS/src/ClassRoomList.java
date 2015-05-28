@@ -60,5 +60,43 @@ public class ClassRoomList {
 
 	public static void setConn(Connection conn) {
 		ClassRoomList.conn = conn;
-	}	
+	}
+	
+	/**이영석 추가 : GUI_ClassRoomList에 있던 기능 이동**/
+	public static Vector getRoomTimetable(String location, String roomNo){
+		Vector v_schedule = new Vector();
+		String schedule_no[][] = new String[20][20];
+		Vector v_scheduleInfos = new Vector();
+		int row;
+		int col;
+		Statement scheduleState, blockState;
+		ResultSet scheduleResult, blockResult;
+		try {
+			blockState=conn.createStatement();
+			blockResult = blockState.executeQuery("select * from timeblock where location='" +location+ "' and classroom='"+roomNo+"' and isAvailable='F'");
+			System.out.println(location + roomNo);
+			while(blockResult.next()) {
+				row = Enums.BlockToIndex(blockResult.getString("time"));
+				col = Enums.DayToIndex(blockResult.getString("day"));	
+				schedule_no[row][col] = blockResult.getString("scheduleNo");
+				
+				scheduleState=conn.createStatement();
+				scheduleResult = scheduleState.executeQuery("select * from schedule where no='" +blockResult.getString("scheduleNo")+ "'");
+				while(scheduleResult.next()) {
+					System.out.println("schedule");
+					Vector v_scheduleInfo = new Vector();
+					v_scheduleInfo.add(scheduleResult.getString("name"));
+					v_scheduleInfo.add(row);
+					v_scheduleInfo.add(col);
+					v_scheduleInfos.add(v_scheduleInfo);
+				}
+			}
+			v_schedule.add(schedule_no);
+			v_schedule.add(v_scheduleInfos);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return v_schedule;
+	}
 }
