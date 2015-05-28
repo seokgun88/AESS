@@ -264,7 +264,7 @@ public class User_Admin{
 			e.printStackTrace();
 		}
 	}
-	public void activateUser(String id, boolean state){
+	public void activateUser(String id, String state){
 		/**이영석 추가 : 쿼리문 작성, state가 T,F들어오면 DB 멤버의 state 상태에 그대로 T,F 업데이트**/
 		//state의 논리값에 따라 멤버 중 id의 active값으로 지정.
 		//활성상태일때 값은 T, 비활성상태일때는 F. Update구문 사용.
@@ -277,7 +277,7 @@ public class User_Admin{
 			e.printStackTrace();
 		}
 	}
-	public boolean isUserActivated(String id){
+	public boolean isUserInactivated(String id){
 		boolean res=false;
 		try{
 			Statement query = conn.createStatement();
@@ -285,7 +285,7 @@ public class User_Admin{
 			ResultSet result;
 			result = query.executeQuery(sql);
 			result.next();
-			if (result.getString("state").equals("T"))
+			if (result.getString("state").equals("F"))
 				res=true;
 			query.close();
 		}catch(SQLException e){
@@ -309,7 +309,7 @@ public class User_Admin{
 			if(state==AccountState.NEW){
 				sql = "select id from member where state = 'N';";//가입 신청한 회원만 표시
 			}else if(state==AccountState.AUTHED){
-				sql = "select id from member where state = 'T' or 'F';";//가입된 회원만 표시(비활성화 회원 포함)
+				sql = "select id from member where state='T' or state='F';";//가입된 회원만 표시(비활성화 회원 포함)
 			}else{
 				//All accounts
 				sql = "select id from member";//전체 회원 표시

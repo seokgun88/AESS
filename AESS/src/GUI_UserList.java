@@ -101,10 +101,10 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		curList=admin.getUserList(accSt);
 		tempList = new String[curList.length];
 		for(int i=0;i<curList.length;i++){
-			if(admin.isUserActivated(curList[i]))
-				buf="";
-			else
+			if(admin.isUserInactivated(curList[i]))
 				buf=deactTag;
+			else
+				buf="";
 			tempList[i]=curList[i]+buf;
 		}
 		
@@ -141,11 +141,10 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 			admin.deleteUser(curList[userJList.getSelectedIndex()]);
 		} else if(arg0.getSource().equals(btnTogAct)){
 			//계정 비/활성화버튼
-			if(userJList.getSelectedValue().toString().contains(deactTag))
-				
-				admin.activateUser(curList[userJList.getSelectedIndex()], true);
+			if(userJList.getSelectedValue().toString().contains(deactTag))				
+				admin.activateUser(curList[userJList.getSelectedIndex()], "T");
 			else
-				admin.activateUser(curList[userJList.getSelectedIndex()], false);
+				admin.activateUser(curList[userJList.getSelectedIndex()], "F");
 		}
 		
 		refreshList();
