@@ -9,23 +9,19 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 /**
- * 
- */
-
-/**
  * @author Seiryu
  *
  */
 public class GUI_UserList extends JPanel implements ActionListener, MouseListener {
-	JList user_list ;
+	private JList user_list ;
 //	JRadioButton ;
 	
-	User_Admin admin;
+	private User_Admin admin;
 	private Connection conn;
-	String id;
+	private String id;
 	
-	public GUI_UserList(Connection conn, String id){
-		this.conn = conn;
+	public GUI_UserList(String id){
+		conn = Info.getConn();
 		this.id = id;
 		
 		refreshList();

@@ -31,7 +31,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 	private JButton btn_selectLecture = new JButton("수업 선택"); //교수가 사용
 	private JButton btn_setPeriod = new JButton("시험기간 설정"); //관리자가 사용
 	private JButton btn_reset_pwd = new JButton("비밀번호 초기화 요청 확인"); //@@승훈추가 : 관리자가 사용
-	JButton btn_dispUserList = new JButton("사용자 목록 표시"); //관리자가 사용
+	private JButton btn_dispUserList = new JButton("사용자 목록 표시"); //관리자가 사용
 	
 	private BorderLayout GUI_MainLayout = new BorderLayout(10,10);
 	
@@ -43,7 +43,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 	private GUI_SetPeriod set_period;
 	private GUI_ResetPwd reset_pwd; //승훈추가 : 비밀번호 초기화 클래스
 	private GUI_Notice notice; //이영석 추가 : 공지사항 클래스
-	private GUI_UserList user_list;
+	private GUI_UserList user_list; //정용훈 추가
 
 	/**********************메인 시작 함수****************************/
 	public static void main(String argv[]){

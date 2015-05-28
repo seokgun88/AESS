@@ -240,62 +240,60 @@ public class User_Admin{
 	}
 	
 	
-	
+	/**정용훈 추가**/
 	public void approveUser(String id){
 		//새로 가입 요청이 들어온 멤버 중 id인 멤버를 가입 승인. auth=F에서 auth=T로 Update
-		try{
-			String sql;
-			ResultSet result;
-			
+		try{			
 			Statement query = conn.createStatement();
-			//*****//
-			sql = ""; //
-			query.executeUpdate(sql);
+			String sql = "update member set state='T' where id='" +id+ "';";
+			query.execute(sql);
+			query.close();
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
 	}
 	public void deleteUser(String id){
+		/**이영석 추가 : 쿼리문 작성**/
 		//id인 멤버를 삭제. Delete사용
 		try{
-			String sql;
-			ResultSet result;
-			
 			Statement query = conn.createStatement();
-			//*****//
-			sql = ""; //
-			query.executeUpdate(sql);
+			String sql = "delete from member where id = '" +id+ "';";
+			query.execute(sql);
+			query.close();
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
 	}
 	public void activateUser(String id, boolean state){
+		/**이영석 추가 : 쿼리문 작성, state가 T,F들어오면 DB 멤버의 state 상태에 그대로 T,F 업데이트**/
 		//state의 논리값에 따라 멤버 중 id의 active값으로 지정.
 		//활성상태일때 값은 T, 비활성상태일때는 F. Update구문 사용.
 		try{
-			String sql;
-			ResultSet result;
-			
 			Statement query = conn.createStatement();
-			//*****//
-			sql = ""; //
-			query.executeUpdate(sql);
+			String sql = "update member set state='" +state+ "' where id='" +id+ "';";
+			query.execute(sql);
+			query.close();
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
 	}
+	/**이영석 추가 : 쿼리문 작성, state가 T면 가입된 즉 활성화된 회원
+	 * F면 비활성화된 회원
+	 * N(new)면 가입 신청한 회원
+	 */
 	public String [] getUserList(AccountState state){
 		try{
 			String [] temp;
-			String sql;
-			ResultSet result;
 			int resCnt, i=0;
 			
 			Statement query = conn.createStatement();
+			String sql;
+			ResultSet result;
+			
 			if(state==AccountState.NEW){
-				sql = "select id from member where auth = 'T'";//가입 신청한 회원만 표시
+				sql = "select id from member where state = 'N';";//가입 신청한 회원만 표시
 			}else if(state==AccountState.AUTHED){
-				sql = "select id from member where auth = 'F'";//가입된 회원만 표시
+				sql = "select id from member where state = 'T' or 'F';";//가입된 회원만 표시(비활성화 회원 포함)
 			}else{
 				//All accounts
 				sql = "select id from member";//전체 회원 표시

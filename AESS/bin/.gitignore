@@ -22,3 +22,5 @@
 /GUI_ResetPwd$1.class
 /ResetPwd.class
 /ResetPwdTest.class
+/User_Admin$AccountState.class
+/GUI_UserList.class
