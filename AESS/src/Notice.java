@@ -4,8 +4,8 @@ import java.util.*;
 public class Notice {
 	Connection conn;
 	
-	public Notice(Connection conn){
-		this.conn = conn;
+	public Notice(){
+		conn = Info.getConn();
 	}
 	/******************이영석 추가 : 공지사항 읽어오기*****************/
 	public Vector getParticipateClasss(){

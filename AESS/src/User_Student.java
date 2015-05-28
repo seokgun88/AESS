@@ -4,8 +4,8 @@ import java.util.*;
 public class User_Student{
 	private Connection conn;
 	
-	public User_Student(Connection conn){
-		this.conn = conn;
+	public User_Student(){
+		conn = Info.getConn();
 	}
 	public void CreateTimeBlock(String day, String time, int type){
 		try {

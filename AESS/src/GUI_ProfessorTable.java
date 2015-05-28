@@ -34,13 +34,11 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener{
 	
 	User_Professor prof;
 	String id;
-	private Connection conn;
 	String[][] schedule_no = new String[20][20];
 	
 	boolean isProfTable;
 	
-	public GUI_ProfessorTable(Connection conn, String id){
-		this.conn = conn;
+	public GUI_ProfessorTable(String id){
 		this.id = id;
 		
 		isProfTable = true;
@@ -70,7 +68,7 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener{
 		
 		profTable.addMouseListener(this);
 		
-		prof=new User_Professor(id, conn);
+		prof=new User_Professor(id);
 		prof.InitializeTable(profTable, schedule_no);
 	}
 	
@@ -112,7 +110,7 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener{
 			
 			isProfTable = false;
 			
-			GUI_Professor prof_main = new GUI_Professor(conn, id, schedule_no[row][column]);
+			GUI_Professor prof_main = new GUI_Professor(id, schedule_no[row][column]);
 			add(BorderLayout.CENTER, prof_main);
 			this.setBorder(new TitledBorder((String) profTable.getValueAt(row, column) ));
 		}

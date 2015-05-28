@@ -14,8 +14,8 @@ public class GUI_Notice extends JPanel implements MouseListener{
 	private JScrollPane sp_participateClass;
 	private JTextArea ta_notice = new JTextArea(30, 60); //공지사항 읽어올 textarea
 	
-	public GUI_Notice(Connection conn){
-		notice = new Notice(conn);		
+	public GUI_Notice(){
+		notice = new Notice();
 		this.setLayout(new BorderLayout());
 		
 		/*************************강의목록 리스트*****************************/

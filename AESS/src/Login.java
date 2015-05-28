@@ -8,15 +8,14 @@ import java.util.*;
 public class Login {
 	static private Connection conn;
 	
-	public Login(Connection conn){
-		this.conn = conn;
+	public Login(){
+		conn = Info.getConn();
 	}
 	
 	public static int loginSetting(String id, String password) {		
 		/******시험 기간과 현재 날짜 비교를 위한 Calendar 객체******/
 		Calendar c = Calendar.getInstance();
 		Calendar c_periodStart = Calendar.getInstance();
-		Info.setConn(conn);
 		
 		String sql = "select * from period;"; //시험 기간을 불러오는 쿼리문
 		try {

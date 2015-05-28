@@ -12,8 +12,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class GUI_SignUp extends JFrame{
-	static DBconnect dbcon;
-	static Connection conn;
 	static Statement query;
 	static ResultSet result;
 	
@@ -47,15 +45,11 @@ public class GUI_SignUp extends JFrame{
 	JRadioButton rbt_student = new JRadioButton("학생");
 	JRadioButton rbt_professor = new JRadioButton("교수");
 		
-	public GUI_SignUp(Connection conn){
+	public GUI_SignUp(){
 		super("AESS SignUp"); // Frame(String title)을 호출한다.
 		super.setIconImage(icon.getImage());
 		setLayout(null);
-		this.conn = conn;
-		Login.setConn(conn);
-		
-		dbcon = new DBconnect();
-		conn = dbcon.connect();
+		Login.setConn(Info.getConn());
 		
 		this.setSize(400,300);
 		x_l = screenSize.width/2 - this.getWidth()/2 ; //x좌표구하기
@@ -112,7 +106,7 @@ public class GUI_SignUp extends JFrame{
 	class EventHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e){					
 			if(e.getSource() == bt_SignUp){
-				GUI_Login gui_login = new GUI_Login(conn);
+				GUI_Login gui_login = new GUI_Login();
 				String type = "notSelect";
 				
 				if(rbt_student.isSelected())
@@ -120,7 +114,7 @@ public class GUI_SignUp extends JFrame{
 				else if(rbt_professor.isSelected())
 					type = "P";
 				
-				ManageUser.setConn(conn);
+				ManageUser.setConn(Info.getConn());
 				ManageUser.signUp(tf_Id.getText(), tf_Pwd.getText(), tf_Name.getText(), type);
 				
 				setVisible(false);
@@ -129,7 +123,7 @@ public class GUI_SignUp extends JFrame{
 			}
 
 			else if (e.getSource() == bt_Cancel) {
-				GUI_Login gui_login = new GUI_Login(conn);
+				GUI_Login gui_login = new GUI_Login();
 				setVisible(false);
 				dispose();
 				gui_login.setVisible(true);

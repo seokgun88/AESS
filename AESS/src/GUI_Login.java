@@ -10,8 +10,6 @@ import java.sql.Statement;
 import java.util.Calendar;
 
 class GUI_Login extends JFrame{	
-	static Connection conn;
-	
 	Toolkit tk = Toolkit.getDefaultToolkit(); //구현된 Toolkit객체를 얻는다.
 	Dimension screenSize=tk.getScreenSize(); //화면의 크기를 구한다.
 	
@@ -31,12 +29,11 @@ class GUI_Login extends JFrame{
 	JButton bt_SignUp = new JButton("회원가입");
 
 	/*************디폴트 생성자*****************/
-	public GUI_Login(Connection conn){
+	public GUI_Login(){
 		super("AESS LOGIN"); // Frame(String title)을 호출한다.
 		super.setIconImage(icon.getImage());
 		setLayout(null);
-		this.conn = conn;
-		Login.setConn(conn);
+		Login.setConn(Info.getConn());
 		
 		/*************창 위치 설정***************/
 		this.setSize(400,250);
@@ -136,7 +133,7 @@ class GUI_Login extends JFrame{
 			//회원가입 창으로 이동
 			else if(e.getSource() == bt_SignUp){
 				setVisible(false);
-				GUI_SignUp gui_signup = new GUI_SignUp(conn);
+				GUI_SignUp gui_signup = new GUI_SignUp();
 			    gui_signup.setVisible(true);
 			}
 		}

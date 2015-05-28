@@ -17,7 +17,6 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 	private User_Professor prof;
 	private Notice notice;
 	Enums enums = new Enums();
-	protected Connection conn;
 	String lectureCode;
 	
 	JButton btAdd = new JButton("조교추가");
@@ -40,12 +39,10 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 	JTable table5;
 	int[][] schedule_no = new int[20][20];
 
-	public GUI_Professor(Connection conn, String id, String lectureCode)
-	{
-		this.conn = conn;
+	public GUI_Professor(String id, String lectureCode){
 		this.lectureCode = lectureCode;
-		prof = new User_Professor(id, conn);
-		notice = new Notice(conn);
+		prof = new User_Professor(id);
+		notice = new Notice();
 		/******************************시험 정보 / 휴강********************************/		
 		JPanel pn_TestInfo = new JPanel(); //메인 페널	
 		

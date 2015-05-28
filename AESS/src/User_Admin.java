@@ -5,8 +5,8 @@ import javax.swing.JOptionPane;
 public class User_Admin{	
 	private static Connection conn; //@@승훈 추가 : static으로 선언함. test때문에
 	
-	public User_Admin(Connection conn){
-		User_Admin.conn = conn; //@@승훈 추가 : static으로 선언함. test때문에
+	public User_Admin(){
+		conn = Info.getConn(); //@@승훈 추가 : static으로 선언함. test때문에
 	}
 	
 	public void GetExamSchedule(int classroom){

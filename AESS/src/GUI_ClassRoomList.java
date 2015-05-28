@@ -18,7 +18,6 @@ import javax.swing.table.TableColumnModel;
 
 /**강의실 목록 및 스케쥴 GUI**/
 public class GUI_ClassRoomList extends JPanel implements MouseListener{
-	private Connection conn;	//DB접속을 위한 컨넥션 변수
 	private User_Admin admin; //관리자일 경우 강의실 정보 수정 가능
 	
 	Object nowListValue, nowRowB, nowRowC, nowRowM, nowRowE; //이영석 추가 : nowRowE(부수기재 열)
@@ -74,13 +73,12 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 	int regularOrEtc = 0; //정규시간표인지 특별 이벤트 스케쥴인지 확인하는 변수
 	Enums enums = new Enums();
 	
-	public GUI_ClassRoomList(Connection conn){
-		this.conn = conn;
-		ClassRoomList.setConn(conn);
+	public GUI_ClassRoomList(){
+		ClassRoomList.setConn(Info.getConn());
 	
 		/*********관리자일 경우 강의실 정보 수정 기능 추가**********/
 		if(Info.getType().equals("A"))
-			admin = new User_Admin(conn);	
+			admin = new User_Admin();	
 		
 		/*************우측 리스트***************/
 		setLayout(new BorderLayout());
@@ -366,6 +364,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		
 		try {
 			//**GUI가 할 일이 아님
+			Connection conn = Info.getConn();
 			blockState=conn.createStatement();
 			blockResult = blockState.executeQuery("select * from timeblock where location='" +location+ "' and classroom='"+roomNo+"' and isAvailable='F'");
 			System.out.println(location + roomNo);

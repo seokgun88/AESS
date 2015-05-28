@@ -7,11 +7,11 @@ import java.util.Vector;
 import javax.swing.JTable;
 
 public class User_Professor{
-	Connection conn;
-	Enums enums = new Enums();
+	private Connection conn;
+	private Enums enums = new Enums();
 	
-	public User_Professor(String id, Connection conn){
-		this.conn = conn;
+	public User_Professor(String id){
+		conn = Info.getConn();
 	}
 	
 	public void GetLectureSchedule(){

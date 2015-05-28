@@ -21,16 +21,14 @@ public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListen
 	JButton bt_left, bt_right, done;
 	CalendarModel tm1;
 	JScrollPane jsp;
-	Connection conn;
 	String id;
 	User_Admin admin;
  
-	public GUI_SetPeriod(Connection conn, String id) {
+	public GUI_SetPeriod(String id) {
 		this.id = id;
-		this.conn = conn;
 		
 		if(Info.getType().equals("A"))
-			admin = new User_Admin(conn);
+			admin = new User_Admin();
 		
 		setLayout(new BorderLayout(10,10));
 		

@@ -9,11 +9,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 /**메인 GUI 띄우기**/
-public class GUI_Main extends JFrame implements ActionListener {
-	/**DB연결 변수 설정**/
-	private static DBconnect dbcon = new DBconnect();
-	private static Connection conn = dbcon.connect();
-	
+public class GUI_Main extends JFrame implements ActionListener {	
 	/**********위치 중앙으로*******/
 	Toolkit tk = Toolkit.getDefaultToolkit(); 		//구현된 Toolkit객체를 얻는다.
 	Dimension screenSize=tk.getScreenSize();		//화면의 크기를 구한다.
@@ -60,8 +56,9 @@ public class GUI_Main extends JFrame implements ActionListener {
 		} catch (UnsupportedLookAndFeelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
-		GUI_Login gui = new GUI_Login(conn);
+		}
+		Info.setConn();
+		GUI_Login gui = new GUI_Login();
 	    gui.setVisible(true);
 	}
 	
@@ -112,7 +109,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 		add(up,"North");		
 		
 		/*************좌측 메뉴 및 중앙 화면 설정******************/	
-		classRoom_list = new GUI_ClassRoomList(conn);	//강의실 GUI		
+		classRoom_list = new GUI_ClassRoomList();	//강의실 GUI		
 		add(classRoom_list, "Center");
 		
 		GridLayout Layout_leftMenu = new GridLayout(20,1,20,8);
@@ -123,13 +120,13 @@ public class GUI_Main extends JFrame implements ActionListener {
 		btn_roomList.addActionListener(this);
 
 		if(Info.getType().equals("A")){ //관리자 일때
-			set_period = new GUI_SetPeriod(conn, id);	//시험 기간 설정 GUI
+			set_period = new GUI_SetPeriod(id);	//시험 기간 설정 GUI
 			
 			left.add(btn_setPeriod);	//관리자 일때 시험기간 설정 보기 버튼 추가
 			btn_setPeriod.addActionListener(this);
 		}		
 		else if(Info.getType().equals("P")){ //교수 일때
-			prof_table = new GUI_ProfessorTable(conn, id);	//교수 수업별 시간표 GUI
+			prof_table = new GUI_ProfessorTable(id);	//교수 수업별 시간표 GUI
 			add(prof_table, "Center");
 			
 			left.add(btn_selectLecture);	//교수 일때 강의 목록 보기 버튼 추가
@@ -137,7 +134,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 			btn_selectLecture.addActionListener(this);
 		}
 		else if(Info.getType().equals("S") || Info.getType().equals("J")){ //학생 또는 조교일때
-			std_main = new GUI_StudentMain(conn, id);	//학생 GUI
+			std_main = new GUI_StudentMain(id);	//학생 GUI
 			add(std_main, "Center");
 			
 			left.add(btn_timeTable);	 //스케쥴 테이블 보기 버튼 추가
@@ -145,7 +142,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 			left.add(btn_leaveOfAbsence); //휴학 버튼 추가
 			btn_leaveOfAbsence.addActionListener(this);
 			/**********이영석 추가***************/
-			notice = new GUI_Notice(conn); //공지사항 인스턴스 생성
+			notice = new GUI_Notice(); //공지사항 인스턴스 생성
 			left.add(btn_notice); //공지사항 보기 버튼 추가
 			btn_notice.addActionListener(this); //공지사항 보기 버튼 리스너 등록
 			/*************************************/
@@ -185,17 +182,17 @@ public class GUI_Main extends JFrame implements ActionListener {
 			repaint();
 		}
 		else if(e.getSource() == btn_logout){ //로그아웃 버튼 이벤트
-			GUI_Login gl = new GUI_Login(conn);
+			GUI_Login gl = new GUI_Login();
 			dispose();
 		}
 		else if(e.getSource() == btn_leaveOfAbsence){ //복학 신청 =>이후 다른 클래스로 이동해야 함
 			if(JOptionPane.showConfirmDialog(null,"휴학신청을 하시겠습니까?\n(신청 후 자동로그아웃 됩니다.)", "휴학신청",
 					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION)
 			{
-				ManageUser.setConn(conn);
+				ManageUser.setConn(Info.getConn());
 				ManageUser.setLeaveOfAbsence();
 				/**재접속**/
-				GUI_Login gl = new GUI_Login(conn);
+				GUI_Login gl = new GUI_Login();
 				dispose();			
 			} 
 		}
@@ -203,10 +200,10 @@ public class GUI_Main extends JFrame implements ActionListener {
 			if(JOptionPane.showConfirmDialog(null,"복학신청을 하시겠습니까?\n(신청 후 자동로그아웃 됩니다.)", "복학신청",
 					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION)
 			{	
-				ManageUser.setConn(conn);
+				ManageUser.setConn(Info.getConn());
 				ManageUser.setReturnToSchool();
 				/**재접속**/
-				GUI_Login gl = new GUI_Login(conn);
+				GUI_Login gl = new GUI_Login();
 				dispose();			
 			}
 		}

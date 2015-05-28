@@ -26,7 +26,6 @@ public class GUI_StudentMain extends JPanel
 
 	int notAvailType=-1;	//DB timeblock 테이블 컬럼 생성시 불가능한 스케쥴 구분 용도 변수	
 	
-	protected Connection conn;
 	String id;
 	User_Student student;
 
@@ -52,11 +51,9 @@ public class GUI_StudentMain extends JPanel
 
 	String[][] schedule_no = new String[20][20];
 	
-	public GUI_StudentMain(Connection conn, String id)
-	{
-		this.conn = conn;
+	public GUI_StudentMain(String id){
 		this.id = id;
-		this.student = new User_Student(conn);
+		this.student = new User_Student();
 		
 		/**화면 구성 요소들 설정**/
 		setBorder(new TitledBorder("학생 시간표"));
@@ -211,7 +208,9 @@ public class GUI_StudentMain extends JPanel
 		//table_Room.repaint();
 		schedule_no = new String[20][20];
 		
+		//GUI가 할일 아님
 		try {
+			Connection conn = Info.getConn();
 			blockState=conn.createStatement();
 			/**이미 있는 스케쥴 불러오기**/
 			blockResult = blockState.executeQuery("select * from timeblock where user_id='" +id+ "' and isAvailable='F'");

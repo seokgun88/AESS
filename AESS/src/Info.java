@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Info {
+	private static DBconnect dbcon;
 	private static Connection conn;
 	private static String id, name, type;
 	private static int year, month, sDate, eDate, week;
@@ -56,8 +57,9 @@ public class Info {
 		return conn;
 	}
 
-	public static void setConn(Connection conn) {
-		Info.conn = conn;
+	public static void setConn() {
+		dbcon = new DBconnect();
+		conn = dbcon.connect();
 	}
 
 	public static int getYear() {

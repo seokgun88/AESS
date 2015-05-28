@@ -3,8 +3,8 @@ import java.sql.*;
 public class User_Assistant{
 	private Connection conn;
 	
-	public User_Assistant(String id, String pass, Connection conn){
-		this.conn = conn;
+	public User_Assistant(String id, String pass){
+		conn = Info.getConn();
 	}
 	
 	public void CreateImpossibleExamTime(){
