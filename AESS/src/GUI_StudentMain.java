@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -26,8 +27,8 @@ public class GUI_StudentMain extends JPanel
 
 	int notAvailType=-1;	//DB timeblock 테이블 컬럼 생성시 불가능한 스케쥴 구분 용도 변수	
 	
-	String id;
-	User_Student student;
+	private String id;
+	private User_Student student;
 
 	String [] dtm_col = {"시간","월","화","수","목","금","토","일"};	
 	String [][] dtm_data = {{"1A(09:00~09:30)","","","","","","",""},
@@ -188,13 +189,6 @@ public class GUI_StudentMain extends JPanel
 	}
 	
 	public void InitializeTable() {
-		Statement blockState;
-		ResultSet blockResult;
-	
-		int row;
-		int col;
-		int i =0;
-		
 		MyTableModel DTM_Room2 = new MyTableModel(dtm_data, dtm_col);
 		table_student.setModel(DTM_Room2);
 		table_student.setColumnSelectionAllowed(true);
@@ -206,40 +200,15 @@ public class GUI_StudentMain extends JPanel
 
 		table_student.revalidate();
 		//table_Room.repaint();
-		schedule_no = new String[20][20];
 		
-		//GUI가 할일 아님
-		try {
-			Connection conn = Info.getConn();
-			blockState=conn.createStatement();
-			/**이미 있는 스케쥴 불러오기**/
-			blockResult = blockState.executeQuery("select * from timeblock where user_id='" +id+ "' and isAvailable='F'");
-			while(blockResult.next()) {
-				row = enums.BlockToIndex(blockResult.getString("time"));
-				col = enums.DayToIndex(blockResult.getString("day"));
-				schedule_no[row][col] = blockResult.getString("no");
-				
-				/**scheduleNo 값에 따라 시험, 수업, 감독불가를 인식**/
-				int type = blockResult.getInt("scheduleNo");
-				if(type==-1) table_student.setValueAt("시험", row, col);
-				else if(type==-2) table_student.setValueAt("수업", row, col);
-				else if(type==-3) table_student.setValueAt("감독 불가", row, col);
-			}
-			
-			/**수강하는 수업 정규 시간표 불러오기**/
-			blockState=conn.createStatement();
-			blockResult = blockState.executeQuery(
-					"select s.name, day, time from timeblock t, courseRelation c, schedule s where c.user_id='" +id+ "' and c.no=s.lecture_id and s.stype='C' and t.scheduleNo=s.no and t.isAvailable='F'"
-					);
-			while(blockResult.next()) {
-				row = enums.BlockToIndex(blockResult.getString("time"));
-				col = enums.DayToIndex(blockResult.getString("day"));
-				table_student.setValueAt(blockResult.getString("name"), row, col);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
+		/**이영석 수정 : GUI에 있는 세부 기능 User_Student로 이동**/
+		Vector v_schedule = student.getStudentSchedule(id);
+		schedule_no = (String[][]) v_schedule.get(0);
+		Vector v_scheduleInfos = (Vector) v_schedule.get(1);
+		for(int i=0; i<v_scheduleInfos.size(); i++){
+			Vector v_scheduleInfo = (Vector) v_scheduleInfos.get(i);
+			table_student.setValueAt((String)v_scheduleInfo.get(0), (int)v_scheduleInfo.get(1), (int)v_scheduleInfo.get(2));			
+		}
 	}
 	
 	/**있는 스케쥴 클릭하면 삭제창 팝업**/
