@@ -6,7 +6,10 @@ import java.util.*;
 
 public class ManageUser {
 	static private Connection conn;
-	
+
+	public static void setConn(Connection conn) {
+		ManageUser.conn = conn;
+	}	
 	public static void setLeaveOfAbsence(){
 		try {
 			Statement query = conn.createStatement();
@@ -16,8 +19,7 @@ public class ManageUser {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	}
-	
+	}	
 	public static void setReturnToSchool(){
 		try {
 			Statement query = conn.createStatement();
@@ -27,8 +29,7 @@ public class ManageUser {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}		
-	}
-	
+	}	
 	public static boolean signUp(String id, String pass, String name, String type){
 		boolean isSignUp;		
 		/*회원가입 시 아이디랑 비밀번호 출력*/
@@ -58,8 +59,22 @@ public class ManageUser {
 		
 		return isSignUp;
 	}
-
-	public static void setConn(Connection conn) {
-		ManageUser.conn = conn;
-	}	
+	public static boolean resetPass(String id){
+		try {
+			Statement query = conn.createStatement();
+			String sql = "select * from member where id='" +id+ "';";
+			ResultSet result = query.executeQuery(sql);
+			if(!result.next())
+				return false;
+			sql = "update member set pass='0000' where id='" +id+ "';";
+			query.execute(sql);
+			result.close();
+			query.close();
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

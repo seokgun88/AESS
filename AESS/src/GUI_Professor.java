@@ -28,6 +28,8 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 	private JTextArea ta_notice = new JTextArea(30, 60); //공지사항 입력할 textarea
 	private JTable table;
 	private JTable prrior_table;
+	private JTable impos_tbList;
+	private JTable table5;
 	private JComboBox cbPrrior;
 	private JComboBox cbDay;
 	private JComboBox cbStarttime;
@@ -35,15 +37,12 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 	private JComboBox impos_cbDay;
 	private JComboBox impos_cbStarttime;
 	private JComboBox impos_cbEndtime;
-	private JTable impos_tbList;
-	private JTable table5;
 	private int[][] schedule_no = new int[20][20];
 
 	public GUI_Professor(String id, String lectureCode){
-		this.lectureCode = lectureCode;
+		this.lectureCode = lectureCode; //과목 코드 초기화
 		prof = new User_Professor(id);
 		notice = new Notice();
-		/******************************시험 정보 / 휴강********************************/		
 		JPanel pn_TestInfo = new JPanel(); //메인 페널	
 		
 		BoxLayout TestInfo_box  = new BoxLayout(pn_TestInfo, BoxLayout.Y_AXIS);	//박스 레이아웃
@@ -59,9 +58,9 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		bt_sendNotice.addActionListener(new profListener()); //입력 버튼 리스너 등록
 		pn_notice.add(bt_sendNotice); //버튼 패널에 등록
 		addTab("공지사항", null, pn_notice, "공지사항 입력 및 수정"); //패널을 탭으로 만듦
-		/******************************************************************/
 		
-		//수업정보, 휴강여부 선택
+		/******************************시험 정보 / 휴강********************************/
+		//휴강 여부 결정
 		JPanel TestInfo_up = new JPanel();		
 		TestInfo_up.setBorder(new TitledBorder("휴강 여부 선택"));
 		TestInfo_up.setLayout(null);
@@ -82,8 +81,6 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		else if(prof.GetIsLecture(lectureCode).equals("T")){
 			rbExam.setSelected(true);
 		}
-
-		JLabel lbLectureName = new JLabel("강의명 : ");
 		
 		//시험 정보 입력
 		JPanel TestInfo_middle = new JPanel();

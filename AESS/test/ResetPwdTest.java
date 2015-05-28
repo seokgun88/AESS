@@ -5,40 +5,48 @@ import java.sql.*;
 import org.junit.*;
 
 public class ResetPwdTest {
+	DBconnect dbConn = new DBconnect();
+	Connection conn = dbConn.connect();
 	
 	@Test
 	public void ResetPwdTest1() {
-		assertEquals(false, Login.check_resetable_id("a") );
+		ManageUser.setConn(conn);
+		assertEquals(true, ManageUser.resetPass("a") );
 	}
 	
 	@Test
 	public void ResetPwdTest2() {
-		assertEquals(true, Login.check_resetable_id("s") );
+		ManageUser.setConn(conn);
+		assertEquals(true, ManageUser.resetPass("s") );
 	}
 	
 	@Test
 	public void ResetPwdTest3() {
-		assertEquals(true, Login.check_resetable_id("p") );
+		ManageUser.setConn(conn);
+		assertEquals(true, ManageUser.resetPass("p") );
 	}
 	
 	@Test
 	public void ResetPwdTest4() {
-		assertEquals(true, Login.check_resetable_id("w") );
+		ManageUser.setConn(conn);
+		assertEquals(false, ManageUser.resetPass("w") );
 	}
 
 	@Test
 	public void ResetPwdTest5() {
-		assertEquals(true, Login.check_resetable_id("r") );
+		ManageUser.setConn(conn);
+		assertEquals(false, ManageUser.resetPass("r") );
 	}
 	
 	@Test
 	public void ResetPwdTest6() {
-		assertEquals(false, Login.check_resetable_id("") );
+		ManageUser.setConn(conn);
+		assertEquals(false, ManageUser.resetPass("") );
 	}
 	
 	@Test
 	public void ResetPwdTest7() {
-		assertEquals(false, Login.check_resetable_id(" ") );
+		ManageUser.setConn(conn);
+		assertEquals(false, ManageUser.resetPass(" ") );
 	}
-
 }

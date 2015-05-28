@@ -56,6 +56,7 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener{
 		profTable.getTableHeader().setReorderingAllowed(false);
 		profTable.getTableHeader().setResizingAllowed(false);
 		
+		/******************교수 시간표 설정********************/
 		JScrollPane sp = new JScrollPane(profTable);
 		scheP.add("Center",sp);
 		

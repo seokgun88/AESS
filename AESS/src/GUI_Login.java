@@ -103,11 +103,14 @@ class GUI_Login extends JFrame{
 			false_check++; //승훈추가 : 비밀번호 틀린횟수 체크, 5이상일때 초기화창 만들려고
 			System.out.printf("   %d\n",false_check);
 			if(false_check>5) {
-				if( Login.check_resetable_id(id) && JOptionPane.showConfirmDialog(null,"비밀번호 초기화 요청하시겠습니까?", "비밀번호 초기화",
+				if(JOptionPane.showConfirmDialog(null,"비밀번호 초기화 요청하시겠습니까?", "비밀번호 초기화",
 						JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION) {
 					false_check=0;
 					System.out.println("id : " + id + " 초기화 요청 발사"); //승훈추가 : 비밀번호 초기화 요청
-					Login.request_reset_id(id); //승훈추가 : 비밀번호 초기화요청
+					ManageUser.setConn(Info.getConn());
+					if(!ManageUser.resetPass(id)){
+						JOptionPane.showMessageDialog(null, "존재하지 않는 ID입니다.", "아이디 오류", JOptionPane.INFORMATION_MESSAGE);
+					}
 				}
 			}
 		}

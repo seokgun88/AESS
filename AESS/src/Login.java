@@ -77,23 +77,4 @@ public class Login {
 	public static void setConn(Connection conn) {
 		Login.conn = conn;
 	}	
-	
-	
-	public static Boolean check_resetable_id(String id) {
-		
-		if(id.equals("a") || id.equals("") || id.equals(" ") )
-			return false;
-		/*
-		 if( DB에 없는 ID ) {
-		 	return false
-		 }
-		 */
-		return true;
-	}
-	
-public static int request_reset_id(String id) {
-		//DB에 id 날림
-		return 0;
-	}
-	
 }
