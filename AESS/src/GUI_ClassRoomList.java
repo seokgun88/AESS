@@ -20,31 +20,31 @@ import javax.swing.table.TableColumnModel;
 public class GUI_ClassRoomList extends JPanel implements MouseListener{
 	private User_Admin admin; //관리자일 경우 강의실 정보 수정 가능
 	
-	Object nowListValue, nowRowB, nowRowC, nowRowM, nowRowE; //이영석 추가 : nowRowE(부수기재 열)
-	int nowListRow, nowListCol;
-	int dragStartRow, dragStartCol, dragEndRow;
+	private Object nowListValue, nowRowB, nowRowC, nowRowM, nowRowE; //이영석 추가 : nowRowE(부수기재 열)
+	private int nowListRow, nowListCol;
+	private int dragStartRow, dragStartCol, dragEndRow;
 		
-	JFrame Fr_addRoom, Fr_addSchedule;
-	JTable table, table_Room;
-	DefaultTableModel sche;
-	MyTableModel DTM_Room;
+	private JFrame Fr_addRoom, Fr_addSchedule;
+	private JTable table, table_Room;
+	private DefaultTableModel sche;
+	private MyTableModel DTM_Room;
 	
-	JButton bt_addRoom = new JButton("강의실 추가");
-	JButton bt_delRoom = new JButton("강의실 삭제");
-	JButton bt_popAdd = new JButton("추가");
-	JButton enterB = new JButton("입력");
-	JButton cancelB = new JButton("취소");
-	JTextField tf_building, tf_room, tf_maxSeat, tf_equip; //이영석 추가 : tf_equip(부수기재)
-	JPanel pn_roomList = new JPanel();
-	JPanel pn_listButton = new JPanel();
-	JPanel pn_roomInfo = new JPanel();
-	String [][] schedule_no = new String[20][20];
-	String [] col_roomList = {"건물","호수","인원","부수기재"}; //추가 : 부수기재
-	String [][] data_roomList;
+	private JButton bt_addRoom = new JButton("강의실 추가");
+	private JButton bt_delRoom = new JButton("강의실 삭제");
+	private JButton bt_popAdd = new JButton("추가");
+	private JButton enterB = new JButton("입력");
+	private JButton cancelB = new JButton("취소");
+	private JTextField tf_building, tf_room, tf_maxSeat, tf_equip; //이영석 추가 : tf_equip(부수기재)
+	private JPanel pn_roomList = new JPanel();
+	private JPanel pn_listButton = new JPanel();
+	private JPanel pn_roomInfo = new JPanel();
+	private String [][] schedule_no = new String[20][20];
+	private String [] col_roomList = {"건물","호수","인원","부수기재"}; //추가 : 부수기재
+	private String [][] data_roomList;
 	
 	
-	String [] col_roomTimetable = {"시간","월","화","수","목","금","토","일"};
-	String [][] data_roomTimetable = {
+	private String [] col_roomTimetable = {"시간","월","화","수","목","금","토","일"};
+	private String [][] data_roomTimetable = {
 			{"1A(09:00~09:30)","","","","","","",""},
 			{"1B(09:30~10:00)","","","","","","",""},
 			{"2A(10:00~10:30)","","","","","","",""},
@@ -65,13 +65,13 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 			{"9B(05:30~06:00)","","","","","","",""}
 			};
 	
-	JRadioButton tableJRadioButton;
-	JRadioButton eventJRadioButton;
-	JLabel lb_name, lb_code, lb_prof;
-	JComboBox cb_prof, cb_prof_id, dateC, timeC1, timeC2;
-	JTextField tf_name, tf_code;
-	int regularOrEtc = 0; //정규시간표인지 특별 이벤트 스케쥴인지 확인하는 변수
-	Enums enums = new Enums();
+	private JRadioButton tableJRadioButton;
+	private JRadioButton eventJRadioButton;
+	private JLabel lb_name, lb_code, lb_prof;
+	private JComboBox cb_prof, cb_prof_id, dateC, timeC1, timeC2;
+	private JTextField tf_name, tf_code;
+	private int regularOrEtc = 0; //정규시간표인지 특별 이벤트 스케쥴인지 확인하는 변수
+	private Enums enums = new Enums();
 	
 	public GUI_ClassRoomList(){
 		ClassRoomList.setConn(Info.getConn());

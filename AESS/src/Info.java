@@ -9,8 +9,8 @@ public class Info {
 	private static String id, name, type;
 	private static int year, month, sDate, eDate, week;
 
-	static String season = "1";	
-	static String test = "기말";
+	private static String season = "1";	
+	private static String test = "기말";
 	
 	public Info() {
 	}
@@ -100,5 +100,21 @@ public class Info {
 
 	public static void setWeek(int week) {
 		Info.week = week;
+	}
+	
+	public static String getSeason() {
+		return season;
+	}
+
+	public static void setSeason(String season) {
+		Info.season = season;
+	}
+
+	public static String getTest() {
+		return test;
+	}
+
+	public static void setTest(String test) {
+		Info.test = test;
 	}
 }

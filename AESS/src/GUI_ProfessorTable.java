@@ -9,11 +9,14 @@ import javax.swing.table.TableColumn;
 
 /**교수 수업 시간표 테이블**/
 public class GUI_ProfessorTable extends JPanel implements MouseListener{
-	JTable profTable;
-	BorderLayout layout;
+	private User_Professor prof;
+	private String id;
 	
-	String [] col = {"시간","월","화","수","목","금","토","일"};
-	String [][] data = {{"1A","","","","","","",""},
+	private JTable profTable;
+	private BorderLayout layout;
+	
+	private String [] col = {"시간","월","화","수","목","금","토","일"};
+	private String [][] data = {{"1A","","","","","","",""},
 			{"1B","","","","","","",""},
 			{"2A","","","","","","",""},
 			{"2B","","","","","","",""},
@@ -32,11 +35,9 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener{
 			{"9A","","","","","","",""},
 			{"9B","","","","","","",""}};
 	
-	User_Professor prof;
-	String id;
-	String[][] schedule_no = new String[20][20];
+	private String[][] schedule_no = new String[20][20];
 	
-	boolean isProfTable;
+	public boolean isProfTable; //테스트 케이스 확인용 변수
 	
 	public GUI_ProfessorTable(String id){
 		this.id = id;

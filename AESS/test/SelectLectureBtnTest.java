@@ -9,7 +9,7 @@ public class SelectLectureBtnTest {
 	public void test() {
 		DBconnect dbcon = new DBconnect();
 		Connection conn = dbcon.connect();
-		GUI_ProfessorTable profTable = new GUI_ProfessorTable(conn, "P");
+		GUI_ProfessorTable profTable = new GUI_ProfessorTable("P");
 		profTable.resetProfessorTable();
 		assertEquals(true,profTable.isProfTable);
 	}

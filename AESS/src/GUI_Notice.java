@@ -8,7 +8,7 @@ import javax.swing.table.*;
 
 /**************이영석 추가 : 학생 공지사항 확인 클래스******************/
 public class GUI_Notice extends JPanel implements MouseListener{
-	Notice notice; //공지사항 클래스
+	private Notice notice; //공지사항 클래스
 	private JLabel lb_notice; //공지사항 라벨
 	private JTable t_participateClass; //참여중인 강의 목록 테이블
 	private JScrollPane sp_participateClass;

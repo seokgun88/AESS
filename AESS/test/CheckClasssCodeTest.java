@@ -10,7 +10,7 @@ public class CheckClasssCodeTest {
 	@Test
 	public void correctCodeTest() {
 		Connection conn = null;
-		User_Admin admin = new User_Admin(conn);
+		User_Admin admin = new User_Admin();
 		boolean isCorrectCode = admin.checkClassCode("CLTR123456");
 		assertEquals(true, isCorrectCode);
 	}
@@ -18,7 +18,7 @@ public class CheckClasssCodeTest {
 	@Test
 	public void incorrectLengthTest() {
 		Connection conn = null;
-		User_Admin admin = new User_Admin(conn);
+		User_Admin admin = new User_Admin();
 		boolean isRightCode = admin.checkClassCode("CLTR123");
 		assertEquals(false, isRightCode);
 	}
@@ -26,7 +26,7 @@ public class CheckClasssCodeTest {
 	@Test
 	public void noncoverageAlphabetTest() {
 		Connection conn = null;
-		User_Admin admin = new User_Admin(conn);
+		User_Admin admin = new User_Admin();
 		boolean isRightCode = admin.checkClassCode("1234123456");
 		assertEquals(false, isRightCode);
 	}
@@ -34,7 +34,7 @@ public class CheckClasssCodeTest {
 	@Test
 	public void noncoverageNumberTest() {
 		Connection conn = null;
-		User_Admin admin = new User_Admin(conn);
+		User_Admin admin = new User_Admin();
 		boolean isRightCode = admin.checkClassCode("CLTRABCDEF");
 		assertEquals(false, isRightCode);
 	}

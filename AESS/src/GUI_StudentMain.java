@@ -16,22 +16,21 @@ import javax.swing.table.TableColumnModel;
 /**학생 GUI**/
 public class GUI_StudentMain extends JPanel
  implements MouseListener, MouseMotionListener{
-	JTable table_student;
-	BorderLayout layout;
-	JButton btn_enter, btn_cancel;
-	JFrame Fr_table_studentClick;	//학생 일정 추가 프레임
-	JComboBox cmbBx_startTime, cmbBx_endTime, cmbBx_date;
-	JRadioButton rBtn_test, rBtn_lecture, rBtn_unable;
-	int dragStartRow, dragStartCol, dragEndRow, dragEndCol;
-	Enums enums = new Enums();	
-
-	int notAvailType=-1;	//DB timeblock 테이블 컬럼 생성시 불가능한 스케쥴 구분 용도 변수	
-	
 	private String id;
 	private User_Student student;
+	private int notAvailType=-1;	//DB timeblock 테이블 컬럼 생성시 불가능한 스케쥴 구분 용도 변수	
+	
+	private JTable table_student;
+	private BorderLayout layout;
+	private JButton btn_enter, btn_cancel;
+	private JFrame Fr_table_studentClick;	//학생 일정 추가 프레임
+	private JComboBox cmbBx_startTime, cmbBx_endTime, cmbBx_date;
+	private JRadioButton rBtn_test, rBtn_lecture, rBtn_unable;
+	private int dragStartRow, dragStartCol, dragEndRow, dragEndCol;
+	private Enums enums = new Enums();
 
-	String [] dtm_col = {"시간","월","화","수","목","금","토","일"};	
-	String [][] dtm_data = {{"1A(09:00~09:30)","","","","","","",""},
+	private String [] dtm_col = {"시간","월","화","수","목","금","토","일"};	
+	private String [][] dtm_data = {{"1A(09:00~09:30)","","","","","","",""},
 			{"1B(09:30~10:00)","","","","","","",""},
 			{"2A(10:00~10:30)","","","","","","",""},
 			{"2B(10:30~11:00)","","","","","","",""},
@@ -50,7 +49,7 @@ public class GUI_StudentMain extends JPanel
 			{"9A(05:00~05:30)","","","","","","",""},
 			{"9B(05:30~06:00)","","","","","","",""}};
 
-	String[][] schedule_no = new String[20][20];
+	private String[][] schedule_no = new String[20][20];
 	
 	public GUI_StudentMain(String id){
 		this.id = id;

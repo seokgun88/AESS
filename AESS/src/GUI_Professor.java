@@ -16,28 +16,28 @@ import javax.swing.table.TableColumnModel;
 public class GUI_Professor extends JTabbedPane implements MouseListener {
 	private User_Professor prof;
 	private Notice notice;
-	Enums enums = new Enums();
-	String lectureCode;
+	private Enums enums = new Enums();
+	private String lectureCode;
 	
-	JButton btAdd = new JButton("조교추가");
-	JButton btRemove = new JButton("삭제");
-	JTextField tfNum = new JTextField(16);
-	JTextField tfAcceptNum = new JTextField(16);
-	JTextField tfClassNum = new JTextField(16);
-	JTextField tfTestPeriod = new JTextField(16);
-	JTextArea ta_notice = new JTextArea(30, 60); //공지사항 입력할 textarea
-	JTable table;
-	JTable prrior_table;
-	JComboBox cbPrrior;
-	JComboBox cbDay;
-	JComboBox cbStarttime;
-	JComboBox cbEndtime;
-	JComboBox impos_cbDay;
-	JComboBox impos_cbStarttime;
-	JComboBox impos_cbEndtime;
-	JTable impos_tbList;
-	JTable table5;
-	int[][] schedule_no = new int[20][20];
+	private JButton btAdd = new JButton("조교추가");
+	private JButton btRemove = new JButton("삭제");
+	private JTextField tfNum = new JTextField(16);
+	private JTextField tfAcceptNum = new JTextField(16);
+	private JTextField tfClassNum = new JTextField(16);
+	private JTextField tfTestPeriod = new JTextField(16);
+	private JTextArea ta_notice = new JTextArea(30, 60); //공지사항 입력할 textarea
+	private JTable table;
+	private JTable prrior_table;
+	private JComboBox cbPrrior;
+	private JComboBox cbDay;
+	private JComboBox cbStarttime;
+	private JComboBox cbEndtime;
+	private JComboBox impos_cbDay;
+	private JComboBox impos_cbStarttime;
+	private JComboBox impos_cbEndtime;
+	private JTable impos_tbList;
+	private JTable table5;
+	private int[][] schedule_no = new int[20][20];
 
 	public GUI_Professor(String id, String lectureCode){
 		this.lectureCode = lectureCode;

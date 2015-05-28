@@ -1,49 +1,41 @@
 /*
- * GUI_Login 구성을 거의 그대로 배낌
+ * 지수 : GUI_Login 구성을 거의 그대로 배낌
  * 조금 다른 부분은 주석처리 하겠음
  */
 import java.awt.*;
-
 import javax.swing.*;
-
 import java.awt.event.*;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
-public class GUI_SignUp extends JFrame{
-	static Statement query;
-	static ResultSet result;
+public class GUI_SignUp extends JFrame{	
+	private Toolkit tk = Toolkit.getDefaultToolkit(); //구현된 Toolkit객체를 얻는다.
+	private Dimension screenSize=tk.getScreenSize();//화면의 크기를 구한다.
+	private int x_l, y_l;	
+	private boolean isSignUp; //##지수 추가
 	
-	Toolkit tk = Toolkit.getDefaultToolkit(); //구현된 Toolkit객체를 얻는다.
-	Dimension screenSize=tk.getScreenSize();//화면의 크기를 구한다.
-	int x_l, y_l;
+	private ImageIcon icon = new ImageIcon("icon.png");
+	private ImageIcon small_logo = new ImageIcon("logo_small.png");
+	private JLabel lbSmallLogo = new JLabel(small_logo);
 	
-	ImageIcon icon = new ImageIcon("icon.png");
-	ImageIcon small_logo = new ImageIcon("logo_small.png");
-	JLabel lbSmallLogo = new JLabel(small_logo);
-	
-	JPanel pn_id = new JPanel();
-	JPanel pn_password = new JPanel();
-	JPanel pn_button = new JPanel();
+	private JPanel pn_id = new JPanel();
+	private JPanel pn_password = new JPanel();
+	private JPanel pn_button = new JPanel();
 
-	JLabel lb_Id = new JLabel("ID : ", Label.RIGHT); // Label의 text정렬을 오른쪽으로.
-	JLabel lb_Name = new JLabel("Name :", Label.RIGHT);
-	JLabel lb_Pass = new JLabel("Password :", Label.RIGHT);
+	private JLabel lb_Id = new JLabel("ID : ", Label.RIGHT); // Label의 text정렬을 오른쪽으로.
+	private JLabel lb_Name = new JLabel("Name :", Label.RIGHT);
+	private JLabel lb_Pass = new JLabel("Password :", Label.RIGHT);
 	
-	boolean isSignUp; //##지수 추가
+	private TextField tf_Id  = new TextField(20);
+	private TextField tf_Pwd = new TextField(20);
+	private TextField tf_Name = new TextField(20);
 	
-	TextField tf_Id  = new TextField(20);
-	TextField tf_Pwd = new TextField(20);
-	TextField tf_Name = new TextField(20);
-	JButton bt_SignUp = new JButton("회원가입");		//회원가입으로 바꿈
-	JButton bt_Cancel = new JButton("취소");
-	JButton bt1 = new JButton("dd");
+	private JButton bt_SignUp = new JButton("회원가입"); //회원가입으로 바꿈
+	private JButton bt_Cancel = new JButton("취소");
+	private JButton bt1 = new JButton("dd");
 	
 	/*********이영석 추가 : 학생, 교수 중 골라서 회원가입 하게 하는 라디오 버튼************/
-	ButtonGroup bg_stdOrPrf = new ButtonGroup();
-	JRadioButton rbt_student = new JRadioButton("학생");
-	JRadioButton rbt_professor = new JRadioButton("교수");
+	private ButtonGroup bg_stdOrPrf = new ButtonGroup();
+	private JRadioButton rbt_student = new JRadioButton("학생");
+	private JRadioButton rbt_professor = new JRadioButton("교수");
 		
 	public GUI_SignUp(){
 		super("AESS SignUp"); // Frame(String title)을 호출한다.

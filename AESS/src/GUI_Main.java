@@ -11,34 +11,35 @@ import javax.swing.border.TitledBorder;
 /**메인 GUI 띄우기**/
 public class GUI_Main extends JFrame implements ActionListener {	
 	/**********위치 중앙으로*******/
-	Toolkit tk = Toolkit.getDefaultToolkit(); 		//구현된 Toolkit객체를 얻는다.
-	Dimension screenSize=tk.getScreenSize();		//화면의 크기를 구한다.
+	private Toolkit tk = Toolkit.getDefaultToolkit(); 		//구현된 Toolkit객체를 얻는다.
+	private Dimension screenSize=tk.getScreenSize();		//화면의 크기를 구한다.
 	
 	/**GUI 구성요소 설정**/
-	JPanel up, left;
-	ImageIcon logo = new ImageIcon("logo.png");
-	ImageIcon icon = new ImageIcon("icon.png");
-	JLabel lbLogo = new JLabel(logo);
-	JLabel lbWelcom = new JLabel();
-	JLabel lbPeriod = new JLabel();
-	JLabel lbInfo = new JLabel();
-	JButton btn_logout;
-	JButton btn_roomList = new JButton("강의실 열람"); //모든 사용자가 사용
-	JButton btn_timeTable = new JButton("시간표/스케쥴 입력"); //학생, 조교가 사용
-	JButton btn_leaveOfAbsence = new JButton("휴학신청"); //학생, 조교가 사용
-	JButton btn_notice = new JButton("공지사항"); //학생, 조교가 사용
-	JButton btn_returnToSchool = new JButton("복학신청"); //휴학생이 사용
-	JButton btn_selectLecture = new JButton("수업 선택"); //교수가 사용
-	JButton btn_setPeriod = new JButton("시험기간 설정"); //관리자가 사용
+	private JPanel up, left;
+	private ImageIcon logo = new ImageIcon("logo.png");
+	private ImageIcon icon = new ImageIcon("icon.png");
+	private JLabel lbLogo = new JLabel(logo);
+	private JLabel lbWelcom = new JLabel();
+	private JLabel lbPeriod = new JLabel();
+	private JLabel lbInfo = new JLabel();
+	private JButton btn_logout;
+	private JButton btn_roomList = new JButton("강의실 열람"); //모든 사용자가 사용
+	private JButton btn_timeTable = new JButton("시간표/스케쥴 입력"); //학생, 조교가 사용
+	private JButton btn_leaveOfAbsence = new JButton("휴학신청"); //학생, 조교가 사용
+	private JButton btn_notice = new JButton("공지사항"); //학생, 조교가 사용
+	private JButton btn_returnToSchool = new JButton("복학신청"); //휴학생이 사용
+	private JButton btn_selectLecture = new JButton("수업 선택"); //교수가 사용
+	private JButton btn_setPeriod = new JButton("시험기간 설정"); //관리자가 사용
 	
-	BorderLayout GUI_MainLayout = new BorderLayout(10,10);
+	private BorderLayout GUI_MainLayout = new BorderLayout(10,10);
 	
-	GUI_ClassRoomList classRoom_list;
-	GUI_StudentMain std_main;
-	GUI_ProfessorTable prof_table;
-	GUI_Professor prof_main;
-	GUI_SetPeriod set_period;
-	GUI_Notice notice; //이영석 추가 : 공지사항 클래스
+	/**사용할 GUI 클래스 목록**/
+	private GUI_ClassRoomList classRoom_list;
+	private GUI_StudentMain std_main;
+	private GUI_ProfessorTable prof_table;
+	private GUI_Professor prof_main;
+	private GUI_SetPeriod set_period;
+	private GUI_Notice notice; //이영석 추가 : 공지사항 클래스
 
 	/**********************메인 시작 함수****************************/
 	public static void main(String argv[]){
@@ -57,8 +58,8 @@ public class GUI_Main extends JFrame implements ActionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Info.setConn();
-		GUI_Login gui = new GUI_Login();
+		Info.setConn(); //DB connect
+		GUI_Login gui = new GUI_Login(); //로그인 GUI 출력
 	    gui.setVisible(true);
 	}
 	
@@ -67,7 +68,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 		super("AESS");
 		super.setIconImage(icon.getImage());
 		
-		Info.setNameAndType(id);
+		Info.setNameAndType(id); //id를 통해 이름과 타입을 알아옴
 		
 		this.setLayout(GUI_MainLayout);
 		this.setSize(1100,750);
@@ -85,7 +86,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 		up.add(lbLogo);
 		lbLogo.setBounds(0,0,455,68);
 		
-		lbInfo.setText(Info.getYear()+"년도 "+Info.season+"학기 "+Info.test+"고사 예약 시스템");
+		lbInfo.setText(Info.getYear()+"년도 "+Info.getSeason()+"학기 "+Info.getTest()+"고사 예약 시스템");
 		up.add(lbInfo);
 		lbInfo.setBounds(800,0,230,50);
 		
@@ -147,7 +148,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 			btn_notice.addActionListener(this); //공지사항 보기 버튼 리스너 등록
 			/*************************************/
 		}
-		else if(Info.getType().equals("L")){
+		else if(Info.getType().equals("L")){ //휴학생 일때
 			left.add(btn_returnToSchool);
 			btn_returnToSchool.addActionListener(this);
 		}

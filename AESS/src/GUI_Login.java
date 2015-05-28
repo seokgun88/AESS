@@ -10,23 +10,23 @@ import java.sql.Statement;
 import java.util.Calendar;
 
 class GUI_Login extends JFrame{	
-	Toolkit tk = Toolkit.getDefaultToolkit(); //구현된 Toolkit객체를 얻는다.
-	Dimension screenSize=tk.getScreenSize(); //화면의 크기를 구한다.
+	private Toolkit tk = Toolkit.getDefaultToolkit(); //구현된 Toolkit객체를 얻는다.
+	private Dimension screenSize=tk.getScreenSize(); //화면의 크기를 구한다.
 	
 	/***************로고 삽입******************/
-	ImageIcon icon = new ImageIcon("icon.png");
-	ImageIcon small_logo = new ImageIcon("logo_small.png");
-	JLabel lbSmallLogo = new JLabel(small_logo);
+	private ImageIcon icon = new ImageIcon("icon.png");
+	private ImageIcon small_logo = new ImageIcon("logo_small.png");
+	private JLabel lbSmallLogo = new JLabel(small_logo);
 	
 	/**************로그인 컴포넌트 설정***************/
-	JLabel lb_Id = new JLabel("ID : ", Label.RIGHT); // Label.RIGHT : Label의 text정렬을 오른쪽으로.
-	JLabel lb_Pass = new JLabel("Password :", Label.RIGHT);
-	JLabel lb_Valid = new JLabel("아이디와 비밀번호를 입력해 주세요.");
-	TextField tf_Id  = new TextField(20);
-	TextField tf_Pwd = new TextField(20);
-	JButton bt_Login = new JButton("로그인");
-	JButton bt_Cancel = new JButton("취소");	
-	JButton bt_SignUp = new JButton("회원가입");
+	private JLabel lb_Id = new JLabel("ID : ", Label.RIGHT); // Label.RIGHT : Label의 text정렬을 오른쪽으로.
+	private JLabel lb_Pass = new JLabel("Password :", Label.RIGHT);
+	private JLabel lb_Valid = new JLabel("아이디와 비밀번호를 입력해 주세요.");
+	private TextField tf_Id  = new TextField(20);
+	private TextField tf_Pwd = new TextField(20);
+	private JButton bt_Login = new JButton("로그인");
+	private JButton bt_Cancel = new JButton("취소");	
+	private JButton bt_SignUp = new JButton("회원가입");
 
 	/*************디폴트 생성자*****************/
 	public GUI_Login(){

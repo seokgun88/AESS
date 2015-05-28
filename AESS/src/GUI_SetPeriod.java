@@ -13,16 +13,17 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListener {
-	int thisYear=2015, thisMonth=2, thisWeek=1, nowRow;
-	JTable weekTable;
-	JPanel pn_week;
-	JLabel lb_year, lb_month, lb_week, lb_yearText, lb_monthText, lb_weekText;
-	JPanel pn_bt_left, pn_bt_right;
-	JButton bt_left, bt_right, done;
-	CalendarModel tm1;
-	JScrollPane jsp;
-	String id;
-	User_Admin admin;
+	private String id;
+	private User_Admin admin;
+	
+	private int thisYear=2015, thisMonth=2, thisWeek=1, nowRow;
+	private JTable weekTable;
+	private JPanel pn_week;
+	private JLabel lb_year, lb_month, lb_week, lb_yearText, lb_monthText, lb_weekText;
+	private JPanel pn_bt_left, pn_bt_right;
+	private JButton bt_left, bt_right, done;
+	private CalendarModel tm1;
+	private JScrollPane jsp;
  
 	public GUI_SetPeriod(String id) {
 		this.id = id;
@@ -162,10 +163,10 @@ public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListen
 			int sDate = Integer.parseInt(weekTable.getValueAt(nowRow, 0).toString());
 			int eDate = Integer.parseInt(weekTable.getValueAt(nowRow, 6).toString());
 			
-			if(Info.test.equals("중간")) test="M";
+			if(Info.getTest().equals("중간")) test="M";
 			else test="F";
 			
-			admin.SetExamWeek(Info.getYear(), Info.season, test, thisMonth, thisWeek, sDate, eDate);
+			admin.SetExamWeek(Info.getYear(), Info.getSeason(), test, thisMonth, thisWeek, sDate, eDate);
 			JOptionPane.showMessageDialog(null, "시험 기간이 변경되었습니다. 지금 이후로 로그인한 사용자에게 반영됩니다.");  
 		}
 	}
