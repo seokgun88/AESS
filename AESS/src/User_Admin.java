@@ -243,6 +243,8 @@ public class User_Admin{
 	/**정용훈 추가**/
 	public void approveUser(String id){
 		//새로 가입 요청이 들어온 멤버 중 id인 멤버를 가입 승인. auth=F에서 auth=T로 Update
+		if(!isUserUnapproved(id))
+			return;
 		try{			
 			Statement query = conn.createStatement();
 			String sql = "update member set state='T' where id='" +id+ "';";
@@ -273,11 +275,7 @@ public class User_Admin{
 			String stateStr;
 			if(isUserUnapproved(id))//가입 승인되지 않은 회원의 상태가 변경되지 않도록.
 				return;
-			if (state)
-				stateStr="T";
-			else
-				stateStr="F";
-			String sql = "update member set state='" +stateStr+ "' where id='" +id+ "';";
+			String sql = "update member set state='" +state+ "' where id='" +id+ "';";
 			query.execute(sql);
 			query.close();
 		}catch(SQLException e){
@@ -310,11 +308,48 @@ public class User_Admin{
 			result.next();
 			if (result.getString("state").equals("N"))
 				res=true;
+			result.close();
 			query.close();
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
 		return res;
+	}
+	/**이영석 추가 : 학생 휴학신청 상태인지 확인**/
+	public boolean isUserLeave(String id){
+		boolean res=false;
+		try{
+			Statement query = conn.createStatement();
+			String sql = "select * from member where id='" +id+ "';";
+			ResultSet result;
+			result = query.executeQuery(sql);
+			result.next();
+			if (result.getString("state").equals("L"))
+				res=true;
+			result.close();
+			query.close();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return res;		
+	}
+	/**이영석 추가 : 활성화 요청 상태 인지 확인**/
+	public boolean isUserRequireActivate(String id){
+		boolean res=false;
+		try{
+			Statement query = conn.createStatement();
+			String sql = "select * from member where id='" +id+ "';";
+			ResultSet result;
+			result = query.executeQuery(sql);
+			result.next();
+			if (result.getString("state").equals("A"))
+				res=true;
+			result.close();
+			query.close();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return res;				
 	}
 	/**이영석 추가 : 쿼리문 작성, state가 T면 가입된 즉 활성화된 회원
 	 * F면 비활성화된 회원
@@ -330,9 +365,9 @@ public class User_Admin{
 			ResultSet result;
 			
 			if(state==AccountState.NEW){
-				sql = "select id from member where state = 'N';";//가입 신청한 회원만 표시
+				sql = "select id from member where state='N';";//가입 신청한 회원만 표시
 			}else if(state==AccountState.AUTHED){
-				sql = "select id from member where state='T' or state='F';";//가입된 회원만 표시(비활성화 회원 포함)
+				sql = "select id from member where state!='N';";//가입된 회원만 표시(비활성화 회원 포함)
 			}else{
 				//All accounts
 				sql = "select id from member";//전체 회원 표시
@@ -352,5 +387,23 @@ public class User_Admin{
 			e.printStackTrace();
 			return null;
 		}
+	}
+	/**이영석 추가 : 비밀번호 초기화 sql**/
+	public void resetPassword(String id){
+		try{
+			Statement query = conn.createStatement();
+			String sql = "select * from member where id='" +id+ "';";
+			ResultSet result = query.executeQuery(sql);
+			if(result.next()){
+				if(result.getString("state").equals("R")){
+					sql = "update member set pass='0000' where id='" +id+ "';";
+					query.execute(sql);
+				}
+			}			
+			result.close();
+			query.close();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}		
 	}
 }

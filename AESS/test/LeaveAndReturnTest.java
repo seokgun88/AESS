@@ -33,7 +33,7 @@ public class LeaveAndReturnTest {
 		Connection conn = dbcon.connect();
 		Info.setId("s");
 		ManageUser.setConn(conn);
-		ManageUser.setReturnToSchool();
+		ManageUser.setActivate();
 		try {
 			Statement query = conn.createStatement();
 			ResultSet result = query.executeQuery("select type from member where id='" +Info.getId()+ "';");

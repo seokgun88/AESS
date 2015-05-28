@@ -13,17 +13,17 @@ public class ManageUser {
 	public static void setLeaveOfAbsence(){
 		try {
 			Statement query = conn.createStatement();
-			query.execute("update member set type='L' where id='" +Info.getId()+ "';");
+			query.execute("update member set state='L' where id='" +Info.getId()+ "';");
 			query.close();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}	
-	public static void setReturnToSchool(){
+	public static void setActivate(){
 		try {
 			Statement query = conn.createStatement();
-			query.execute("update member set type='S' where id='" +Info.getId()+ "';");
+			query.execute("update member set state='A' where id='" +Info.getId()+ "';");
 			query.close();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
@@ -66,7 +66,7 @@ public class ManageUser {
 			ResultSet result = query.executeQuery(sql);
 			if(!result.next())
 				return false;
-			sql = "update member set pass='0000' where id='" +id+ "';";
+			sql = "update member set state='R' where id='" +id+ "';";
 			query.execute(sql);
 			result.close();
 			query.close();

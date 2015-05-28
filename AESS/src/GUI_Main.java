@@ -27,7 +27,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 	private JButton btn_timeTable = new JButton("시간표/스케쥴 입력"); //학생, 조교가 사용
 	private JButton btn_leaveOfAbsence = new JButton("휴학신청"); //학생, 조교가 사용
 	private JButton btn_notice = new JButton("공지사항"); //학생, 조교가 사용
-	private JButton btn_returnToSchool = new JButton("복학신청"); //휴학생이 사용
+	private JButton btn_activate = new JButton("계정 활성화 신청"); //비활성화된 사용자가 사용
 	private JButton btn_selectLecture = new JButton("수업 선택"); //교수가 사용
 	private JButton btn_setPeriod = new JButton("시험기간 설정"); //관리자가 사용
 	private JButton btn_dispUserList = new JButton("사용자 목록 표시"); //관리자가 사용
@@ -121,41 +121,43 @@ public class GUI_Main extends JFrame implements ActionListener {
 
 		left.add(btn_roomList);	//모든 사용자에게 강의실 시간표 보기 버튼 추가
 		btn_roomList.addActionListener(this);
-
-		if(Info.getType().equals("A")){ //관리자 일때
-			set_period = new GUI_SetPeriod(id);	//시험 기간 설정 GUI
-			user_list = new GUI_UserList(id); //사용자 목록 GUI
-			
-			left.add(btn_setPeriod);	//관리자 일때 시험기간 설정 보기 버튼 추가
-			btn_setPeriod.addActionListener(this);
-			left.add(btn_dispUserList);
-			btn_dispUserList.addActionListener(this);
-		}		
-		else if(Info.getType().equals("P")){ //교수 일때
-			prof_table = new GUI_ProfessorTable(id);	//교수 수업별 시간표 GUI
-			add(prof_table, "Center");
-			
-			left.add(btn_selectLecture);	//교수 일때 강의 목록 보기 버튼 추가
-			btn_selectLecture.setBounds(0,0,10,10);
-			btn_selectLecture.addActionListener(this);
+		
+		if(Info.getState().equals("T") || Info.getState().equals("L")){ //활성화된 상태일때(휴학 신청 상태 포함)
+			if(Info.getType().equals("A")){ //관리자 일때
+				set_period = new GUI_SetPeriod(id);	//시험 기간 설정 GUI
+				user_list = new GUI_UserList(id); //사용자 목록 GUI
+				
+				left.add(btn_setPeriod);	//관리자 일때 시험기간 설정 보기 버튼 추가
+				btn_setPeriod.addActionListener(this);
+				left.add(btn_dispUserList);
+				btn_dispUserList.addActionListener(this);
+			}		
+			if(Info.getType().equals("P")){ //교수 일때
+				prof_table = new GUI_ProfessorTable(id);	//교수 수업별 시간표 GUI
+				add(prof_table, "Center");
+				
+				left.add(btn_selectLecture);	//교수 일때 강의 목록 보기 버튼 추가
+				btn_selectLecture.setBounds(0,0,10,10);
+				btn_selectLecture.addActionListener(this);
+			}
+			else if(Info.getType().equals("S") || Info.getType().equals("J")){ //학생 또는 조교일때
+				std_main = new GUI_StudentMain(id);	//학생 GUI
+				add(std_main, "Center");
+				
+				left.add(btn_timeTable);	 //스케쥴 테이블 보기 버튼 추가
+				btn_timeTable.addActionListener(this);
+				left.add(btn_leaveOfAbsence); //휴학 버튼 추가
+				btn_leaveOfAbsence.addActionListener(this);
+				/**********이영석 추가***************/
+				notice = new GUI_Notice(); //공지사항 인스턴스 생성
+				left.add(btn_notice); //공지사항 보기 버튼 추가
+				btn_notice.addActionListener(this); //공지사항 보기 버튼 리스너 등록
+				/*************************************/
+			}
 		}
-		else if(Info.getType().equals("S") || Info.getType().equals("J")){ //학생 또는 조교일때
-			std_main = new GUI_StudentMain(id);	//학생 GUI
-			add(std_main, "Center");
-			
-			left.add(btn_timeTable);	 //스케쥴 테이블 보기 버튼 추가
-			btn_timeTable.addActionListener(this);
-			left.add(btn_leaveOfAbsence); //휴학 버튼 추가
-			btn_leaveOfAbsence.addActionListener(this);
-			/**********이영석 추가***************/
-			notice = new GUI_Notice(); //공지사항 인스턴스 생성
-			left.add(btn_notice); //공지사항 보기 버튼 추가
-			btn_notice.addActionListener(this); //공지사항 보기 버튼 리스너 등록
-			/*************************************/
-		}
-		else if(Info.getType().equals("L")){ //휴학생 일때
-			left.add(btn_returnToSchool);
-			btn_returnToSchool.addActionListener(this);
+		else if(Info.getState().equals("F")){ //비활성화된 상태 일때
+			left.add(btn_activate);
+			btn_activate.addActionListener(this);
 		}
 		add(left,"West");
 	}
@@ -202,12 +204,12 @@ public class GUI_Main extends JFrame implements ActionListener {
 				dispose();			
 			} 
 		}
-		else if(e.getSource() == btn_returnToSchool){ //복학신청 =>이후 다른 클래스로 이동해야 함
-			if(JOptionPane.showConfirmDialog(null,"복학신청을 하시겠습니까?\n(신청 후 자동로그아웃 됩니다.)", "복학신청",
+		else if(e.getSource() == btn_activate){ //활성화 신청
+			if(JOptionPane.showConfirmDialog(null,"계정 활성화 신청을 하시겠습니까?\n(신청 후 자동로그아웃 됩니다.)", "계정 활성화 신청",
 					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION)
 			{	
 				ManageUser.setConn(Info.getConn());
-				ManageUser.setReturnToSchool();
+				ManageUser.setActivate();
 				/**재접속**/
 				GUI_Login gl = new GUI_Login();
 				dispose();			

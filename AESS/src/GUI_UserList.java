@@ -24,8 +24,8 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 	private JRadioButton [] listState = new JRadioButton[3]; //0: 기존, 1: 신규, 2: 전체
 	private ButtonGroup bg;
 	private JButton btnApprv, btnDelete, btnTogAct; //가입 승인 버튼, 계정 삭제 버튼, 활성 상태 토글 버튼
+	private JButton btnReset; //비밀번호 초기화 버튼
 	private JPanel [] horPane = new JPanel[2] ; //수평으로 객체들을 배치해 수직으로 쌓기 위한 패널
-//	private String [] allUserList, newUserList, userList;
 	private String [] curList, tempList;
 	
 	private User_Admin admin;
@@ -50,6 +50,7 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		btnApprv=new JButton("가입 허가");
 		btnDelete=new JButton("계정 삭제");
 		btnTogAct=new JButton("계정 비/활성화");
+		btnReset=new JButton("비밀번호 초기화");
 		horPane[0]=new JPanel();
 		horPane[1]=new JPanel();
 		userJList=new JList<String>();
@@ -64,10 +65,10 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		btnApprv.addActionListener(this);
 		btnDelete.addActionListener(this);
 		btnTogAct.addActionListener(this);
+		btnReset.addActionListener(this);
 		userJList.addListSelectionListener(this);
 		
 		//객체 등록
-//		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setLayout(null);
 		horPane[0].setLayout(new FlowLayout(FlowLayout.LEFT));
 		horPane[0].add(listState[0]);
@@ -78,6 +79,7 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		horPane[1].add(btnApprv);
 		horPane[1].add(btnDelete);
 		horPane[1].add(btnTogAct);
+		horPane[1].add(btnReset);
 		add(horPane[1]);
 		add(scrollPane);
 		
@@ -103,6 +105,10 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		for(int i=0;i<curList.length;i++){
 			if(admin.isUserInactivated(curList[i]))
 				buf=deactTag;
+			else if(admin.isUserLeave(curList[i]))
+				buf="[휴학신청]";
+			else if(admin.isUserRequireActivate(curList[i]))
+				buf="[활성화신청]";
 			else
 				buf="";
 			tempList[i]=curList[i]+buf;
@@ -141,10 +147,13 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 			admin.deleteUser(curList[userJList.getSelectedIndex()]);
 		} else if(arg0.getSource().equals(btnTogAct)){
 			//계정 비/활성화버튼
-			if(userJList.getSelectedValue().toString().contains(deactTag))				
+			if(userJList.getSelectedValue().toString().contains(deactTag) || userJList.getSelectedValue().toString().contains("[활성화신청]"))				
 				admin.activateUser(curList[userJList.getSelectedIndex()], "T");
 			else
 				admin.activateUser(curList[userJList.getSelectedIndex()], "F");
+		} else if(arg0.getSource().equals(btnReset)){
+			//비밀번호 초기화 버튼
+			admin.resetPassword(curList[userJList.getSelectedIndex()]);
 		}
 		
 		refreshList();

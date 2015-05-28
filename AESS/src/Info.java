@@ -36,6 +36,26 @@ public class Info {
 			System.out.println("Connection Fail :"+se.getMessage());
 		}		
 	}
+	
+	public static String getState(){
+		Statement query;
+		ResultSet result;
+		String state=null;
+		
+		String sql = "select * from member where id='" +id+ "';";
+		try {
+			query = conn.createStatement();
+			result = query.executeQuery(sql);
+			if(result.next()){
+				state = result.getString("state");
+			}
+			result.close();
+			query.close();
+		} catch(SQLException se) {
+			System.out.println("Connection Fail :"+se.getMessage());
+		}
+		return state;
+	}
 
 	public static String getName() {
 		return name;
