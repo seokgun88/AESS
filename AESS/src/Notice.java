@@ -7,7 +7,6 @@ public class Notice {
 	public Notice(){
 		conn = Info.getConn();
 	}
-	/******************이영석 추가 : 공지사항 읽어오기*****************/
 	public Vector getParticipateClasss(){
 		Vector v_participateClass = new Vector();;
 		Vector v_participateClassCol;
@@ -28,6 +27,7 @@ public class Notice {
 		}		
 		return v_participateClass;
 	}
+	/******************이영석 추가 : 공지사항 읽어오기*****************/
 	public String getNotice(String lectureCode){
 		String notice = "";
 		try {

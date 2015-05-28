@@ -49,6 +49,18 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		BoxLayout TestInfo_box  = new BoxLayout(pn_TestInfo, BoxLayout.Y_AXIS);	//박스 레이아웃
 		pn_TestInfo.setLayout(TestInfo_box);		
 		
+		/********************이영석 추가 : 공지사항*************************/
+		JPanel pn_notice = new JPanel(); //공지사항 패널
+		ta_notice.setText(notice.getNotice(lectureCode));
+		pn_notice.add(ta_notice); //textarea 패널에 등록
+		JScrollPane scrollPane = new JScrollPane(ta_notice); //스크롤 생성
+		pn_notice.add(scrollPane); //스크롤 패널에 추가		
+		JButton bt_sendNotice = new JButton("입력"); //공지사항 입력 버튼
+		bt_sendNotice.addActionListener(new profListener()); //입력 버튼 리스너 등록
+		pn_notice.add(bt_sendNotice); //버튼 패널에 등록
+		addTab("공지사항", null, pn_notice, "공지사항 입력 및 수정"); //패널을 탭으로 만듦
+		/******************************************************************/
+		
 		//수업정보, 휴강여부 선택
 		JPanel TestInfo_up = new JPanel();		
 		TestInfo_up.setBorder(new TitledBorder("휴강 여부 선택"));
@@ -306,18 +318,6 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		tableCellCenter(table5);
 		table5.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table5.addMouseListener(this);
-		
-		/********************이영석 추가 : 공지사항*************************/
-		JPanel pn_notice = new JPanel(); //공지사항 패널
-		ta_notice.setText(notice.getNotice(lectureCode));
-		pn_notice.add(ta_notice); //textarea 패널에 등록
-		JScrollPane scrollPane = new JScrollPane(ta_notice); //스크롤 생성
-		pn_notice.add(scrollPane); //스크롤 패널에 추가		
-		JButton bt_sendNotice = new JButton("입력"); //공지사항 입력 버튼
-		bt_sendNotice.addActionListener(new profListener()); //입력 버튼 리스너 등록
-		pn_notice.add(bt_sendNotice); //버튼 패널에 등록
-		addTab("공지사항", null, pn_notice, "공지사항 입력 및 수정"); //패널을 탭으로 만듦
-		/******************************************************************/
 	}
 	
 	public void tableCellCenter(JTable t) // 셀 내용 가운데 정렬
@@ -500,6 +500,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 				}
 			}
 			else if(menu.equals("입력")){ //이영석 추가 : 공지사항 입력 버튼 액션
+				JOptionPane.showMessageDialog(null, "공지사항 입력 완료", "공지사항 입력", JOptionPane.INFORMATION_MESSAGE);
 				prof.SetNotice(lectureCode, ta_notice.getText());
 			}
 		}
