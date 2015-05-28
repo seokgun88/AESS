@@ -124,9 +124,12 @@ public class GUI_Main extends JFrame implements ActionListener {
 
 		if(Info.getType().equals("A")){ //관리자 일때
 			set_period = new GUI_SetPeriod(id);	//시험 기간 설정 GUI
+			user_list = new GUI_UserList(id); //사용자 목록 GUI
 			
 			left.add(btn_setPeriod);	//관리자 일때 시험기간 설정 보기 버튼 추가
 			btn_setPeriod.addActionListener(this);
+			left.add(btn_dispUserList);
+			btn_dispUserList.addActionListener(this);
 		}		
 		else if(Info.getType().equals("P")){ //교수 일때
 			prof_table = new GUI_ProfessorTable(id);	//교수 수업별 시간표 GUI

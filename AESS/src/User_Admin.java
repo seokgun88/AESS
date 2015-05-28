@@ -277,6 +277,22 @@ public class User_Admin{
 			e.printStackTrace();
 		}
 	}
+	public boolean isUserActivated(String id){
+		boolean res=false;
+		try{
+			Statement query = conn.createStatement();
+			String sql = "select * from member where id='" +id+ "';";
+			ResultSet result;
+			result = query.executeQuery(sql);
+			result.next();
+			if (result.getString("state").equals("T"))
+				res=true;
+			query.close();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return res;
+	}
 	/**이영석 추가 : 쿼리문 작성, state가 T면 가입된 즉 활성화된 회원
 	 * F면 비활성화된 회원
 	 * N(new)면 가입 신청한 회원
