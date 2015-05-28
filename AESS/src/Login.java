@@ -81,9 +81,13 @@ public class Login {
 	
 	public static Boolean check_resetable_id(String id) {
 		
-		if(id.equals("a"))
+		if(id.equals("a") || id.equals("") || id.equals(" ") )
 			return false;
-		
+		/*
+		 if( DB¿¡ ¾ø´Â ID ) {
+		 	return false
+		 }
+		 */
 		return true;
 	}
 	
