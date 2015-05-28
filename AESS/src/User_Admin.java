@@ -5,6 +5,8 @@ import javax.swing.JOptionPane;
 public class User_Admin{	
 	private static Connection conn; //@@승훈 추가 : static으로 선언함. test때문에
 	
+	public enum AccountState {NEW,AUTHED}
+	
 	public User_Admin(){
 		conn = Info.getConn(); //@@승훈 추가 : static으로 선언함. test때문에
 	}
@@ -234,6 +236,84 @@ public class User_Admin{
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	public void approveUser(String id){
+		//새로 가입 요청이 들어온 멤버 중 id인 멤버를 가입 승인. auth=F에서 auth=T로 Update
+		try{
+			String sql;
+			ResultSet result;
+			
+			Statement query = conn.createStatement();
+			//*****//
+			sql = ""; //
+			query.executeUpdate(sql);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	public void deleteUser(String id){
+		//id인 멤버를 삭제. Delete사용
+		try{
+			String sql;
+			ResultSet result;
+			
+			Statement query = conn.createStatement();
+			//*****//
+			sql = ""; //
+			query.executeUpdate(sql);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	public void activateUser(String id, boolean state){
+		//state의 논리값에 따라 멤버 중 id의 active값으로 지정.
+		//활성상태일때 값은 T, 비활성상태일때는 F. Update구문 사용.
+		try{
+			String sql;
+			ResultSet result;
+			
+			Statement query = conn.createStatement();
+			//*****//
+			sql = ""; //
+			query.executeUpdate(sql);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	public String [] getUserList(AccountState state){
+		try{
+			String [] temp;
+			String sql;
+			ResultSet result;
+			int resCnt, i=0;
+			
+			Statement query = conn.createStatement();
+			if(state==AccountState.NEW){
+				sql = "select id from member where auth = 'T'";//가입 신청한 회원만 표시
+			}else if(state==AccountState.AUTHED){
+				sql = "select id from member where auth = 'F'";//가입된 회원만 표시
+			}else{
+				//All accounts
+				sql = "select id from member";//전체 회원 표시
+			}
+			
+			result = query.executeQuery(sql);
+			result.last();
+			resCnt=result.getRow();
+			result.beforeFirst();
+			temp = new String[resCnt];
+			while(result.next()){
+				temp[i++]=result.getString("id");
+				System.out.println(result.getString("id"));
+			}
+			return temp;
+		}catch(SQLException e){
+			e.printStackTrace();
+			return null;
 		}
 	}
 }
