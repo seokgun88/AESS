@@ -282,73 +282,47 @@ public class User_Admin{
 			e.printStackTrace();
 		}
 	}
-	public boolean isUserInactivated(String id){
-		boolean res=false;
+	/**이영석 추가 : 사용자의 state 확인**/
+	public String getUserState(String id){
+		String state=null;
 		try{
 			Statement query = conn.createStatement();
 			String sql = "select * from member where id='" +id+ "';";
 			ResultSet result;
 			result = query.executeQuery(sql);
 			result.next();
-			if (result.getString("state").equals("F"))
-				res=true;
-			query.close();
-		}catch(SQLException e){
-			e.printStackTrace();
-		}
-		return res;
-	}
-	public boolean isUserUnapproved(String id){
-		boolean res=false;
-		try{
-			Statement query = conn.createStatement();
-			String sql = "select * from member where id='" +id+ "';";
-			ResultSet result;
-			result = query.executeQuery(sql);
-			result.next();
-			if (result.getString("state").equals("N"))
-				res=true;
+			state = result.getString("state");
 			result.close();
 			query.close();
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
+		return state;
+	}
+	public boolean isUserInactivated(String id){
+		boolean res=false;
+		if(getUserState(id).equals("F"))
+			res = true;
+		return res;
+	}
+	public boolean isUserUnapproved(String id){
+		boolean res=false;
+		if(getUserState(id).equals("N"))
+			res = true;
 		return res;
 	}
 	/**이영석 추가 : 학생 휴학신청 상태인지 확인**/
 	public boolean isUserLeave(String id){
 		boolean res=false;
-		try{
-			Statement query = conn.createStatement();
-			String sql = "select * from member where id='" +id+ "';";
-			ResultSet result;
-			result = query.executeQuery(sql);
-			result.next();
-			if (result.getString("state").equals("L"))
-				res=true;
-			result.close();
-			query.close();
-		}catch(SQLException e){
-			e.printStackTrace();
-		}
+		if(getUserState(id).equals("L"))
+			res = true;
 		return res;		
 	}
 	/**이영석 추가 : 활성화 요청 상태 인지 확인**/
 	public boolean isUserRequireActivate(String id){
 		boolean res=false;
-		try{
-			Statement query = conn.createStatement();
-			String sql = "select * from member where id='" +id+ "';";
-			ResultSet result;
-			result = query.executeQuery(sql);
-			result.next();
-			if (result.getString("state").equals("A"))
-				res=true;
-			result.close();
-			query.close();
-		}catch(SQLException e){
-			e.printStackTrace();
-		}
+		if(getUserState(id).equals("A"))
+			res = true;
 		return res;				
 	}
 	/**이영석 추가 : 쿼리문 작성, state가 T면 가입된 즉 활성화된 회원
