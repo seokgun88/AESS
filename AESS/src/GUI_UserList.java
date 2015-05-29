@@ -111,7 +111,8 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 				buf="[활성화신청]";
 			else
 				buf="";
-			tempList[i]=curList[i]+buf;
+			//지수 수정
+			tempList[i] = curList[i] + buf + '[' + admin.getUserType(curList[i]) + ']';
 		}
 		
 		userJList.setListData(tempList);
