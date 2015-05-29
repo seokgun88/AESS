@@ -282,6 +282,23 @@ public class User_Admin{
 			e.printStackTrace();
 		}
 	}
+	/**이영석 추가 : 사용자 type 확인**/
+	public String getUserType(String id){
+		String type=null;
+		try{
+			Statement query = conn.createStatement();
+			String sql = "select * from member where id='" +id+ "';";
+			ResultSet result;
+			result = query.executeQuery(sql);
+			result.next();
+			type = result.getString("type");
+			result.close();
+			query.close();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return type;
+	}
 	/**이영석 추가 : 사용자의 state 확인**/
 	public String getUserState(String id){
 		String state=null;
