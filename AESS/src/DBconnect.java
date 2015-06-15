@@ -6,7 +6,7 @@ public class DBconnect {
 		Connection conn = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://sukgun.iptime.org:3306/aess?useUnicode=true&characterEncoding=utf-8","aess","");
+			conn = DriverManager.getConnection("jdbc:mysql://183.106.12.154:3306/aess?useUnicode=true&characterEncoding=utf-8","aess","");
 			System.out.println("db에 접속 완료");
 		} 
 		catch(ClassNotFoundException cnfe) {
