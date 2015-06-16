@@ -342,6 +342,13 @@ public class User_Admin{
 			res = true;
 		return res;				
 	}
+	/**이영석 추가 : 비밀번호 초기화 요청 확인**/
+	public boolean isRequireResetPass(String id){
+		boolean res=false;
+		if(getUserState(id).equals("R"))
+			res = true;
+		return res;						
+	}
 	/**이영석 추가 : 쿼리문 작성, state가 T면 가입된 즉 활성화된 회원
 	 * F면 비활성화된 회원
 	 * N(new)면 가입 신청한 회원
@@ -387,7 +394,7 @@ public class User_Admin{
 			ResultSet result = query.executeQuery(sql);
 			if(result.next()){
 				if(result.getString("state").equals("R")){
-					sql = "update member set pass='0000' where id='" +id+ "';";
+					sql = "update member set pass='0000', state='T' where id='" +id+ "';";
 					query.execute(sql);
 				}
 			}			

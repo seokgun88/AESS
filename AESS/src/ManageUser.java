@@ -77,4 +77,23 @@ public class ManageUser {
 			return false;
 		}
 	}
+	/**이영석 추가 : 비밀번호 수정 기능**/
+	public static boolean setPass(String id, String pass){
+		try {
+			Statement query = conn.createStatement();
+			String sql = "select * from member where id='" +id+ "';";
+			ResultSet result = query.executeQuery(sql);
+			if(!result.next())
+				return false;
+			sql = "update member set pass='" +pass+ "' where id='" +id+ "';";
+			query.execute(sql);
+			result.close();
+			query.close();
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}		
+	}
 }

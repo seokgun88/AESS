@@ -101,14 +101,15 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		curList=admin.getUserList(accSt);
 		tempList = new String[curList.length];
 		for(int i=0;i<curList.length;i++){
+			buf = "";
 			if(admin.isUserInactivated(curList[i]))
-				buf=deactTag;
+				buf += deactTag;
 			else if(admin.isUserLeave(curList[i]))
-				buf="[휴학신청]";
+				buf += "[휴학 신청]";
 			else if(admin.isUserRequireActivate(curList[i]))
-				buf="[활성화신청]";
-			else
-				buf="";
+				buf += "[활성화 신청]";
+			else if(admin.isRequireResetPass(curList[i]))
+				buf += "[비밀번호 초기화]";
 			//지수 수정
 			tempList[i] = curList[i] + buf + '[' + admin.getUserType(curList[i]) + ']';
 		}
@@ -139,7 +140,7 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 			admin.deleteUser(curList[userJList.getSelectedIndex()]);
 		} else if(arg0.getSource().equals(btnTogAct)){
 			//계정 비/활성화버튼
-			if(userJList.getSelectedValue().toString().contains(deactTag) || userJList.getSelectedValue().toString().contains("[활성화신청]"))				
+			if(userJList.getSelectedValue().toString().contains(deactTag) || userJList.getSelectedValue().toString().contains("[활성화 신청]"))	
 				admin.activateUser(curList[userJList.getSelectedIndex()], "T");
 			else
 				admin.activateUser(curList[userJList.getSelectedIndex()], "F");

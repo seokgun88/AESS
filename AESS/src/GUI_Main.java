@@ -27,6 +27,7 @@ public class GUI_Main extends JFrame implements ActionListener {
 	private JButton btn_timeTable = new JButton("시간표/스케쥴 입력"); //학생, 조교가 사용
 	private JButton btn_leaveOfAbsence = new JButton("휴학신청"); //학생, 조교가 사용
 	private JButton btn_notice = new JButton("공지사항"); //학생, 조교가 사용
+	private JButton btn_changpwd = new JButton("비밀번호수정"); //학생, 조교, 교수가 사용 @@비밀번호수정
 	private JButton btn_activate = new JButton("계정 활성화 신청"); //비활성화된 사용자가 사용
 	private JButton btn_selectLecture = new JButton("수업 선택"); //교수가 사용
 	private JButton btn_setPeriod = new JButton("시험기간 설정"); //관리자가 사용
@@ -69,6 +70,9 @@ public class GUI_Main extends JFrame implements ActionListener {
 	public GUI_Main(String id) {
 		super("AESS");
 		super.setIconImage(icon.getImage());
+
+		/**ManageUser DBconnection 변수 초기화**/
+		ManageUser.setConn(Info.getConn());
 		
 		Info.setNameAndType(id); //id를 통해 이름과 타입을 알아옴
 		
@@ -139,6 +143,9 @@ public class GUI_Main extends JFrame implements ActionListener {
 				left.add(btn_selectLecture);	//교수 일때 강의 목록 보기 버튼 추가
 				btn_selectLecture.setBounds(0,0,10,10);
 				btn_selectLecture.addActionListener(this);
+				/*************************************/
+				left.add(btn_changpwd); //@@비밀번호 수정
+				btn_changpwd.addActionListener(this); //@@비밀번호 수정
 			}
 			else if(Info.getType().equals("S") || Info.getType().equals("J")){ //학생 또는 조교일때
 				std_main = new GUI_StudentMain(id);	//학생 GUI
@@ -153,6 +160,8 @@ public class GUI_Main extends JFrame implements ActionListener {
 				left.add(btn_notice); //공지사항 보기 버튼 추가
 				btn_notice.addActionListener(this); //공지사항 보기 버튼 리스너 등록
 				/*************************************/
+				left.add(btn_changpwd); //@@비밀번호 수정
+				btn_changpwd.addActionListener(this); //@@비밀번호 수정
 			}
 		}
 		else if(Info.getState().equals("F")){ //비활성화된 상태 일때
@@ -193,11 +202,15 @@ public class GUI_Main extends JFrame implements ActionListener {
 			GUI_Login gl = new GUI_Login();
 			dispose();
 		}
+		else if(e.getSource() == btn_changpwd){ //@@비밀번호수정
+			String pass=""; //@@비밀번호수정
+			pass=JOptionPane.showInputDialog("변경할 비밀번호를 입력하십시오."); //@@비밀번호수정
+			ManageUser.setPass(Info.getId(), pass);
+		} //@@비밀번호수정
 		else if(e.getSource() == btn_leaveOfAbsence){ //복학 신청 =>이후 다른 클래스로 이동해야 함
 			if(JOptionPane.showConfirmDialog(null,"휴학신청을 하시겠습니까?\n(신청 후 자동로그아웃 됩니다.)", "휴학신청",
 					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION)
 			{
-				ManageUser.setConn(Info.getConn());
 				ManageUser.setLeaveOfAbsence();
 				/**재접속**/
 				GUI_Login gl = new GUI_Login();
@@ -208,7 +221,6 @@ public class GUI_Main extends JFrame implements ActionListener {
 			if(JOptionPane.showConfirmDialog(null,"계정 활성화 신청을 하시겠습니까?\n(신청 후 자동로그아웃 됩니다.)", "계정 활성화 신청",
 					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION)
 			{	
-				ManageUser.setConn(Info.getConn());
 				ManageUser.setActivate();
 				/**재접속**/
 				GUI_Login gl = new GUI_Login();
