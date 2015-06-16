@@ -1,16 +1,10 @@
-import java.awt.FlowLayout;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -25,6 +19,7 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 	private ButtonGroup bg;
 	private JButton btnApprv, btnDelete, btnTogAct; //가입 승인 버튼, 계정 삭제 버튼, 활성 상태 토글 버튼
 	private JButton btnReset; //비밀번호 초기화 버튼
+	private JPanel p_east; //버튼들을 하나로 묶는 패널
 	private JPanel [] horPane = new JPanel[2] ; //수평으로 객체들을 배치해 수직으로 쌓기 위한 패널
 	private String [] curList, tempList;
 	
@@ -69,19 +64,22 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		userJList.addListSelectionListener(this);
 		
 		//객체 등록
-		setLayout(null);
+		setLayout(new BorderLayout());
+		p_east = new JPanel();
+		p_east.setLayout(new BorderLayout());
 		horPane[0].setLayout(new FlowLayout(FlowLayout.LEFT));
 		horPane[0].add(listState[0]);
 		horPane[0].add(listState[1]);
 		horPane[0].add(listState[2]);
-		add(horPane[0]);
+		p_east.add(horPane[0], "North");
 		horPane[1].setLayout(new FlowLayout(FlowLayout.LEFT));
 		horPane[1].add(btnApprv);
 		horPane[1].add(btnDelete);
 		horPane[1].add(btnTogAct);
 		horPane[1].add(btnReset);
-		add(horPane[1]);
-		add(scrollPane);
+		p_east.add(horPane[1], "Center");
+		add(p_east, "East");
+		add(scrollPane, "Center");
 		
 		listState[0].setSelected(true);
 		
@@ -116,11 +114,6 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		}
 		
 		userJList.setListData(tempList);
-		
-//		System.out.println(curList);
-//		for(int i=0; i<curList.length; i++){
-//			System.out.println(curList[i]);
-//		}
 	}
 	
 	//Refresh Views
@@ -128,9 +121,7 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		try{
 			Rectangle bndry=this.getBounds();
 			int btn_h = 40;
-			horPane[0].setBounds(0, 0, bndry.width, btn_h);
-			horPane[1].setBounds(0, (int) horPane[0].getBounds().getMaxY(), bndry.width, btn_h);
-			scrollPane.setBounds(0, (int) horPane[1].getBounds().getMaxY(), bndry.width, bndry.height-btn_h*2);
+			scrollPane.setBounds(50, (int) horPane[1].getBounds().getMaxY(), bndry.width/2, bndry.height-btn_h*2);
 		}catch(NullPointerException npe){}
 	}
 	
