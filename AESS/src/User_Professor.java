@@ -422,7 +422,7 @@ public class User_Professor{
 			sql = "update member set type='J' where id='" +id+ "';";
 			query.execute(sql);
 			
-			sql = "insert into courseRelation values ('" +lectureNo+ "', '" +id+ "', 'J', 0)";
+			sql = "insert into courseRelation (no, user_id, user_type, schedule_save) values ('" +lectureNo+ "', '" +id+ "', 'J', 0)";
 			query.execute(sql);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
