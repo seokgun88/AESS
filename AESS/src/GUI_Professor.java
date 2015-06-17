@@ -409,28 +409,25 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 				String day=(String) cbDay.getSelectedItem();
 				String stime=(String) cbStarttime.getSelectedItem();
 				String etime=(String) cbEndtime.getSelectedItem();
-				String time;
+				String time = stime;	
 				
-				time = stime;
-				while(true){
-					if(stime.equals(etime)){
+				/**이영석 추가 : 시작 시간이 종료 시간보다 빠를 경우에만 추가**/
+				if(Enums.TimeToIndex(stime)<Enums.TimeToIndex(etime)){	
+					prof.checkOverlapPreferredTime(rank, lectureCode);
+					while(true){
+						if(time.equals(etime))
+							break;
 						prof.SetPreferredTime(rank, day, time, lectureCode);
-						break;
+						if(time.substring(3).equals("00")){
+							time = time.substring(0, 2) + ":30";
+						}
+						else{
+							time = (Integer.parseInt(time.substring(0, 2))+1) + ":00";
+						}
 					}
-					else if(time.equals(etime)){
-						break;
-					}
-					System.out.println(time);
-					prof.SetPreferredTime(rank, day, time, lectureCode);
-					if(time.substring(3).equals("00")){
-						time = time.substring(0, 2) + ":30";
-					}
-					else{
-						time = (Integer.parseInt(time.substring(0, 2))+1) + ":00";
-					}
+					listPrefer();
+					System.out.println("선호시간추가");
 				}
-				listPrefer();
-				System.out.println("선호시간추가");
 			}
 			else if(menu.equals("선호시간삭제")){
 				int rank=Integer.parseInt(prrior_table.getValueAt(prrior_table.getSelectedRow(), 0).toString());

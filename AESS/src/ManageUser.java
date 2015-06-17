@@ -79,6 +79,8 @@ public class ManageUser {
 	}
 	/**이영석 추가 : 비밀번호 수정 기능**/
 	public static boolean setPass(String id, String pass){
+		if(pass == null || pass.length()==0)
+			return false;
 		try {
 			Statement query = conn.createStatement();
 			String sql = "select * from member where id='" +id+ "';";

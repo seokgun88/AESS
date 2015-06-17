@@ -87,7 +87,6 @@ public class User_Professor{
 		}
 		return "에러";
 	}
-	
 	public void SetRequiredInfo(String lectureNo, int max, int rooms, int timelen){
 		try {
 			Statement query = conn.createStatement();
@@ -135,7 +134,23 @@ public class User_Professor{
 		}		
 		return require;
 	}
-	
+	/**이영석 추가 : 선호 시험 시간이 이미 있는 경우**/
+	public void checkOverlapPreferredTime(int rank, String lectureCode){
+		try {
+			Statement query = conn.createStatement();
+			String sql = "select no from schedule where stype='P' and rank=" +rank+ " and lecture_id = '" +lectureCode+ "';";
+			ResultSet result = query.executeQuery(sql);	
+			if(result.next()){
+				sql = "delete from timeblock where scheduleNo=" +result.getString("no");
+				query.execute(sql);
+			}
+			result.close();
+			query.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}	
 	public void SetPreferredTime(int rank, String day, String rtime, String lectureNo){
 		try {			
 			String time = enums.TimeToBlock(rtime);
