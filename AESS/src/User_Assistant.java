@@ -1,13 +1,16 @@
 import java.sql.*;
 
+/**Assistant user class**/
 public class User_Assistant{
 	private Connection conn;
 	
+	/**Constructor**/
 	public User_Assistant(String id, String pass){
 		conn = Info.getConn();
 	}
 	
-	public void CreateImpossibleExamTime(){
+	/**Create Impossible Exam Time**/
+	public void createImpossibleExamTime(){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "insert into schedule (name, type, classroom) values ('Á¶±³', 'J', 1113)";
@@ -17,7 +20,7 @@ public class User_Assistant{
 			e.printStackTrace();
 		}
 	}
-	public void SetImpossibleExamTime(String name){
+	public void setImpossibleExamTime(String name){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "update schedule set classroom=1555 where name='" +name+ "';";
@@ -27,7 +30,8 @@ public class User_Assistant{
 			e.printStackTrace();
 		}
 	}
-	public void DeleteImpossibleExamTime(String name){
+	/**Delete impossible exam time**/
+	public void deleteImpossibleExamTime(String name){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "delete from schedule where name='" +name+ "';";

@@ -1,12 +1,15 @@
 import java.util.Calendar;
+
 import javax.swing.table.AbstractTableModel;
 
-/**************시험기간 설정을 할 때 사용할 달력 클래스*********************/
+@SuppressWarnings("serial")
+/**************Calendar class to set exam period*********************/
 public class CalendarModel extends AbstractTableModel {
 	private Calendar calendar;
 	private int year;
 	private int month;
  
+	/**Constructor**/
 	public CalendarModel(int _year, int _month) {
 		calendar = Calendar.getInstance();  // 현재의 일시 가지고 있는 칼렌더 취득
 		if(_year==0&&_month==0) {
@@ -33,17 +36,18 @@ public class CalendarModel extends AbstractTableModel {
 	@Override
 	public int getRowCount() {
 		if(getDate(6,0)<10) return 6;
-		else return 5;
+		return 5;
 	}
 	
 	@Override
 	public Object getValueAt(int row, int col) {
-		if(col<6) if(getDate(row,col+1)==1) return 1; //월화수목금토일로 바꾸기
+		if(col<6) if(getDate(row,col+1)==1) return 1; //Convert to days of week
 		if(col==6) if(getDate(row+1, 0)==1) return 1;
 	 
 		return getDate(row, col)+1;
 	}
  
+	@Override
 	public String getColumnName(int columnIndex) {
 		String[] dayOfTheWeek = {"월", "화", "수", "목", "금", "토", "일"};
 		return dayOfTheWeek[columnIndex];

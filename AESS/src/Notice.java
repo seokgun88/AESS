@@ -1,9 +1,11 @@
 import java.sql.*;
 import java.util.*;
 
+/**Notice class**/
 public class Notice {
 	private Connection conn;
 	
+	/**Constructor**/
 	public Notice(){
 		conn = Info.getConn();
 	}
@@ -42,6 +44,6 @@ public class Notice {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return notice; //공지사항 내용 리턴
+		return notice; //Notice subject return
 	}
 }

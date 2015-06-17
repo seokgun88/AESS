@@ -1,18 +1,35 @@
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
 import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+@SuppressWarnings("serial")
+/**Professor GUI**/
 public class GUI_Professor extends JTabbedPane implements MouseListener {
 	private User_Professor prof;
 	private Notice notice;
@@ -25,7 +42,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 	private JTextField tfAcceptNum = new JTextField(16);
 	private JTextField tfClassNum = new JTextField(16);
 	private JTextField tfTestPeriod = new JTextField(16);
-	private JTextArea ta_notice = new JTextArea(30, 60); //공지사항 입력할 textarea
+	private JTextArea ta_notice = new JTextArea(30, 60); //Textarea to input notice
 	private JTable table;
 	private JTable prrior_table;
 	private JTable impos_tbList;
@@ -39,25 +56,26 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 	private JComboBox impos_cbEndtime;
 	private int[][] schedule_no = new int[20][20];
 
+	/**Constructor**/
 	public GUI_Professor(String id, String lectureCode){
-		this.lectureCode = lectureCode; //과목 코드 초기화
+		this.lectureCode = lectureCode; //Initialize class code
 		prof = new User_Professor(id);
 		notice = new Notice();
-		JPanel pn_TestInfo = new JPanel(); //메인 페널	
+		JPanel pn_TestInfo = new JPanel(); //Main panel
 		
-		BoxLayout TestInfo_box  = new BoxLayout(pn_TestInfo, BoxLayout.Y_AXIS);	//박스 레이아웃
+		BoxLayout TestInfo_box  = new BoxLayout(pn_TestInfo, BoxLayout.Y_AXIS);	//Box layout
 		pn_TestInfo.setLayout(TestInfo_box);		
 		
 		/********************이영석 추가 : 공지사항*************************/
-		JPanel pn_notice = new JPanel(); //공지사항 패널
+		JPanel pn_notice = new JPanel(); //Notice panel
 		ta_notice.setText(notice.getNotice(lectureCode));
-		pn_notice.add(ta_notice); //textarea 패널에 등록
-		JScrollPane scrollPane = new JScrollPane(ta_notice); //스크롤 생성
-		pn_notice.add(scrollPane); //스크롤 패널에 추가		
-		JButton bt_sendNotice = new JButton("입력"); //공지사항 입력 버튼
-		bt_sendNotice.addActionListener(new profListener()); //입력 버튼 리스너 등록
-		pn_notice.add(bt_sendNotice); //버튼 패널에 등록
-		addTab("공지사항", null, pn_notice, "공지사항 입력 및 수정"); //패널을 탭으로 만듦
+		pn_notice.add(ta_notice); //add textarea to panel
+		JScrollPane scrollPane = new JScrollPane(ta_notice); //generate scroll
+		pn_notice.add(scrollPane); //add to scrollpane
+		JButton bt_sendNotice = new JButton("입력"); //notice input button
+		bt_sendNotice.addActionListener(new profListener()); //add listener to input button
+		pn_notice.add(bt_sendNotice); //add button to panel
+		addTab("공지사항", null, pn_notice, "공지사항 입력 및 수정"); //make panel as a tab
 		
 		/******************************시험 정보 / 휴강********************************/
 		//휴강 여부 결정
@@ -75,10 +93,10 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		rbExam.setBounds(200,70,70,30);
 		rbNotexam.addActionListener(new profListener());
 		rbExam.addActionListener(new profListener());
-		if(prof.GetIsLecture(lectureCode).equals("F")){
+		if(prof.getIsLecture(lectureCode).equals("F")){
 			rbNotexam.setSelected(true);
 		}
-		else if(prof.GetIsLecture(lectureCode).equals("T")){
+		else if(prof.getIsLecture(lectureCode).equals("T")){
 			rbExam.setSelected(true);
 		}
 		
@@ -95,7 +113,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		tfAcceptNum.setBounds(191, 34, 175, 23);
 		tfClassNum.setBounds(191, 60, 175, 23);
 		tfTestPeriod.setBounds(191, 86, 175, 23);	
-		String [] require = prof.GetRequiredInfo(lectureCode);
+		String [] require = prof.getRequiredInfo(lectureCode);
 		tfAcceptNum.setText(require[0]);
 		tfClassNum.setText(require[1]);
 		tfTestPeriod.setText(require[2]);
@@ -133,7 +151,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		Vector vAssiHead = new Vector();
 		vAssiHead.addElement("학번");
 		vAssiHead.addElement("이름");		
-		Vector vAssi = prof.GetAssistant(lectureCode);
+		Vector vAssi = prof.getAssistant(lectureCode);
 
 		table = new JTable(new DefaultTableModel(vAssi, vAssiHead));
 		JScrollPane sp = new JScrollPane(table);
@@ -154,7 +172,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		vStdchkHead.addElement("시간표입력");
 		
 		panel3.add("North",pTop3);
-		JTable table2 = new JTable(prof.CheckStudentSchedule(lectureCode), vStdchkHead);		
+		JTable table2 = new JTable(prof.checkStudentSchedule(lectureCode), vStdchkHead);		
 		JScrollPane sp2 = new JScrollPane(table2);
 		panel3.add("Center",sp2);
 		table2.setPreferredScrollableViewportSize(new Dimension(700,1000));				
@@ -205,7 +223,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		vPtimeHead.addElement("시작시간");
 		vPtimeHead.addElement("끝시간");
 		
-		prrior_table = new JTable(prof.GetPreferredTime(lectureCode), vPtimeHead);//prrior_Table 추가 
+		prrior_table = new JTable(prof.getPreferredTime(lectureCode), vPtimeHead);//prrior_Table 추가 
 		JScrollPane prrior_sp = new JScrollPane(prrior_table);
 		JCheckBox checkBox2 = new JCheckBox();		
 		checkBox2.setHorizontalAlignment(JLabel.CENTER);
@@ -254,7 +272,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		vImpossibleHead.addElement("시작시간");
 		vImpossibleHead.addElement("끝시간");
 		
-		impos_tbList = new JTable(prof.GetImpossibleTime(lectureCode), vImpossibleHead); 		
+		impos_tbList = new JTable(prof.getImpossibleTime(lectureCode), vImpossibleHead); 		
 		JScrollPane impos_tbScroll = new JScrollPane(impos_tbList);
 		JCheckBox checkBox3 = new JCheckBox();		
 		//impos_tbList.getColumn("ChkBox2").setCellRenderer(d);		
@@ -317,7 +335,8 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		table5.addMouseListener(this);
 	}
 	
-	public void tableCellCenter(JTable t) // 셀 내용 가운데 정렬
+	/**Align cell subjects center**/
+	public void tableCellCenter(JTable t)
 	{
 		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
 		dtcr.setHorizontalAlignment(SwingConstants.CENTER);
@@ -331,6 +350,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 	}
 	
 	DefaultTableCellRenderer d = new DefaultTableCellRenderer(){
+		@Override
 		public Component getTableCellRendererComponent(
 	                JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 	            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -343,6 +363,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 	        }
 	};
 
+	/**Apply preference list**/
 	public void listPrefer(){
 		Vector vPreferHead = new Vector();
 		vPreferHead.addElement("우선순위");
@@ -350,29 +371,31 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 		vPreferHead.addElement("시작시간");
 		vPreferHead.addElement("끝시간");
 		
-		DefaultTableModel DTM = new DefaultTableModel(prof.GetPreferredTime(lectureCode), vPreferHead);
+		DefaultTableModel DTM = new DefaultTableModel(prof.getPreferredTime(lectureCode), vPreferHead);
 		prrior_table.setModel(DTM);
 		prrior_table.revalidate();
 		prrior_table.repaint();
 	}
+	/**Apply assistant list**/
 	public void listAssi() {
 		Vector vAssiHead = new Vector();
 		vAssiHead.addElement("학번");
 		vAssiHead.addElement("이름");	
 
-		DefaultTableModel DTM = new DefaultTableModel(prof.GetAssistant(lectureCode), vAssiHead);
+		DefaultTableModel DTM = new DefaultTableModel(prof.getAssistant(lectureCode), vAssiHead);
 		table.setModel(DTM);
 		table.revalidate();
 		table.repaint();
 	}
 	
+	/**Apply impossible time list**/
 	public void listImpossible(){
 		Vector vImpossibleHead = new Vector();
 		vImpossibleHead.addElement("요일");
 		vImpossibleHead.addElement("시작시간");
 		vImpossibleHead.addElement("끝시간");
 		
-		DefaultTableModel DTM = new DefaultTableModel(prof.GetImpossibleTime(lectureCode), vImpossibleHead);
+		DefaultTableModel DTM = new DefaultTableModel(prof.getImpossibleTime(lectureCode), vImpossibleHead);
 		impos_tbList.setModel(DTM);
 		impos_tbList.revalidate();
 		impos_tbList.repaint();
@@ -384,23 +407,23 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 			String menu = e.getActionCommand();	
 			
 			if(menu.equals("조교추가")) {
-				prof.SetAssistant(tfNum.getText(), lectureCode);
+				prof.setAssistant(tfNum.getText(), lectureCode);
 				listAssi();
 				System.out.println("Clicked");
 			}
 			else if(menu.equals("삭제")){
-				prof.DeleteAssistant(tfNum.getText());
+				prof.deleteAssistant(tfNum.getText());
 				listAssi();
 				System.out.println("Clicked2");
 			}			
 			else if(menu.equals("수업")){
-				prof.SetIsLecture(lectureCode, "F");
+				prof.setIsLecture(lectureCode, "F");
 			}
 			else if(menu.equals("휴강")){
-				prof.SetIsLecture(lectureCode, "T");
+				prof.setIsLecture(lectureCode, "T");
 			}
 			else if(menu.equals("저장")){
-				prof.SetRequiredInfo(lectureCode, Integer.parseInt(tfAcceptNum.getText()), 
+				prof.setRequiredInfo(lectureCode, Integer.parseInt(tfAcceptNum.getText()), 
 						Integer.parseInt(tfClassNum.getText()), Integer.parseInt(tfTestPeriod.getText()));
 				System.out.println("저장");
 			}
@@ -417,7 +440,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 					while(true){
 						if(time.equals(etime))
 							break;
-						prof.SetPreferredTime(rank, day, time, lectureCode);
+						prof.setPreferredTime(rank, day, time, lectureCode);
 						if(time.substring(3).equals("00")){
 							time = time.substring(0, 2) + ":30";
 						}
@@ -431,7 +454,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 			}
 			else if(menu.equals("선호시간삭제")){
 				int rank=Integer.parseInt(prrior_table.getValueAt(prrior_table.getSelectedRow(), 0).toString());
-				prof.DelPreferredTime(rank, lectureCode);
+				prof.delPreferredTime(rank, lectureCode);
 				listPrefer();
 				System.out.println(rank);
 			}
@@ -445,14 +468,14 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 				int rank = enums.TimeToRank(day, stime);
 				while(true){
 					if(stime.equals(etime)){
-						prof.SetImpossibleTime(rank, day, time, lectureCode);
+						prof.setImpossibleTime(rank, day, time, lectureCode);
 						break;
 					}
 					else if(time.equals(etime)){
 						break;
 					}
 					System.out.println(time);
-					prof.SetImpossibleTime(rank, day, time, lectureCode);
+					prof.setImpossibleTime(rank, day, time, lectureCode);
 					if(time.substring(3).equals("00")){
 						time = time.substring(0, 2) + ":30";
 					}
@@ -464,7 +487,7 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 				System.out.println("불가능추가");
 			}
 			else if(menu.equals("불가능시간삭제")){
-				prof.DelImpossibleTime(impos_tbList.getValueAt(impos_tbList.getSelectedRow(), 0).toString(), 
+				prof.delImpossibleTime(impos_tbList.getValueAt(impos_tbList.getSelectedRow(), 0).toString(), 
 						impos_tbList.getValueAt(impos_tbList.getSelectedRow(), 1).toString(), 
 						impos_tbList.getValueAt(impos_tbList.getSelectedRow(), 2).toString(), 
 						lectureCode);
@@ -473,8 +496,8 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 			}
 			else if(menu.equals("가능시간확인")){
 				schedule_no = new int[20][20];
-				int [] possibleRank = prof.SetPossibleTime(lectureCode);
-				Vector vPossibletime = prof.GetPreferredTime(lectureCode);
+				int [] possibleRank = prof.setPossibleTime(lectureCode);
+				Vector vPossibletime = prof.getPreferredTime(lectureCode);
 				Vector vPossibleRank;
 				int start, end, day, cnt=0;
 				for(int i=0; i<5; i++){
@@ -508,8 +531,8 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 			int rank = schedule_no[row][column];
 			int vRank;
 			String day="", start="", end="";
-			Vector room = prof.FindClassroom(lectureCode, rank);
-			Vector timeinfo = prof.GetPreferredTime(lectureCode);
+			Vector room = prof.findClassroom(lectureCode, rank);
+			Vector timeinfo = prof.getPreferredTime(lectureCode);
 			Vector time;
 			for(int i=0; i<timeinfo.size(); i++){
 				time = (Vector) timeinfo.get(i);
@@ -521,15 +544,15 @@ public class GUI_Professor extends JTabbedPane implements MouseListener {
 					break;
 				}
 			}
-			String no = prof.SetFinal(lectureCode, rank);
+			String no = prof.setFinal(lectureCode, rank);
 			String message = lectureCode+"과목의 시험 기간이 확정 되었습니다.";
 			message += '\n' + day +"요일, 시작시간 "+ start +", 끝시간 " +end; 
-			prof.DelPossibleToFinal(lectureCode);
+			prof.delPossibleToFinal(lectureCode);
 			for(int i=0; i<room.size(); i++){
 				message += "\n" + room.get(i);
 				String Room = (String)room.get(i);
 				String [] sRoom = Room.split(" ");
-				prof.SetFinalClassSchedule(lectureCode, day, enums.TimeToBlock(start), enums.TimeToBlock(end), sRoom[0], sRoom[1]);
+				prof.setFinalClassSchedule(lectureCode, day, enums.TimeToBlock(start), enums.TimeToBlock(end), sRoom[0], sRoom[1]);
 			}
 			JOptionPane.showMessageDialog(null, message); 
 		}

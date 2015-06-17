@@ -1,17 +1,22 @@
 import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+@SuppressWarnings("serial")
+/**GUI to set period**/
 public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListener {
 	private String id;
 	private User_Admin admin;
@@ -25,6 +30,7 @@ public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListen
 	private CalendarModel tm1;
 	private JScrollPane jsp;
  
+	/**Constructor**/
 	public GUI_SetPeriod(String id) {
 		this.id = id;
 		
@@ -94,7 +100,8 @@ public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListen
 		add(pn_week, "North");
 	}
 	
-	public void tableCellCenter(JTable t) // table 가운데 정렬
+	/**Align table center**/
+	public void tableCellCenter(JTable t)
 	{
 		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
 		dtcr.setHorizontalAlignment(SwingConstants.CENTER);		
@@ -166,7 +173,7 @@ public class GUI_SetPeriod extends JPanel implements ActionListener, MouseListen
 			if(Info.getTest().equals("중간")) test="M";
 			else test="F";
 			
-			admin.SetExamWeek(Info.getYear(), Info.getSeason(), test, thisMonth, thisWeek, sDate, eDate);
+			admin.setExamWeek(Info.getYear(), Info.getSeason(), test, thisMonth, thisWeek, sDate, eDate);
 			JOptionPane.showMessageDialog(null, "시험 기간이 변경되었습니다. 지금 이후로 로그인한 사용자에게 반영됩니다.");  
 		}
 	}

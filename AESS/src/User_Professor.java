@@ -4,17 +4,20 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Vector;
+
 import javax.swing.JTable;
 
+/**Professor user class**/
 public class User_Professor{
 	private Connection conn;
 	private Enums enums = new Enums();
 	
+	/**Constructor**/
 	public User_Professor(String id){
 		conn = Info.getConn();
 	}
 	
-	public void GetLectureSchedule(){
+	public void getLectureSchedule(){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "select no from courseRelation where user_id='" +Info.getId()+ "';";
@@ -39,7 +42,7 @@ public class User_Professor{
 		}
 	}
 	
-	public void SetIsLecture(String lectureNo, String isExam){
+	public void setIsLecture(String lectureNo, String isExam){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "select no from schedule where lecture_id = '" +lectureNo+ "';";
@@ -60,7 +63,7 @@ public class User_Professor{
 		}
 	}
 	
-	public String GetIsLecture(String lectureNo){
+	public String getIsLecture(String lectureNo){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "select no from schedule where stype='C' and lecture_id = '" +lectureNo+ "';";
@@ -87,7 +90,7 @@ public class User_Professor{
 		}
 		return "에러";
 	}
-	public void SetRequiredInfo(String lectureNo, int max, int rooms, int timelen){
+	public void setRequiredInfo(String lectureNo, int max, int rooms, int timelen){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "select * from examRequired where lecNo='" +lectureNo+ "'";
@@ -109,7 +112,7 @@ public class User_Professor{
 		}
 	}
 	
-	public String[] GetRequiredInfo(String lectureNo){
+	public String[] getRequiredInfo(String lectureNo){
 		String [] require = new String[3];
 		for(int i=0; i<3; i++){
 			require[i] = "";
@@ -151,7 +154,7 @@ public class User_Professor{
 			e.printStackTrace();
 		}
 	}	
-	public void SetPreferredTime(int rank, String day, String rtime, String lectureNo){
+	public void setPreferredTime(int rank, String day, String rtime, String lectureNo){
 		try {			
 			String time = enums.TimeToBlock(rtime);
 			Statement query = conn.createStatement();
@@ -188,7 +191,7 @@ public class User_Professor{
 		}		
 	}
 	
-	public Vector GetPreferredTime(String lectureNo){
+	public Vector getPreferredTime(String lectureNo){
 		Vector vPrefer = new Vector();
 		Vector vPreferCol;
 		String stime="", etime="", day="";
@@ -243,7 +246,8 @@ public class User_Professor{
 		return vPrefer;
 	}
 	
-	public void DelPreferredTime(int rank, String lectureNo){
+	/**Delete preferred time**/
+	public void delPreferredTime(int rank, String lectureNo){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "select no from schedule where stype='P' and rank=" +rank+ " and lecture_id = '" +lectureNo+ "';";
@@ -267,7 +271,7 @@ public class User_Professor{
 		}		
 	}
 	
-	public void SetImpossibleTime(int rank, String day, String rtime, String lectureNo){
+	public void setImpossibleTime(int rank, String day, String rtime, String lectureNo){
 		try {			
 			String time = enums.TimeToBlock(rtime);
 			Statement query = conn.createStatement();
@@ -305,7 +309,7 @@ public class User_Professor{
 		}		
 	}
 	
-	public Vector GetImpossibleTime(String lectureNo){
+	public Vector getImpossibleTime(String lectureNo){
 		Vector vImpossible = new Vector();
 		Vector vImpossibleCol;
 		Vector vRank = new Vector();
@@ -373,7 +377,8 @@ public class User_Professor{
 		return vImpossible;
 	}
 	
-	public void DelImpossibleTime(String day, String starttime, String endtime, String lectureNo){
+	/**Delete impossible time**/
+	public void delImpossibleTime(String day, String starttime, String endtime, String lectureNo){
 		int rank= enums.TimeToRank(day, starttime);
 		String time=enums.TimeToBlock(starttime);
 		String etime=enums.TimeToBlock(endtime);
@@ -400,7 +405,7 @@ public class User_Professor{
 		}		
 	}
 	
-	public void SetAssistant(String id, String lectureNo){
+	public void setAssistant(String id, String lectureNo){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "select * from courseRelation where user_id='" +id+ "' and no='" +lectureNo+ "';";
@@ -430,7 +435,7 @@ public class User_Professor{
 		}
 	}
 	
-	public Vector GetAssistant(String lectureNo){
+	public Vector getAssistant(String lectureNo){
 		Vector vAssi = new Vector();
 		Vector vAssiCol;
 		String assi_id;
@@ -464,7 +469,8 @@ public class User_Professor{
 		return vAssi;
 	}
 	
-	public void DeleteAssistant(String id){
+	/**Delete Assistant**/
+	public void deleteAssistant(String id){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "select * from member where id='" +id+ "';";
@@ -492,7 +498,8 @@ public class User_Professor{
 		}		
 	}
 	
-	public void InitializeTable(JTable table, String[][] schedule_no){
+	/**Initialize time table**/
+	public void initializeTable(JTable table, String[][] schedule_no){
 		Statement scheduleState, blockState;
 		ResultSet scheduleResult, blockResult;
 		
@@ -524,7 +531,8 @@ public class User_Professor{
 		}
 	}
 	
-	public Vector CheckStudentSchedule(String lectureNo){
+	/**Check student schedule**/
+	public Vector checkStudentSchedule(String lectureNo){
 		Vector vStdchk = new Vector();
 		Vector vStdchkCol;
 		String std_id;
@@ -557,7 +565,8 @@ public class User_Professor{
 		return vStdchk;
 	}
 	
-	public void SelectExamTime(String lectureNo, int rank, int examLen){
+	/**Select examination time**/
+	public void selectExamTime(String lectureNo, int rank, int examLen){
 		int roomcnt = 0;
 		int availRooms [] = new int[100];
 		int roomNo, time;
@@ -621,7 +630,7 @@ public class User_Professor{
 		}
 	}
 	
-	public int GetPeriodStartday(){
+	public int getPeriodStartday(){
 		Calendar calendar = Calendar.getInstance();
 		try {
 			Statement query = conn.createStatement();
@@ -645,7 +654,7 @@ public class User_Professor{
 		return calendar.get(Calendar.DATE);
 	}
 	
-	public int[] SetPossibleTime(String lectureNo){
+	public int[] setPossibleTime(String lectureNo){
 		int [] possibleRank = new int[5];
 		for(int i=0; i<5; i++){
 			possibleRank[i] = 0;
@@ -746,7 +755,7 @@ public class User_Professor{
 				result.close();
 			}
 			
-			//학생 안되는시간 표시
+			//Display when the student cannot apply the exam
 			Vector vStd = new Vector();
 			sql = "select user_id from courseRelation where user_type='S' and no='" +lectureNo+ "'";
 			result = query.executeQuery(sql);
@@ -768,7 +777,7 @@ public class User_Professor{
 				result.close();
 			}		
 			
-			//우선순위 시간중 가능한거 찾기
+			//Find available times among preferred times
 			boolean [] possible = new boolean [5];
 			for(int i=0; i<5; i++){
 				possible[i] = true;
@@ -815,7 +824,7 @@ public class User_Professor{
 				}
 			}
 			
-			//안되는시간 블럭들 테이블에서 삭제			
+			//Delete unable time blocks from table
 			sql = "delete from timeblock where scheduleNo=" +no;
 			query.execute(sql);
 			
@@ -827,7 +836,8 @@ public class User_Professor{
 		return possibleRank;	
 	}
 	
-	public Vector FindClassroom(String lectureNo, int rank){	
+	/**Find class room**/
+	public Vector findClassroom(String lectureNo, int rank){	
 		Vector room = new Vector();	
 		try {
 			Statement query = conn.createStatement();
@@ -836,7 +846,7 @@ public class User_Professor{
 			
 			ResultSet tbResult=null;
 			boolean isPossible;
-			String [] infos = GetRequiredInfo(lectureNo);
+			String [] infos = getRequiredInfo(lectureNo);
 			Vector location = new Vector();
 			Vector roomno = new Vector();
 
@@ -889,7 +899,7 @@ public class User_Professor{
 		return room;
 	}
 	
-	public String SetFinal(String lectureNo, int rank){
+	public String setFinal(String lectureNo, int rank){
 		String rt="";
 		try {
 			Statement query = conn.createStatement();
@@ -910,7 +920,7 @@ public class User_Professor{
 		return rt;
 	}
 	
-	public void SetFinalClassSchedule(String lectureNo, String day, String start, String end, String location, String roomno){
+	public void setFinalClassSchedule(String lectureNo, String day, String start, String end, String location, String roomno){
 		try {
 			String time=start;
 			Statement query = conn.createStatement();
@@ -939,7 +949,8 @@ public class User_Professor{
 		}		
 	}
 	
-	public void DelPossibleToFinal(String lectureNo){
+	/**Delete possible to final**/
+	public void delPossibleToFinal(String lectureNo){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "select * from schedule where lecture_id='" +lectureNo+ "' and stype='F'";
@@ -963,11 +974,11 @@ public class User_Professor{
 			Statement query = conn.createStatement();
 			String sql = "select * from notice where courseNo='" +lectureCode+ "';";	 //공지사항이 있는지 확인
 			ResultSet result = query.executeQuery(sql);
-			if(result.next()){ //이미 있다면 공지사항 수정
+			if(result.next()){ //Edit notice if exists
 				sql = "update notice set message='" +message+ "' where courseNo='" +lectureCode+ "';";
 				query.execute(sql);
 			}
-			else{ //없다면 새 공지사항 입력
+			else{ //Make new notice if not exist
 				sql = "insert into notice(courseNo, message) values ('" +lectureCode+ "', '" +message+ "');";
 				query.execute(sql);
 			}

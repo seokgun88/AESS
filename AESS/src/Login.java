@@ -1,19 +1,19 @@
-import java.awt.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.Calendar;
 
+/**Log in class**/
 public class Login {
 	static private Connection conn;
 	
+	/******Calendar instance to compare current date and exam period******/
 	public static int loginSetting(String id, String password) {		
-		/******시험 기간과 현재 날짜 비교를 위한 Calendar 객체******/
 		Calendar c = Calendar.getInstance();
 		Calendar c_periodStart = Calendar.getInstance();
 		
-		String sql = "select * from period;"; //시험 기간을 불러오는 쿼리문
+		String sql = "select * from period;"; //Query to get exam period
 		try {
 			Statement query = conn.createStatement();
 			ResultSet result = query.executeQuery(sql);
@@ -41,14 +41,15 @@ public class Login {
 			Statement query = conn.createStatement();
 			ResultSet result = query.executeQuery(sql);
 			
-			if(!result.next()){ //아이디, 비밀번호가 DB에 없는 경우		
+			if(!result.next()){ //If id, password is not in DB		
 				result.close();
 				query.close();			
 				return 1;
 			} else {
-				c.add(Calendar.DATE, 14); //오늘 날짜+14(2주후 날짜)
-				/***2주후 날짜가 시험시작일 보다 작을 경우 2주보다 많이 남았으므로 시스템 사용이 불가***/
-				/***단 관리자일 경우 항상 사용 가능***/
+				c.add(Calendar.DATE, 14); //Current date+14(2 weeks later)
+				/***If the date 2 weeks later is closer than exam period,
+				 * the time left more than 2 weeks so the system is unavailable***/
+				/***But admin always can use***/
 				if(c.compareTo(c_periodStart)<0 && !result.getString("type").equals("A")){
 					result.close();
 					query.close();			

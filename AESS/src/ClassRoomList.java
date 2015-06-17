@@ -4,9 +4,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+/**Class Room List Class**/
 public class ClassRoomList {
 	static private Connection conn;
 
+	/**Return list of professor**/
 	public static ArrayList getProfessorList(){
 		ArrayList<ArrayList> nameAndIdList = new ArrayList<ArrayList>();
 		ArrayList<String> nameList = new ArrayList<String>();
@@ -41,7 +43,7 @@ public class ClassRoomList {
 				classInfo[0] = result.getString("location");
 				classInfo[1] = result.getString("no");
 				classInfo[2] = result.getString("maxSeat");
-				classInfo[3] = result.getString("equipment"); //추가 : 부수기재 정보 얻어옴
+				classInfo[3] = result.getString("equipment"); //Add : Get appliances info
 				classRoomList.add(classInfo);
 			}
 			result.close();
@@ -51,7 +53,7 @@ public class ClassRoomList {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null; //비정상적인 종료
+		return null; //Abnormal termination
 	}
 	
 	public static Connection getConn() {

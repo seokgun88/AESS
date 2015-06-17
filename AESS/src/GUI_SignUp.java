@@ -3,12 +3,16 @@
  * 조금 다른 부분은 주석처리 하겠음
  */
 import java.awt.*;
+
 import javax.swing.*;
+
 import java.awt.event.*;
 
+@SuppressWarnings("serial")
+/**GUI for sign up page**/
 public class GUI_SignUp extends JFrame{	
-	private Toolkit tk = Toolkit.getDefaultToolkit(); //구현된 Toolkit객체를 얻는다.
-	private Dimension screenSize=tk.getScreenSize();//화면의 크기를 구한다.
+	private Toolkit tk = Toolkit.getDefaultToolkit();//Get implemented Toolkit instance
+	private Dimension screenSize=tk.getScreenSize();//Get screen size
 	private int x_l, y_l;	
 	private boolean isSignUp; //##지수 추가
 	
@@ -20,7 +24,7 @@ public class GUI_SignUp extends JFrame{
 	private JPanel pn_password = new JPanel();
 	private JPanel pn_button = new JPanel();
 
-	private JLabel lb_Id = new JLabel("ID : ", Label.RIGHT); // Label의 text정렬을 오른쪽으로.
+	private JLabel lb_Id = new JLabel("ID : ", Label.RIGHT); //Right alignment of texts in Label
 	private JLabel lb_Name = new JLabel("Name :", Label.RIGHT);
 	private JLabel lb_Pass = new JLabel("Password :", Label.RIGHT);
 	
@@ -28,7 +32,7 @@ public class GUI_SignUp extends JFrame{
 	private TextField tf_Pwd = new TextField(20);
 	private TextField tf_Name = new TextField(20);
 	
-	private JButton bt_SignUp = new JButton("회원가입"); //회원가입으로 바꿈
+	private JButton bt_SignUp = new JButton("회원가입"); //Change to sign up
 	private JButton bt_Cancel = new JButton("취소");
 	private JButton bt1 = new JButton("dd");
 	
@@ -36,24 +40,24 @@ public class GUI_SignUp extends JFrame{
 	private ButtonGroup bg_stdOrPrf = new ButtonGroup();
 	private JRadioButton rbt_student = new JRadioButton("학생");
 	private JRadioButton rbt_professor = new JRadioButton("교수");
-		
+	
+	/**Constructor**/
 	public GUI_SignUp(){
-		super("AESS SignUp"); // Frame(String title)을 호출한다.
+		super("AESS SignUp"); // Call Frame(String title)
 		super.setIconImage(icon.getImage());
 		setLayout(null);
 		Login.setConn(Info.getConn());
 		
 		this.setSize(400,300);
-		x_l = screenSize.width/2 - this.getWidth()/2 ; //x좌표구하기
-		y_l = screenSize.height/2 - this.getHeight()/2; //y좌표구하기
+		x_l = screenSize.width/2 - this.getWidth()/2 ; //Get x coordinate
+		y_l = screenSize.height/2 - this.getHeight()/2; //Get y coordinate
 		this.setLocation(x_l, y_l);
 		
 		this.addWindowListener(new EventHandler1());
 		this.setVisible(true);
-		tf_Pwd.setEchoChar('*'); // 입력한 값 대신 '*'이 보이게 한다.
+		tf_Pwd.setEchoChar('*'); //show '*' instead real value
 		
-		// 버튼과 TextField에 이벤트처리를 위한 Listener를 추가해준다.
-		
+		/******Add listener to Button and TextField for event handle****/		
 		bt_SignUp.addActionListener(new EventHandler());
 		bt_Cancel.addActionListener(new EventHandler());
 		
@@ -66,7 +70,7 @@ public class GUI_SignUp extends JFrame{
 		add(lb_Id);
 		add(tf_Id);	
 		
-		/*Name 추가*/
+		/**Add Name**/
 		lb_Name.setBounds(95, 110, 50, 22);
 		tf_Name.setBounds(150, 110, 180, 22);
 		add(lb_Name);
@@ -93,7 +97,8 @@ public class GUI_SignUp extends JFrame{
 		this.setResizable(false);
 	}
 	
-	/**Login_set 함수 삭제**/
+	/**Login_set removed**/
+	
 	/**이영석 삭제 : 엔터키 리스너 삭제**/
 	class EventHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e){					
@@ -125,12 +130,12 @@ public class GUI_SignUp extends JFrame{
 
 	class EventHandler1 implements WindowListener 
 	{ 
-		// Frame의 닫기 버튼을 눌렀을 때 호출된다.
+		// Called when close button of Frame is clicked
 		public void windowClosing(WindowEvent e) {
-			// Frame을 화면에서 보이지 않도록 하고
+			// Set Frame invisible
 			System.exit(0);		
 		}
-		//아무내용도 없는 메서드 구현
+		/*******Vacant method implementation************/
 		public void windowOpened(WindowEvent e) {} 
 		public void windowClosed(WindowEvent e){} 
 		public void windowIconified(WindowEvent e){} 

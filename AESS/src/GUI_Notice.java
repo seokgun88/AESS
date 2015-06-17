@@ -18,33 +18,34 @@ public class GUI_Notice extends JPanel implements MouseListener{
 		notice = new Notice();
 		this.setLayout(new BorderLayout());
 		
-		/*************************강의목록 리스트*****************************/
-		Vector v_participateClassHead = new Vector(); //강의목록 테이블 헤드
-		v_participateClassHead.addElement("강의목록"); //테이블 헤드 이름
-		Vector v_participateClass = notice.getParticipateClasss(); //강의 목록 받아오기
+		/*************************Class list*****************************/
+		Vector v_participateClassHead = new Vector(); //Class list table head
+		v_participateClassHead.addElement("강의목록"); //Name of table head
+		Vector v_participateClass = notice.getParticipateClasss(); //Get class list
 		t_participateClass = new JTable(new DefaultTableModel(v_participateClass ,v_participateClassHead){
-			public boolean isCellEditable(int i, int c){ //셀 내용 수정 안되게 설정
+			@Override
+			public boolean isCellEditable(int i, int c){ //make cell uneditable
 				return false;
 			}
-		}); //테이블 생성
-		t_participateClass.getTableHeader().setReorderingAllowed(false); //테이블 헤더 드래그 불가
-		t_participateClass.addMouseListener(this); //셀 마우스 리스너 등록
+		}); //Generate table
+		t_participateClass.getTableHeader().setReorderingAllowed(false); //Set table header undraggable
+		t_participateClass.addMouseListener(this); //Add cell mouse listener
 		sp_participateClass = new JScrollPane(t_participateClass);
 		sp_participateClass.setPreferredSize(new Dimension(100, 500));
 		add(sp_participateClass, "West");
 				
-		/*******************선택한 강의 공지사항 출력할 textarea 설정*******************/
+		/*******************Set textarea to show notice of selected class*******************/
 		lb_notice = new JLabel("                                   공지사항");
 		add(lb_notice, "North");
 		
-		ta_notice.setEditable(false); //읽어온 공지사항 수정 불가
+		ta_notice.setEditable(false); //Set read notice uneditable
 		add(ta_notice, "Center"); //textarea 패널에 등록
 		JScrollPane scrollPane = new JScrollPane(ta_notice); //스크롤 생성
 		add(scrollPane); //스크롤 패널에 추가
 	}
 	
+	/****************Read notice by the class code of selected item*****************/
 	public void mouseClicked(MouseEvent arg0) {
-		/****************선택된 칸의 과목코드로 해당 공지사항 읽어오기*****************/
 		int row = t_participateClass.getSelectedRow();
 		int col = t_participateClass.getSelectedColumn();
 		String lectureCode = (String)t_participateClass.getValueAt(row, col);

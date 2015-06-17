@@ -1,40 +1,46 @@
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.sql.Connection;
 
-import javax.swing.*;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
  * @author Seiryu
- *
+ * User List GUI
  */
 public class GUI_UserList extends JPanel implements ActionListener, ListSelectionListener {
 	private JList userJList ;
 	private JScrollPane scrollPane;
-	private JRadioButton [] listState = new JRadioButton[3]; //0: 기존, 1: 신규, 2: 전체
+	private JRadioButton [] listState = new JRadioButton[3]; //0: Existing, 1: New, 2: All
 	private ButtonGroup bg;
-	private JButton btnApprv, btnDelete, btnTogAct; //가입 승인 버튼, 계정 삭제 버튼, 활성 상태 토글 버튼
-	private JButton btnReset; //비밀번호 초기화 버튼
-	private JPanel p_east; //버튼들을 하나로 묶는 패널
-	private JPanel [] horPane = new JPanel[2] ; //수평으로 객체들을 배치해 수직으로 쌓기 위한 패널
+	private JButton btnApprv, btnDelete, btnTogAct; //Approve, Delete, Toggle Activation
+	private JButton btnReset; //Password reset button
+	private JPanel p_east; //Panel to gather all buttons
+	private JPanel [] horPane = new JPanel[2] ; //Panels to arrange instances horizontally, and lay them vertically.
 	private String [] curList, tempList;
 	
 	private User_Admin admin;
 	private Connection conn;
 	private String id;
 	
-	static final String deactTag="[비활성화]";//비활성화 태그
+	static final String deactTag="[비활성화]";//Inactivation tag
 	
 	public GUI_UserList(String id){
 		conn = Info.getConn();
 		this.id = id;
 		admin = new User_Admin();
 		
-		//객체 생성
+		//Instantiate instances
 		listState[0]=new JRadioButton("기존 사용자");
 		listState[1]=new JRadioButton("신규 가입");
 		listState[2]=new JRadioButton("전체");
@@ -53,7 +59,7 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		scrollPane.setViewportView(userJList);
 		
 		
-		//객체 초기화
+		//Initialize instances
 		listState[0].addActionListener(this);
 		listState[1].addActionListener(this);
 		listState[2].addActionListener(this);
@@ -63,7 +69,7 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		btnReset.addActionListener(this);
 		userJList.addListSelectionListener(this);
 		
-		//객체 등록
+		//Add instances
 		setLayout(new BorderLayout());
 		p_east = new JPanel();
 		p_east.setLayout(new BorderLayout());
@@ -87,7 +93,7 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		refreshView();
 	}
 	
-	//Refresh the list. Including visualization.
+	/**Refresh the list. Including visualization.**/
 	public void refreshList(){
 		String buf;
 		User_Admin.AccountState accSt;
@@ -117,7 +123,7 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 		userJList.setListData(tempList);
 	}
 	
-	//Refresh Views
+	/**Refresh Views**/
 	public void refreshView(){
 		try{
 			Rectangle bndry=this.getBounds();
@@ -133,26 +139,26 @@ public class GUI_UserList extends JPanel implements ActionListener, ListSelectio
 	
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource().equals(btnApprv)){
-			//가입 승인 버튼
+			/**Account Approve button**/
 			admin.approveUser(curList[userJList.getSelectedIndex()]);
 		} else if(arg0.getSource().equals(btnDelete)){
-			//계정 삭제 버튼
+			/**Account Delete button**/
 			admin.deleteUser(curList[userJList.getSelectedIndex()]);
 		} else if(arg0.getSource().equals(btnTogAct)){
-			//계정 비/활성화버튼
+			/**Account In/active button**/
 			if(userJList.getSelectedValue().toString().contains(deactTag) || userJList.getSelectedValue().toString().contains("[활성화 신청]"))	
 				admin.activateUser(curList[userJList.getSelectedIndex()], "T");
 			else
 				admin.activateUser(curList[userJList.getSelectedIndex()], "F");
 		} else if(arg0.getSource().equals(btnReset)){
-			//비밀번호 초기화 버튼
+			/**Reset Password button**/
 			admin.resetPassword(curList[userJList.getSelectedIndex()]);
 		}
 		
 		refreshList();
 	}
+	/**To confirm selected item**/
 	public void valueChanged(ListSelectionEvent e) {
-		//아이템 선택 확인용
 //		System.out.println(userJList.getSelectedValue().toString());
 	}	
 }

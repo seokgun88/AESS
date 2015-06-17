@@ -3,6 +3,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**Info class contains generic informations**/
 public class Info {
 	private static DBconnect dbcon;
 	private static Connection conn;
@@ -11,7 +12,8 @@ public class Info {
 
 	private static String season = "1";	
 	private static String test = "±â¸»";
-	
+
+	/**Constructor**/
 	public Info() {
 	}
 

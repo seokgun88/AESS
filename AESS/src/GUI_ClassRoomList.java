@@ -1,24 +1,43 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.sql.Connection;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-/**강의실 목록 및 스케쥴 GUI**/
+@SuppressWarnings("serial")
+/**GUI for Room list and Schedule**/
 public class GUI_ClassRoomList extends JPanel implements MouseListener{
-	private User_Admin admin; //관리자일 경우 강의실 정보 수정 가능
+	private User_Admin admin; //Admin can edit room info
 	
 	private Object nowListValue, nowRowB, nowRowC, nowRowM, nowRowE; //이영석 추가 : nowRowE(부수기재 열)
 	private int nowListRow, nowListCol;
@@ -73,14 +92,15 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 	private int regularOrEtc = 0; //정규시간표인지 특별 이벤트 스케쥴인지 확인하는 변수
 	private Enums enums = new Enums();
 	
+	/**Constructor**/
 	public GUI_ClassRoomList(){
 		ClassRoomList.setConn(Info.getConn());
 	
-		/*********관리자일 경우 강의실 정보 수정 기능 추가**********/
+		/*********Add features to edit room info for admin**********/
 		if(Info.getType().equals("A"))
 			admin = new User_Admin();	
 		
-		/*************우측 리스트***************/
+		/*************List on right***************/
 		setLayout(new BorderLayout());
 		pn_roomList.setBorder(new TitledBorder("강의실 List"));
 		pn_roomList.setLayout(new BorderLayout());
@@ -96,7 +116,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		pn_listButton.add(bt_addRoom, "North");
 		pn_listButton.add(bt_delRoom, "North");
 		
-		/********관리자일 경우 강의실 정보 수정 버튼 추가***************/
+		/********Add edit room info button for admin***************/
 		if(Info.getType().equals("A"))
 			pn_roomList.add(pn_listButton, "North");
 		
@@ -108,7 +128,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		bt_delRoom.addActionListener(new adminListener());
 		table.addMouseListener(this);
 		
-		/************* 메인 강의실 info ************/
+		/************* Main room info ************/
 		
 		pn_roomInfo.setBorder(new TitledBorder("강의실 시간표"));
 		pn_roomInfo.setLayout(new BoxLayout(pn_roomInfo, BoxLayout.Y_AXIS));
@@ -132,7 +152,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		column.setPreferredWidth(30);
 		table_Room.getColumn("시간").setPreferredWidth(95);
 		
-		/**********관리자일 경우 수정 가능하게 리스너 등록***********/
+		/**********Add listener for admin to allow edit***********/
 		if(Info.getType().equals("A"))
 			table_Room.addMouseListener(this);
 		
@@ -149,9 +169,9 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		add(pn_roomInfo,"Center");		
 	}
 	
-	/***********새로운 강의실 정보 추가********************/
+	/***********Add new room info********************/
 	public void addRoomPop(){
-		/**처음으로 생성하는 강의실 추가 프레임만 새로 생성**/
+		/**Generate new frame for add room for once**/
 		if(Fr_addRoom == null){
 			Fr_addRoom = new JFrame("강의실 추가");
 			
@@ -202,7 +222,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		Fr_addRoom.setVisible(true);
 	}
 	
-	/*****************새 스케쥴 입력************************/
+	/*****************Input new schedule************************/
 	public void addSchedulePop(int dayIndex, int sTimeIndex, int eTimeIndex)
 	{
 		Fr_addSchedule = new JFrame("스케쥴 추가");
@@ -265,7 +285,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		cb_prof = new JComboBox();
 		cb_prof_id = new JComboBox();
 		
-		/*************교수 목록 불러오기***************/
+		/*************Load professor list***************/
 		ArrayList nameAndIdList = ClassRoomList.getProfessorList();
 		ArrayList<String> nameList = (ArrayList)nameAndIdList.get(0);
 		ArrayList<String> idList = (ArrayList)nameAndIdList.get(1);
@@ -296,7 +316,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		Fr_addSchedule.setVisible(true);
 	}
 	
-	/************강의실 목록 출력****************/
+	/************Print room list****************/
 	public void listRoom() {
 		Statement scheduleState;
 		ResultSet scheduleResult;
@@ -310,7 +330,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		Vector vRoomList = new Vector();
 		Vector vRoomListCol;
 
-		/*************강의실 목록 불러오기****************/
+		/*************Load room list****************/
 		ArrayList classRoomList = ClassRoomList.getClassRoomList();
 		for(int i=0; i<classRoomList.size(); i++){			
 			String[] classInfo = (String[]) classRoomList.get(i);
@@ -337,7 +357,8 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		table.repaint();
 	}
 	
-	public void InitializeTable(String location, String roomNo) {			
+	/**Initialize table**/
+	public void initializeTable(String location, String roomNo) {			
 		MyTableModel DTM_Room2 = new MyTableModel(data_roomTimetable, col_roomTimetable);
 		table_Room.setModel(DTM_Room2);
 		/**********************이영석 추가 : 테이블 헤더 수정 불가**********************/
@@ -364,7 +385,8 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		}				
 	}
 	
-	public void tableCellColor(JTable t, int row, int col) // 셀 내용 안비었으면 색칠
+	/**Paint if the cell is not vacant**/
+	public void tableCellColor(JTable t, int row, int col)
 	{
 		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
 		dtcr.setBackground(Color.yellow);
@@ -372,7 +394,8 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		tcm.getColumn(col).setCellRenderer(dtcr);
 	}
 	
-	public void tableCellCenter(JTable t) // 셀 내용 가운데 정렬
+	/**Align center inside cell**/
+	public void tableCellCenter(JTable t)
 	{
 		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
 		dtcr.setHorizontalAlignment(SwingConstants.CENTER);		
@@ -393,11 +416,11 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 			this.nowRowM = table.getValueAt(nowListRow, 2);
 			this.nowRowE = table.getValueAt(nowListRow, 3);
 			System.out.println(nowListRow+","+nowListCol+","+nowListValue.toString()+"selected");
-			InitializeTable(table.getValueAt(nowListRow, 0).toString(), table.getValueAt(nowListRow, 1).toString());
+			initializeTable(table.getValueAt(nowListRow, 0).toString(), table.getValueAt(nowListRow, 1).toString());
 			System.out.println(table.getValueAt(nowListRow, 0).toString()+","+ table.getValueAt(nowListRow, 1).toString());
 		} else if(me.getSource()==table_Room) {
 			if(schedule_no[table_Room.getSelectedRow()][table_Room.getSelectedColumn()]!=null)
-				PopUpMenu(me, schedule_no[table_Room.getSelectedRow()][table_Room.getSelectedColumn()]);
+				popUpMenu(me, schedule_no[table_Room.getSelectedRow()][table_Room.getSelectedColumn()]);
 		}
 		else if(me.getSource()==tableJRadioButton)
 		{
@@ -449,7 +472,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 	       		 		/**이영석 추가 : 부수기재 정보 수정 가능**/
 	       		 		String changedRowE = table.getValueAt(nowListRow, 3).toString();
 	       		 		System.out.printf("%s %s %s %s %s %s %s",nowRowB.toString(), nowRowC.toString(), nowRowM.toString(), changedRowB, changedRowC, changedRowM, changedRowE);
-	       		 		admin.SetClassRoom(nowRowB.toString(), nowRowC.toString(), nowRowM.toString(), nowRowE.toString(), changedRowB, changedRowC, changedRowM, changedRowE);
+	       		 		admin.setClassRoom(nowRowB.toString(), nowRowC.toString(), nowRowM.toString(), nowRowE.toString(), changedRowB, changedRowC, changedRowM, changedRowE);
 	       		 }
 	        	else{
 						table.setValueAt(nowListValue, nowListRow, nowListCol);
@@ -469,7 +492,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 			
 			if(e.getSource() == bt_delRoom) {
 				System.out.println(" bt_delRoomClicked");
-				admin.DeleteClassRoom(table.getValueAt(nowListRow, 1).toString(), table.getValueAt(nowListRow, 0).toString());
+				admin.deleteClassRoom(table.getValueAt(nowListRow, 1).toString(), table.getValueAt(nowListRow, 0).toString());
 				listRoom();
 			}
 			
@@ -480,7 +503,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 				equipment = tf_equip.getText();
 				System.out.println("부수기재 : " + equipment);
 				
-				admin.CreateClassRoom(tf_room.getText(), tf_building.getText(), tf_maxSeat.getText(), equipment); 
+				admin.createClassRoom(tf_room.getText(), tf_building.getText(), tf_maxSeat.getText(), equipment); 
 				listRoom();
 				Fr_addRoom.setVisible(false);
 			}
@@ -494,7 +517,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 				}
 				else{
 					System.out.println("다운");
-					scheNo = admin.CreateOtherSchedule(tf_name.getText());
+					scheNo = admin.createOtherSchedule(tf_name.getText());
 				}
 				
 				int start_time = enums.TimeToIndex(timeC1.getSelectedItem().toString());
@@ -504,11 +527,11 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 				System.out.println("returned schNo : "+scheNo);
 				for(i=start_time; i<end_time; i++) {
 					System.out.printf("%d %s %d",nowListRow, dateC.getSelectedItem().toString(), scheNo);
-					admin.CreateTimeBlock(cb_prof_id.getItemAt(cb_prof.getSelectedIndex()).toString(), table.getValueAt(nowListRow, 0).toString(), 
+					admin.createTimeBlock(cb_prof_id.getItemAt(cb_prof.getSelectedIndex()).toString(), table.getValueAt(nowListRow, 0).toString(), 
 							table.getValueAt(nowListRow, 1).toString(), dateC.getSelectedItem().toString(), enums.IndexToBlock[i], scheNo);
 				}
 				Fr_addSchedule.setVisible(false);
-				InitializeTable(table.getValueAt(nowListRow, 0).toString(), table.getValueAt(nowListRow, 1).toString());
+				initializeTable(table.getValueAt(nowListRow, 0).toString(), table.getValueAt(nowListRow, 1).toString());
 			}
 			
 			if(e.getSource() == cancelB) {
@@ -517,7 +540,8 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 		}
 	}
 	
-	public void PopUpMenu(MouseEvent ce, final String schedule){
+	/****/
+	public void popUpMenu(MouseEvent ce, final String schedule){
 		JPopupMenu Pmenu;
 		Pmenu = new JPopupMenu();
 		final JMenuItem modifySchedule = new JMenuItem("Sche No. "+schedule);
@@ -533,7 +557,7 @@ public class GUI_ClassRoomList extends JPanel implements MouseListener{
 							JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)!=JOptionPane.NO_OPTION)
 					{
 						admin.DeleteSchedule(schedule);
-						InitializeTable(table.getValueAt(nowListRow, 0).toString(), table.getValueAt(nowListRow, 1).toString());
+						initializeTable(table.getValueAt(nowListRow, 0).toString(), table.getValueAt(nowListRow, 1).toString());
 					} 
 				}
 			}

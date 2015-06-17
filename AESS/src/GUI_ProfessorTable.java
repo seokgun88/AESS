@@ -1,13 +1,16 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.sql.Connection;
+import java.awt.BorderLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-/**교수 수업 시간표 테이블**/
+@SuppressWarnings("serial")
+/**Professor class time table**/
 public class GUI_ProfessorTable extends JPanel implements MouseListener{
 	private User_Professor prof;
 	private String id;
@@ -37,8 +40,10 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener{
 	
 	private String[][] schedule_no = new String[20][20];
 	
-	public boolean isProfTable; //테스트 케이스 확인용 변수
 	
+	public boolean isProfTable; //For test case
+	
+	/**Constructor**/
 	public GUI_ProfessorTable(String id){
 		this.id = id;
 		
@@ -56,7 +61,7 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener{
 		profTable.getTableHeader().setReorderingAllowed(false);
 		profTable.getTableHeader().setResizingAllowed(false);
 		
-		/******************교수 시간표 설정********************/
+		/******************Professor schedule setting********************/
 		JScrollPane sp = new JScrollPane(profTable);
 		scheP.add("Center",sp);
 		
@@ -71,10 +76,10 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener{
 		profTable.addMouseListener(this);
 		
 		prof=new User_Professor(id);
-		prof.InitializeTable(profTable, schedule_no);
+		prof.initializeTable(profTable, schedule_no);
 	}
 	
-	/***************다시 강의목록을 볼려고 할 때 리셋 해주는 함수*******************/
+	/***************Reset to view the class list again*******************/
 	public void resetProfessorTable(){
 		remove(layout.getLayoutComponent(BorderLayout.CENTER));
 		revalidate();
@@ -98,7 +103,7 @@ public class GUI_ProfessorTable extends JPanel implements MouseListener{
 		scheP.add("Center",sp);
 		add(scheP);
 		profTable.addMouseListener(this);
-		prof.InitializeTable(profTable, schedule_no);
+		prof.initializeTable(profTable, schedule_no);
 	}
 
 	public void mouseClicked(MouseEvent me) {

@@ -2,8 +2,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
 
+/**User Management Class**/
 public class ManageUser {
 	static private Connection conn;
 
@@ -29,12 +29,13 @@ public class ManageUser {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}		
-	}	
+	}
+	/**Check sign up**/
 	public static boolean signUp(String id, String pass, String name, String type){
 		boolean isSignUp;		
-		/*회원가입 시 아이디랑 비밀번호 출력*/
+		/**Display ID and Password when sign up**/
 		System.out.printf("ID : %s\nName : %s\nPW : %s\nType : %s\n",id, pass, name, type);
-		/*이름 조건*/
+		/**Condition for name**/
 		if(name.contains("0") || name.contains("1") || name.contains("2") || name.contains("3") || name.contains("4") || name.contains("5") || name.contains("6") || name.contains("7") || name.contains("8") || name.contains("9"))
 			isSignUp = false;
 		else if(name.contains(")") || name.contains("!") || name.contains("@") || name.contains("#") || name.contains("$") || name.contains("%") || name.contains("^") || name.contains("&") || name.contains("*") || name.contains("("))
@@ -59,6 +60,7 @@ public class ManageUser {
 		
 		return isSignUp;
 	}
+	/**Reset password**/
 	public static boolean resetPass(String id){
 		try {
 			Statement query = conn.createStatement();

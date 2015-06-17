@@ -1,8 +1,8 @@
-/**각종 요일, 시간 등을 서로 변경해주는 클래스**/
-
+/**Convert days or times**/
 public class Enums {
 	String[] IndexToBlock = {"1a", "1b", "2a", "2b", "3a", "3b", "4a", "4b", "5a", "5b", "6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b"};
 	
+	/**String day to numeric day index**/
 	public static int DayToIndex(String Day) {
 		switch(Day) {
 			case "월" : return 1;
@@ -16,6 +16,7 @@ public class Enums {
 		return 0;
 	}
 
+	/**Time block to numeric index**/
 	public static int BlockToIndex(String block) {
 		switch(block) {
 			case "1a" : return 0;
@@ -39,7 +40,8 @@ public class Enums {
 		}
 		return 0;
 	}
-		
+	
+	/**Time block to time period**/
 	public static String BlockToTime(String block) {
 		switch(block) {
 			case "1a" : return "09:00";
@@ -64,6 +66,7 @@ public class Enums {
 		return "00:00";
 	}
 	
+	/**Time period to time block**/
 	public static String TimeToBlock(String time){
 		switch(time){
 			 case "09:00" : return "1a";
@@ -88,6 +91,7 @@ public class Enums {
 		return "00";
 	}
 	
+	/**Time period to index**/
 	public static int TimeToIndex(String time){
 		switch(time){
 			 case "09:00" : return 0;
@@ -112,6 +116,7 @@ public class Enums {
 		return -1;
 	}
 	
+	/**Time to rank**/
 	public static int TimeToRank(String day, String starttime){
 		return 100*DayToIndex(day) + Integer.parseInt(starttime.substring(0, 2));
 	}

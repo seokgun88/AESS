@@ -1,13 +1,17 @@
 import java.sql.*;
 import java.util.*;
 
+/**Student user class**/
 public class User_Student{
 	private Connection conn;
 	
+	/**Constructor**/
 	public User_Student(){
 		conn = Info.getConn();
 	}
-	public void CreateTimeBlock(String day, String time, int type){
+	
+	/**Create time block**/
+	public void createTimeBlock(String day, String time, int type){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "insert into timeblock(location, classroom, day, time, isAvailable, user_id, scheduleNo) values ('-1', '-1', '"+day+"', '"+time+"', 'F', '"+Info.getId()+"', '"+type+"')";
@@ -18,7 +22,8 @@ public class User_Student{
 			e.printStackTrace();
 		}
 	}
-	public void DeleteTimeBlock(int no){
+	/**Delete time block**/
+	public void deleteTimeBlock(int no){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "delete from timeblock where no = '"+no+"'";
@@ -29,7 +34,9 @@ public class User_Student{
 			e.printStackTrace();
 		}
 	}
-	public void Save(){
+	
+	/**Save schedule**/
+	public void save(){
 		try {
 			Statement query = conn.createStatement();
 			String sql = "update courserelation set schedule_save='T' where user_id='" +Info.getId()+ "';";
@@ -40,6 +47,7 @@ public class User_Student{
 			e.printStackTrace();
 		}
 	}
+	
 	/**이영석 수정 : GUI_StudentMain에 있던 세부 기능 이동**/
 	public Vector getStudentSchedule(String id){
 		Vector v_schedule = new Vector();
@@ -51,7 +59,7 @@ public class User_Student{
 		ResultSet blockResult;
 		try {
 			blockState=conn.createStatement();
-			/**이미 있는 스케쥴 불러오기**/
+			/**Load existing schedule**/
 			blockResult = blockState.executeQuery("select * from timeblock where user_id='" +id+ "' and isAvailable='F'");
 			while(blockResult.next()) {
 				row = Enums.BlockToIndex(blockResult.getString("time"));
@@ -59,7 +67,7 @@ public class User_Student{
 				schedule_no[row][col] = blockResult.getString("no");
 				
 				Vector v_scheduleInfo = new Vector();
-				/**scheduleNo 값에 따라 시험, 수업, 감독불가를 인식**/
+				/**Recognize <Exam, Class, Impossible> by the value of scheduleNo**/
 				int type = blockResult.getInt("scheduleNo");
 				if(type==-1)
 					v_scheduleInfo.add("시험");
@@ -72,7 +80,7 @@ public class User_Student{
 				v_scheduleInfos.add(v_scheduleInfo);
 			}
 			
-			/**수강하는 수업 정규 시간표 불러오기**/
+			/**Load attending formed time schedule**/
 			blockState=conn.createStatement();
 			blockResult = blockState.executeQuery(
 					"select s.name, day, time from timeblock t, courseRelation c, schedule s where c.user_id='" +id+ "' and c.no=s.lecture_id and s.stype='C' and t.scheduleNo=s.no and t.isAvailable='F'"

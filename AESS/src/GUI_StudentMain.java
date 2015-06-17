@@ -1,19 +1,34 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-/**학생 GUI**/
+@SuppressWarnings("serial")
+/**GUI for student**/
 public class GUI_StudentMain extends JPanel
  implements MouseListener, MouseMotionListener{
 	private String id;
@@ -51,11 +66,12 @@ public class GUI_StudentMain extends JPanel
 
 	private String[][] schedule_no = new String[20][20];
 	
+	/**Constructor**/
 	public GUI_StudentMain(String id){
 		this.id = id;
 		this.student = new User_Student();
 		
-		/**화면 구성 요소들 설정**/
+		/**Set screen properties**/
 		setBorder(new TitledBorder("학생 시간표"));
 		layout = new BorderLayout();
 		setLayout(layout);
@@ -83,10 +99,11 @@ public class GUI_StudentMain extends JPanel
 		setColumnSize(table_student);
 		tableCellCenter(table_student);
 		
-		InitializeTable();
+		initializeTable();
 	}
 
-	public void tableCellCenter(JTable t) // 셀 내용 가운데 정렬
+	/**Align cell subjects center**/
+	public void tableCellCenter(JTable t)
 	{
 		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
 		dtcr.setHorizontalAlignment(SwingConstants.CENTER);
@@ -98,12 +115,14 @@ public class GUI_StudentMain extends JPanel
 			tcm.getColumn(i).setCellRenderer(dtcr);
 		}
 	}
-	public void setColumnSize(JTable t) // 젤 왼쪽 가로크기
+	/**Width of left**/
+	public void setColumnSize(JTable t)
 	{
 		t.getColumnModel().getColumn(0).setPreferredWidth(100);
 	}
 	
-	public void table_studentClick(int dayIndex, int sTimeIndex, int eTimeIndex) // <시험, 수업, 불가능한 시간대> 일정 입력
+	/**Input schedule with <Exam, Class, Impossible Time>**/
+	public void table_studentClick(int dayIndex, int sTimeIndex, int eTimeIndex)
 	{		
 		Fr_table_studentClick = new JFrame("일정 입력");
 		
@@ -163,7 +182,7 @@ public class GUI_StudentMain extends JPanel
 		panel_schedule.add(rBtn_test);
 		panel_schedule.add(rBtn_lecture);
 		if(Info.getType().equals("J"))
-			panel_schedule.add(rBtn_unable);	//조교면 감독 불가능한 시간 버튼 추가
+			panel_schedule.add(rBtn_unable); //Add unable time for Assistant
 		
 		/******************************************/
 		JPanel buttonP = new JPanel();
@@ -186,8 +205,9 @@ public class GUI_StudentMain extends JPanel
 		Fr_table_studentClick.setSize(450, 200);
 		Fr_table_studentClick.setVisible(true);			
 	}
-	
-	public void InitializeTable() {
+
+	/**Initialize table**/
+	public void initializeTable() {
 		MyTableModel DTM_Room2 = new MyTableModel(dtm_data, dtm_col);
 		table_student.setModel(DTM_Room2);
 		table_student.setColumnSelectionAllowed(true);
@@ -210,7 +230,7 @@ public class GUI_StudentMain extends JPanel
 		}
 	}
 	
-	/**있는 스케쥴 클릭하면 삭제창 팝업**/
+	/**Deletion window pops up when schedule is clicked**/
 	public void PopUpMenu(MouseEvent ce, final int no){
 		JPopupMenu Pmenu;
 		Pmenu = new JPopupMenu();
@@ -224,30 +244,30 @@ public class GUI_StudentMain extends JPanel
 					if(JOptionPane.showConfirmDialog(null,"이 일정을 삭제 하시겠습니까?", "삭제 경고",
 							JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)!=JOptionPane.NO_OPTION)
 					{
-						student.DeleteTimeBlock(no);
-						InitializeTable();
+						student.deleteTimeBlock(no);
+						initializeTable();
 					} 
 				}
 			}
 		});
    }
 
-	/**마우스 드래그, 클릭 리스너**/
+	/**Mouse drag, click listener**/
 	class studentListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			/**학생 일정 입력 버튼 클릭**/
+			/**Student schedule input button click**/
 			if(e.getSource() == btn_enter) {
-				student.Save();
+				student.save();
 				
 				int start_time = enums.TimeToIndex(cmbBx_startTime.getSelectedItem().toString());
 				int end_time = enums.TimeToIndex(cmbBx_endTime.getSelectedItem().toString());
 				
 				for(int i=start_time; i<end_time; i++) {
-					student.CreateTimeBlock(cmbBx_date.getSelectedItem().toString(), enums.IndexToBlock[i], notAvailType);
+					student.createTimeBlock(cmbBx_date.getSelectedItem().toString(), enums.IndexToBlock[i], notAvailType);
 				}
 				
 				Fr_table_studentClick.setVisible(false);
-				InitializeTable();
+				initializeTable();
 			}
 			
 			else if(e.getSource() == btn_cancel) {
@@ -260,7 +280,7 @@ public class GUI_StudentMain extends JPanel
 		}
 	}
 
-	/**이미 있는 일정 클릭시**/
+	/**Schedule exists clicked**/
 	public void mouseClicked(MouseEvent me) {
 		if(me.getSource()==table_student) {
 			if(schedule_no[table_student.getSelectedRow()][table_student.getSelectedColumn()]!=null)
@@ -273,7 +293,7 @@ public class GUI_StudentMain extends JPanel
 	@Override
 	public void mouseExited(MouseEvent arg0) {}
 	
-	/**마우스 드래그 할때 시작 칸과 끝 칸 좌표 저장**/
+	/**Store the first and the last item coordinate when dragged**/
 	public void mousePressed(MouseEvent pe) {
 		// TODO Auto-generated method stub
 		if(pe.getSource()==table_student) {
@@ -288,9 +308,9 @@ public class GUI_StudentMain extends JPanel
 			this.dragEndRow = table_student.getSelectedRow();
 			this.dragEndCol = table_student.getSelectedColumn();
 
-			/**드래그한 행이 다르고 열이 같을 때만 입력**/
+			/**Input only dragged row is different and column is same**/
 			if(dragEndRow!=dragStartRow && dragEndCol == dragStartCol){
-				/**스케쥴이 있는 칸 드래그 했는지 확인**/
+				/**Confirm scheduled item is dragged**/
 				boolean scheduleDuplicate = false;
 				for(int i=dragStartRow; i<=dragEndRow; i++){
 					if(table_student.getValueAt(i, dragStartCol)!=""){
@@ -298,10 +318,10 @@ public class GUI_StudentMain extends JPanel
 						break;
 					}
 				}
-				/**이미 스케쥴이 있는 칸 드래그 했을 시 무시**/
+				/**Ignore the item already scheduled**/
 				if(!scheduleDuplicate){
 					if(dragStartRow<=dragEndRow)	table_studentClick(dragStartCol, dragStartRow, dragEndRow);					
-					/**드래그를 아래서 부터 했을 경우 시작과 끝시간 반대로 입력**/
+					/**Reverse start time and end time if dragged from bottom to top**/
 					else	table_studentClick(dragStartCol, dragEndRow, dragStartRow);
 				}
 			}
